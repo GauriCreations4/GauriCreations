@@ -1,0 +1,663 @@
+<!-- PART 1: head + CSS + topbar -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Manage Products • Gauri Creations Admin</title>
+<!-- Favicon -->
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="favicon.ico">
+
+<style>
+  :root{
+    --bg-grad: linear-gradient(135deg,#86e1ff,#ffd4b8);
+    --glass-bg: rgba(255,255,255,0.96);
+    --glass-border: rgba(148,163,184,0.6);
+    --shadow-strong: 0 22px 60px rgba(15,23,42,0.40);
+    --muted: #6b7280;
+    --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: system-ui, -apple-system, "Poppins", sans-serif;
+    background: var(--bg-grad);
+    padding:18px;
+    color:#0f172a;
+    display:flex;
+    justify-content:center;
+  }
+
+  .shell{ width:100%; max-width:1200px; }
+
+  /* TOPBAR layout: Add Product + Home side-by-side, Logout below Add Product */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 14px;
+    border-radius:22px;
+    background: var(--glass-bg);
+    border:1px solid var(--glass-border);
+    box-shadow: var(--shadow-strong);
+    margin-bottom:14px;
+  }
+  .top-left{ display:flex; gap:12px; align-items:center; }
+  .logo{ width:56px; height:56px; border-radius:12px; object-fit:cover; }
+  .title-main{ font-size:18px; font-weight:700; }
+  .subtitle{ font-size:12px; color:var(--muted); }
+
+  /* right controls: vertical stack for logout under add/home group */
+  .top-right { display:flex; align-items:flex-start; gap:8px; }
+  .top-right .group{ display:flex; gap:8px; align-items:center; }
+  .pill-btn{
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,0.8);
+    background:#fff;
+    cursor:pointer; text-decoration:none; color:#0f172a;
+    display:inline-flex; gap:8px; align-items:center; font-weight:600;
+  }
+  .pill-btn.primary{ background:var(--accent-grad); color:#fff; border:none; box-shadow:0 6px 18px rgba(37,99,235,0.12); }
+
+  /* small gap control */
+  .gap-2 { margin-left: 6px; } /* small visual gap for mobile — ~2-3mm equivalent */
+
+  /* MAIN CARD */
+  .card{
+    border-radius:22px;
+    background: var(--glass-bg);
+    border:1px solid rgba(148,163,184,0.6);
+    padding:14px;
+    box-shadow: var(--shadow-strong);
+  }
+
+  .card-header{ display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+  .card-title{ font-size:16px; font-weight:600; }
+  .card-sub{ font-size:11px; color:var(--muted); }
+
+  .filters{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .search-input{ padding:10px 14px; border-radius:999px; border:1px solid #cbd5e1; min-width:220px; font-size:14px; }
+
+  /* Desktop table */
+  table.products-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .products-table th, .products-table td { padding:10px 8px; border-bottom:1px solid #e5e7eb; text-align:left; vertical-align:middle; }
+  .products-table th{ font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:0.02em; }
+
+  /* Thumbnail cell: fixed square 60x60 and cropped */
+  .thumb-cell{ width:72px; } /* breathing room */
+  .thumb-img{
+    width:60px;
+    height:60px;
+    border-radius:10px;    /* rounded corners (square crop with rounded corners) */
+    object-fit:cover;      /* crop to fill */
+    display:block;
+    box-shadow:0 6px 16px rgba(15,23,42,0.12);
+  }
+
+  /* Floating product cards (store-like) */
+  .cards-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+  .product-fcard{
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(249,250,251,0.98));
+    padding:10px;
+    box-shadow:0 18px 40px rgba(15,23,42,0.10);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .product-fcard:hover{ transform:translateY(-6px); box-shadow:0 26px 60px rgba(15,23,42,0.14); }
+  .fcard-img{ width:100%; height:160px; border-radius:12px; object-fit:cover; background:#fff; display:block; }
+  .fcard-title{ font-weight:700; font-size:14px; }
+  .fcard-price{ font-weight:800; color:#e11d48; font-size:15px; }
+  .fcard-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+
+  .fcard-actions{ display:flex; gap:8px; margin-top:auto; } /* actions stick bottom */
+  .btn-small{ padding:8px 10px; border-radius:999px; font-size:13px; border:1px solid #d1d5db; background:#fff; cursor:pointer; font-weight:700; }
+
+  /* mobile card alternative */
+  .product-card { display:grid; grid-template-columns:70px 1fr; gap:8px; padding:10px; border-radius:14px; background:linear-gradient(135deg,#fff,#eef7ff); border:1px solid rgba(226,232,240,0.9); }
+  .product-card-thumb{ width:60px; height:60px; border-radius:10px; object-fit:cover; }
+
+  /* media preview inside edit modal */
+  .media-thumb img{ width:60px; height:60px; object-fit:cover; border-radius:10px; }
+
+  /* edit overlay */
+  #editOverlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,23,42,0.7); z-index:60; }
+  .edit-box{ width:96%; max-width:780px; max-height:90vh; overflow:auto; background:#fff; border-radius:22px; padding:14px; }
+
+  /* responsive hiding/showing */
+  @media (max-width:820px){
+    .desktop-table{ display:none; }
+    .cards-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); }
+  }
+  @media (min-width:821px){
+    .desktop-table{ display:block; }
+  }
+
+  .muted{ color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="shell" id="adminMain">
+
+  <header class="topbar">
+    <div class="top-left">
+      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" />
+      <div>
+        <div class="title-main">Manage Products</div>
+        <div class="subtitle">Edit images, stock & details</div>
+      </div>
+    </div>
+
+    <div class="top-right">
+      <!-- group with Add Product + Home side-by-side -->
+      <div class="group">
+        <a href="admin-add-product.html" class="pill-btn primary">➕ Add Product</a>
+        <a href="admin.html" class="pill-btn gap-2">🏠 Home</a>
+      </div>
+
+      <!-- logout placed below add/home — stack using a tiny column layout -->
+      <div style="display:flex; flex-direction:column; gap:6px; margin-left:8px;">
+        <button onclick="adminLogout()" class="pill-btn">🔒 Logout</button>
+      </div>
+    </div>
+  </header>
+  <!-- PART 2: Main product table + filters + JS (loading + rendering) -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Product Catalog</div>
+        <div class="card-sub">Data loaded live from your Products sheet</div>
+      </div>
+
+      <div class="filters">
+        <input id="searchInput" class="search-input" placeholder="Search by name or SKU" />
+        <select id="filterCategory" class="pill-btn" style="min-width:140px;">
+          <option value="">All Categories</option>
+        </select>
+        <select id="filterStock" class="pill-btn" style="min-width:140px;">
+          <option value="">All Stock</option>
+          <option value="in">In Stock (> 0)</option>
+          <option value="low">Low Stock (≤ 5)</option>
+          <option value="out">Out of Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="statusText" class="muted" style="margin-bottom:8px;">Loading products…</div>
+
+    <!-- Desktop table -->
+    <div class="desktop-table">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th style="width:140px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productsTableBody"><tr><td colspan="8">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- Floating store-like cards -->
+    <div class="cards-grid" id="cardsGrid"></div>
+
+  </section>
+
+<script>
+/* ===============================
+   Config & helpers
+   =============================== */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const ADMIN_FLAG = "gc_admin_auth";
+
+let ALL_PRODUCTS = [];   // raw from server
+let CURRENT_EDIT_PRODUCT = null;
+
+/* Robust normalize: extract drive id with broader regex (user suggested) */
+function normalizeImageForThumb(url){
+  if(!url) return "";
+  url = String(url).trim();
+  // direct googleusercontent or http host passes through
+  if(url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
+    try {
+      // if it's already a sized googleusercontent link, return as-is
+      if(url.includes('=w') || url.includes('=s')) return url;
+    } catch(e){}
+  }
+  // try to capture file id like user desired: letters, digits, dash, underscore
+  const m = url.match(/[-A-Za-z0-9_]+/g);
+  // find the longest candidate that looks like an id (>=20 chars)
+  if(m && m.length){
+    const candidate = m.reduce((a,b)=> a.length>b.length ? a : b, "");
+    if(candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w600`;
+  }
+  // fallback to returning original url (maybe it's a direct image url)
+  return url;
+}
+
+/* ===============================
+   Admin login (simple) & init
+   =============================== */
+function initAdminLogin(){
+  if(localStorage.getItem(ADMIN_FLAG) === "yes"){
+    document.getElementById("adminMain").style.display = "block";
+    reloadProducts();
+  } else {
+    const pin = prompt("Enter admin PIN:");
+    if(pin === "3105"){ localStorage.setItem(ADMIN_FLAG,"yes"); document.getElementById("adminMain").style.display="block"; reloadProducts(); }
+    else { alert("Wrong PIN"); window.location.href="admin.html"; }
+  }
+}
+function adminLogout(){ localStorage.removeItem(ADMIN_FLAG); window.location.href = "admin.html"; }
+
+/* ===============================
+   Load products and dedupe
+   =============================== */
+async function reloadProducts(){
+  document.getElementById("statusText").textContent = "Loading products from sheet…";
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=getProducts");
+    const data = await res.json();
+    const raw = data.products || [];
+
+    // Deduplicate by SKU (keep first occurrence)
+    const map = new Map();
+    raw.forEach(p => {
+      const sku = (p["SKU"] || "").toString().trim();
+      if(!sku) return;
+      if(!map.has(sku)) map.set(sku, p);
+    });
+    ALL_PRODUCTS = Array.from(map.values());
+
+    populateCategoryFilter();
+    renderProducts();
+    document.getElementById("statusText").textContent = `Showing ${ALL_PRODUCTS.length} products (deduped).`;
+  }catch(err){
+    console.error(err);
+    document.getElementById("statusText").textContent = "Error loading products.";
+    document.getElementById("productsTableBody").innerHTML = '<tr><td colspan="8">Error loading products.</td></tr>';
+    document.getElementById("cardsGrid").innerHTML = '';
+  }
+}
+
+/* ===============================
+   Category dropdown
+   =============================== */
+function populateCategoryFilter(){
+  const sel = document.getElementById("filterCategory");
+  sel.innerHTML = '<option value="">All Categories</option>';
+  const cats = [...new Set(ALL_PRODUCTS.map(p => (p["Category"]||"").toString().trim()).filter(Boolean))];
+  cats.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+}
+
+/* ===============================
+   Filtering helper
+   =============================== */
+function getFilteredProducts(){
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  const cat = document.getElementById("filterCategory").value;
+  const stock = document.getElementById("filterStock").value;
+
+  let list = ALL_PRODUCTS.slice();
+
+  if(q){
+    list = list.filter(p=>{
+      const name = (p["Name"]||"").toString().toLowerCase();
+      const sku = (p["SKU"]||"").toString().toLowerCase();
+      return name.includes(q) || sku.includes(q);
+    });
+  }
+
+  if(cat) list = list.filter(p => (p["Category"]||"") === cat);
+
+  if(stock === "in") list = list.filter(p => Number(p["Stock"]||0) > 0);
+  else if(stock === "low") list = list.filter(p => { const s = Number(p["Stock"]||0); return s>0 && s<=5; });
+  else if(stock === "out") list = list.filter(p => Number(p["Stock"]||0) <= 0);
+
+  return list;
+}
+
+/* ===============================
+   Render products: table + floating cards
+   =============================== */
+function renderProducts(){
+  const tableBody = document.getElementById("productsTableBody");
+  const cardsGrid = document.getElementById("cardsGrid");
+  const statusEl = document.getElementById("statusText");
+
+  // clear to avoid duplicates
+  tableBody.innerHTML = "";
+  cardsGrid.innerHTML = "";
+
+  const list = getFilteredProducts();
+
+  if(!list.length){
+    tableBody.innerHTML = '<tr><td colspan="8">No products found.</td></tr>';
+    statusEl.textContent = "No products match current filters.";
+    return;
+  }
+
+  // Desktop rows
+  list.forEach(p=>{
+    const tr = document.createElement("tr");
+
+    // thumb
+    const tdImg = document.createElement("td"); tdImg.className = "thumb-cell";
+    const img = document.createElement("img"); img.className = "thumb-img";
+    img.alt = p["Name"] || "";
+    img.src = normalizeImageForThumb(p["Image URL 1"] || p["Image URL 2"] || "");
+    img.onerror = () => { img.style.display = 'none'; };
+    img.style.cursor = "pointer";
+    img.onclick = (ev) => { ev.stopPropagation(); openEdit(p); };
+    tdImg.appendChild(img);
+
+    const tdSku = document.createElement("td"); tdSku.textContent = p["SKU"] || "";
+    const tdName = document.createElement("td"); tdName.textContent = p["Name"] || "";
+    const tdPrice = document.createElement("td"); tdPrice.textContent = "₹" + (p["Price"]||"0");
+
+    const tdStock = document.createElement("td");
+    const stockVal = Number(p["Stock"]||0);
+    const stockBadge = document.createElement("span");
+    stockBadge.style.padding = "4px 8px"; stockBadge.style.borderRadius="999px"; stockBadge.style.fontSize="12px";
+    if(stockVal <= 0){ stockBadge.style.background = "rgba(239,68,68,0.08)"; stockBadge.textContent = "Out ("+stockVal+")"; }
+    else if(stockVal <= 5){ stockBadge.style.background = "rgba(245,158,11,0.08)"; stockBadge.textContent = "Low ("+stockVal+")"; }
+    else { stockBadge.style.background = "rgba(34,197,94,0.08)"; stockBadge.textContent = "In ("+stockVal+")"; }
+    tdStock.appendChild(stockBadge);
+
+    const tdCat = document.createElement("td"); tdCat.textContent = p["Category"] || "-";
+    const tdRating = document.createElement("td"); tdRating.textContent = p["Rating"] ? (p["Rating"] + " ★ (" + (p["Review Count"]||0) + ")") : "–";
+
+    const tdActions = document.createElement("td"); tdActions.style.width="140px";
+    const btnEdit = document.createElement("button"); btnEdit.className="btn-small"; btnEdit.textContent="Edit"; btnEdit.onclick = ()=>openEdit(p);
+    const btnDelete = document.createElement("button"); btnDelete.className="btn-small"; btnDelete.style.background="#fee2e2"; btnDelete.style.borderColor="#fecaca"; btnDelete.textContent="Delete"; btnDelete.onclick=()=>deleteProduct(p);
+    tdActions.appendChild(btnEdit); tdActions.appendChild(btnDelete);
+
+    tr.appendChild(tdImg); tr.appendChild(tdSku); tr.appendChild(tdName); tr.appendChild(tdPrice);
+    tr.appendChild(tdStock); tr.appendChild(tdCat); tr.appendChild(tdRating); tr.appendChild(tdActions);
+
+    tableBody.appendChild(tr);
+  });
+
+  // Floating cards (store-like) with Edit at bottom
+  list.forEach(p=>{
+    const card = document.createElement("div"); card.className="product-fcard";
+
+    const img = document.createElement("img"); img.className="fcard-img"; img.alt = p["Name"] || "";
+    img.src = normalizeImageForThumb(p["Image URL 1"] || "");
+    img.onerror = () => { img.style.display = 'none'; };
+
+    const title = document.createElement("div"); title.className="fcard-title"; title.textContent = p["Name"] || "(no name)";
+    const price = document.createElement("div"); price.className="fcard-price"; price.textContent = p["Price"] ? ("₹"+p["Price"]) : "";
+
+    const row = document.createElement("div"); row.className="fcard-row";
+    const skuEl = document.createElement("div"); skuEl.className="muted"; skuEl.textContent = "SKU: "+(p["SKU"]||"");
+    const stockEl = document.createElement("div"); stockEl.className="muted"; stockEl.textContent = "Stock: "+(p["Stock"]||0);
+
+    row.appendChild(skuEl); row.appendChild(stockEl);
+
+    const actions = document.createElement("div"); actions.className="fcard-actions";
+    const btnEdit2 = document.createElement("button"); btnEdit2.className="btn-small"; btnEdit2.textContent="Edit"; btnEdit2.onclick=()=>openEdit(p);
+    actions.appendChild(btnEdit2);
+
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(price);
+    card.appendChild(row);
+    card.appendChild(actions);
+
+    cardsGrid.appendChild(card);
+  });
+
+  statusEl.textContent = `Showing ${list.length} of ${ALL_PRODUCTS.length} products.`;
+}
+
+/* ===============================
+   Filter event wiring & init
+   =============================== */
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("searchInput").addEventListener("input", renderProducts);
+  document.getElementById("filterCategory").addEventListener("change", renderProducts);
+  document.getElementById("filterStock").addEventListener("change", renderProducts);
+
+  initAdminLogin();
+});
+</script>
+<!-- PART 3: Edit Modal + Image Upload + Save/Edit/Delete functions -->
+<!-- EDIT MODAL -->
+<div id="editOverlay">
+  <div class="edit-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <h3 id="editTitle" style="margin:0;font-size:16px;">Edit Product</h3>
+      <button onclick="closeEdit()" style="border:none;background:transparent;font-size:20px;cursor:pointer;">×</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.6fr); gap:12px;">
+      <div>
+        <div style="margin-bottom:8px;">
+          <div style="font-size:11px;color:var(--muted)">SKU</div>
+          <input id="editSku" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb" disabled />
+        </div>
+        <div style="margin-bottom:8px;">
+          <div style="font-size:11px;color:var(--muted)">Name</div>
+          <input id="editName" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb" />
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1"><div style="font-size:11px;color:var(--muted)">Price</div><input id="editPrice" type="number" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb" /></div>
+          <div style="width:120px"><div style="font-size:11px;color:var(--muted)">Stock</div><input id="editStock" type="number" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb" /></div>
+        </div>
+        <div style="margin-top:8px;">
+          <div style="font-size:11px;color:var(--muted)">Description</div>
+          <textarea id="editDesc" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div>
+        <!-- images 1..5 (show 3 slots by default; you can add more) -->
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <!-- slot 1 -->
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="media-thumb" style="width:64px;height:64px;border-radius:10px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+              <img id="previewImg1" src="" alt="" style="display:none;width:60px;height:60px;object-fit:cover;border-radius:10px;">
+              <span id="placeholder1">🖼️</span>
+            </div>
+            <div style="flex:1;">
+              <input id="editImg1" type="text" placeholder="Image URL 1" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:6px;" />
+              <div style="display:flex;gap:6px;">
+                <label class="btn-small" style="cursor:pointer;display:inline-flex;align-items:center;">
+                  Upload <input type="file" accept="image/*" style="display:none" onchange="handleImageUpload(event,1)">
+                </label>
+                <button class="btn-small" onclick="clearImageField(1)">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- slot 2 -->
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="media-thumb" style="width:64px;height:64px;border-radius:10px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+              <img id="previewImg2" src="" alt="" style="display:none;width:60px;height:60px;object-fit:cover;border-radius:10px;">
+              <span id="placeholder2">🖼️</span>
+            </div>
+            <div style="flex:1;">
+              <input id="editImg2" type="text" placeholder="Image URL 2" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:6px;" />
+              <div style="display:flex;gap:6px;">
+                <label class="btn-small" style="cursor:pointer;display:inline-flex;align-items:center;">
+                  Upload <input type="file" accept="image/*" style="display:none" onchange="handleImageUpload(event,2)">
+                </label>
+                <button class="btn-small" onclick="clearImageField(2)">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- slot 3 -->
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="media-thumb" style="width:64px;height:64px;border-radius:10px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+              <img id="previewImg3" src="" alt="" style="display:none;width:60px;height:60px;object-fit:cover;border-radius:10px;">
+              <span id="placeholder3">🖼️</span>
+            </div>
+            <div style="flex:1;">
+              <input id="editImg3" type="text" placeholder="Image URL 3" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:6px;" />
+              <div style="display:flex;gap:6px;">
+                <label class="btn-small" style="cursor:pointer;display:inline-flex;align-items:center;">
+                  Upload <input type="file" accept="image/*" style="display:none" onchange="handleImageUpload(event,3)">
+                </label>
+                <button class="btn-small" onclick="clearImageField(3)">Clear</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+      <span id="editStatus" style="font-size:12px;color:var(--muted)">Edit fields and Save.</span>
+      <div>
+        <button class="btn-small" onclick="closeEdit()">Cancel</button>
+        <button id="saveEditBtn" class="btn-small" style="background:#16a34a;color:#fff;border:none;margin-left:6px;">Update Product</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ========== Image preview helpers ========== */
+function syncImagePreview(slot){
+  const input = document.getElementById("editImg"+slot);
+  const url = (input?.value || "").trim();
+  const img = document.getElementById("previewImg"+slot);
+  const ph = document.getElementById("placeholder"+slot);
+  if(url){
+    const norm = normalizeImageForThumb(url).replace("=w600","=w300");
+    img.src = norm;
+    img.style.display = "block";
+    if(ph) ph.style.display = "none";
+  } else {
+    if(img) img.style.display = "none";
+    if(ph) ph.style.display = "block";
+  }
+}
+function clearImageField(slot){ document.getElementById("editImg"+slot).value = ""; syncImagePreview(slot); }
+
+/* ========== Upload image file -> backend uploadMedia ========== */
+async function handleImageUpload(event, slot){
+  const file = event.target.files[0];
+  if(!file) return;
+  const status = document.getElementById("editStatus");
+  status.textContent = "Uploading image "+slot+"…";
+
+  try{
+    const base64 = await fileToBase64(file);
+    const payload = { base64, mimeType: file.type || "image/jpeg", fileName: "product_img_slot"+slot + "_" + Date.now() };
+    const res = await fetch(SCRIPT_URL + "?action=uploadMedia", { method:"POST", body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(!data.success || !data.url) throw new Error(data.message || "Upload failed");
+    document.getElementById("editImg"+slot).value = data.url;
+    syncImagePreview(slot);
+    status.textContent = "Uploaded image "+slot+".";
+  }catch(err){
+    console.error(err);
+    status.textContent = "Upload failed.";
+  } finally {
+    event.target.value = "";
+  }
+}
+function fileToBase64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=err=>rej(err); r.readAsDataURL(file); }); }
+
+/* ========== Open/Close Edit ========== */
+function openEdit(product){
+  CURRENT_EDIT_PRODUCT = product;
+  document.getElementById("editOverlay").style.display = "flex";
+  document.getElementById("editTitle").textContent = "Edit: " + (product["Name"]||"") + " (" + (product["SKU"]||"") + ")";
+  document.getElementById("editSku").value = product["SKU"] || "";
+  document.getElementById("editName").value = product["Name"] || "";
+  document.getElementById("editPrice").value = product["Price"] || "";
+  document.getElementById("editStock").value = product["Stock"] || "";
+  document.getElementById("editDesc").value = product["Description"] || "";
+
+  for(let i=1;i<=3;i++){
+    const val = product["Image URL " + i] || "";
+    document.getElementById("editImg"+i).value = val;
+    syncImagePreview(i);
+  }
+  document.getElementById("editStatus").textContent = "Edit and Save changes.";
+}
+
+function closeEdit(){ document.getElementById("editOverlay").style.display = "none"; CURRENT_EDIT_PRODUCT = null; }
+
+/* ========== Save edits -> updateProduct backend ========== */
+document.getElementById("saveEditBtn").addEventListener("click", saveEdit);
+async function saveEdit(){
+  if(!CURRENT_EDIT_PRODUCT) return;
+  const payload = {
+    sku: document.getElementById("editSku").value.trim(),
+    name: document.getElementById("editName").value.trim(),
+    price: document.getElementById("editPrice").value.trim(),
+    stock: document.getElementById("editStock").value.trim(),
+    description: document.getElementById("editDesc").value.trim(),
+    imageUrl1: document.getElementById("editImg1").value.trim(),
+    imageUrl2: document.getElementById("editImg2").value.trim(),
+    imageUrl3: document.getElementById("editImg3").value.trim()
+  };
+  try{
+    document.getElementById("editStatus").textContent = "Saving…";
+    const res = await fetch(SCRIPT_URL + "?action=updateProduct", { method:"POST", body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(!data.success) throw new Error(data.message || "Update failed");
+
+    // update local ALL_PRODUCTS and re-render
+    const idx = ALL_PRODUCTS.findIndex(p => (p["SKU"]||"") === payload.sku);
+    if(idx > -1){
+      const p = ALL_PRODUCTS[idx];
+      p["Name"] = payload.name; p["Price"] = payload.price; p["Stock"] = payload.stock;
+      p["Description"] = payload.description;
+      p["Image URL 1"] = payload.imageUrl1; p["Image URL 2"] = payload.imageUrl2; p["Image URL 3"] = payload.imageUrl3;
+    }
+    renderProducts();
+    document.getElementById("editStatus").textContent = "Saved.";
+    setTimeout(closeEdit, 700);
+  }catch(err){
+    console.error(err);
+    document.getElementById("editStatus").textContent = "Error: " + (err.message || err);
+  }
+}
+
+/* ========== Delete product ========= */
+async function deleteProduct(product){
+  const sku = product["SKU"];
+  if(!sku) return;
+  if(!confirm("Delete product " + sku + " ? This cannot be undone.")) return;
+  try{
+    document.getElementById("statusText").textContent = "Deleting " + sku + "…";
+    const res = await fetch(SCRIPT_URL + "?action=deleteProduct", { method:"POST", body: JSON.stringify({ sku }) });
+    const data = await res.json();
+    if(!data.success) throw new Error(data.message || "Delete failed");
+    ALL_PRODUCTS = ALL_PRODUCTS.filter(p => (p["SKU"]||"") !== sku);
+    renderProducts();
+    document.getElementById("statusText").textContent = "Deleted " + sku;
+  }catch(err){
+    console.error(err);
+    document.getElementById("statusText").textContent = "Error deleting product.";
+  }
+}
+</script>
+
+</div> <!-- end shell -->
+</body>
+</html>

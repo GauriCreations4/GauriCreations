@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Complete Payment • Gauri Creations</title>
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="favicon.ico">
+
+<style>
+:root {
+  --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg,#86e1ff,#ffd4b8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 22px;
+  padding: 22px 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.logo { width:80px; height:80px; border-radius:18px; margin-bottom: 10px; }
+
+.summary {
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  margin: 12px 0 20px;
+  text-align: left;
+}
+.summary-row {
+  display:flex;
+  justify-content:space-between;
+  margin:5px 0;
+  font-size: 14px;
+}
+
+.qr-wrap { 
+    margin: 15px 0;
+    padding: 10px;
+    background: white;
+    display: inline-block;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.qr { width:160px; height:160px; }
+
+.pay-buttons {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+.pay-pill {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:600;
+  background:#fff;
+  border:1px solid #ddd;
+  text-decoration:none;
+  color:#333;
+  transition: transform 0.1s;
+}
+.pay-pill:active { transform: scale(0.98); }
+.pay-pill img { width:24px; height:24px; }
+
+.confirm-btn {
+  margin-top:18px;
+  width:100%;
+  padding:14px;
+  background:var(--accent-grad);
+  border-radius:999px;
+  font-weight:600;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+/* 🔥 ANIMATION STYLES: Left-Right Scanning */
+.wait-area {
+  margin-top: 25px;
+  display: none; /* Hidden initially */
+  flex-direction: column;
+  align-items: center;
+}
+
+.switch-track {
+  position: relative;
+  width: 100px;
+  height: 50px;
+  background: #e2e8f0;
+  border-radius: 50px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  
+  /* THIS IS THE LEFT-RIGHT ANIMATION */
+  animation: scanning 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes scanning {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50px); } /* Moves to the right end */
+}
+
+/* State: SUCCESS (Green & Stopped) */
+.switch-track.active {
+  background: #22c55e; /* Green */
+}
+
+.switch-track.active .switch-thumb {
+  animation: none; /* Stop moving */
+  transform: translateX(50px); /* Stay on the right */
+}
+
+.status-text {
+  margin-top: 15px;
+  font-weight: 500;
+  color: #666;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <img src="logo-gauri.jpeg" class="logo">
+  
+  <h2 style="margin:5px 0;">Complete Payment</h2>
+  <p style="color:#666; font-size:14px; margin:0 0 15px;">Scan QR or use buttons below</p>
+
+  <div class="summary">
+    <div class="summary-row"><span>Product</span><strong id="summaryProduct">Loading...</strong></div>
+    <div class="summary-row"><span>Order ID</span><strong id="summaryOrderId">-</strong></div>
+    <div class="summary-row"><span>Total Amount</span><strong id="summaryTotal" style="color:#2563eb">₹0</strong></div>
+  </div>
+
+  <div class="qr-wrap">
+    <img src="upi-qr.jpeg" class="qr">
+  </div>
+
+  <div class="pay-buttons">
+    <a id="btnGpay" class="pay-pill"><img src="gpay.PNG">Pay with GPay</a>
+    <a id="btnPhonePe" class="pay-pill"><img src="phonepe.PNG">Pay with PhonePe</a>
+  </div>
+
+  <button id="confirmButton" class="confirm-btn">
+    I have made the payment
+  </button>
+
+  <div class="wait-area" id="waitArea">
+    <div class="switch-track" id="statusSwitch">
+      <div class="switch-thumb"></div>
+    </div>
+    <div class="status-text" id="statusText">Verifying Payment...</div>
+  </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+
+const orderId = new URLSearchParams(window.location.search).get("orderId");
+document.getElementById("summaryOrderId").textContent = orderId;
+
+let pollInterval = null;
+
+/* 1. LOAD ORDER */
+fetch(`${SCRIPT_URL}?action=getOrders`)
+.then(r=>r.json())
+.then(d=>{
+  if(!d.success) return;
+  const o = d.orders.find(x => x["Order ID"] === orderId);
+  if(!o) return;
+
+  document.getElementById("summaryProduct").textContent = o["Product Name"];
+  document.getElementById("summaryTotal").textContent = "₹" + o["Total"];
+
+  const upi = `upi://pay?pa=vinayaksasane999-2@oksbi&pn=Gauri Creations&am=${o["Total"]}&cu=INR`;
+  document.getElementById("btnGpay").href = upi;
+  document.getElementById("btnPhonePe").href = upi;
+});
+
+/* 2. START POLLING */
+function startPaymentCheck(){
+  // Hide button, show animation
+  document.getElementById("confirmButton").style.display = "none";
+  document.getElementById("waitArea").style.display = "flex";
+  
+  checkPayment(); // Check immediately
+  pollInterval = setInterval(checkPayment, 4000); // Check every 4 sec
+}
+
+/* 3. CHECK STATUS & STOP ANIMATION */
+function checkPayment(){
+  fetch(`${SCRIPT_URL}?action=checkPayment&orderId=${orderId}`)
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.success && d.paymentStatus === "Paid"){
+      clearInterval(pollInterval);
+      
+      // 🔥 Stop Animation & Turn Green
+      const switchEl = document.getElementById("statusSwitch");
+      const textEl = document.getElementById("statusText");
+
+      switchEl.classList.add("active"); // Turns Green & Stops Motion
+      textEl.textContent = "Payment Successful!";
+      textEl.style.color = "#22c55e";
+      textEl.style.fontWeight = "bold";
+      
+      // Redirect
+      setTimeout(()=>{
+        window.location.href = `confirmation.html?orderId=${orderId}`;
+      }, 1500);
+    }
+  });
+}
+
+document.getElementById("confirmButton").addEventListener("click", startPaymentCheck);
+</script>
+
+</body>
+</html>

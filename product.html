@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Product • Gauri Creations</title>
+ <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="favicon.ico"> 
+
+<style>
+  :root{
+    --bg:linear-gradient(135deg,#e3f2ff,#ffe5f3);
+    --glass-strong:rgba(255,255,255,0.98);
+    --glass-border:rgba(148,163,184,0.6);
+    --accent-grad:linear-gradient(135deg,#2563eb,#ec4899);
+    --muted:#6b7280;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:Poppins,system-ui;
+    background:var(--bg);
+    padding:18px;
+    display:flex;
+    justify-content:center;
+  }
+  .shell{width:100%;max-width:1100px}
+
+  .menu-btn{
+    position:fixed;
+    top:15px;
+    right:15px;
+    background:var(--accent-grad);
+    padding:10px 16px;
+    border-radius:999px;
+    color:#fff;
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+    z-index:9999;
+    box-shadow:0 10px 20px rgba(0,0,0,0.25);
+  }
+
+  .menu-box{
+    position:fixed;
+    top:60px;
+    right:15px;
+    background:#fff;
+    border-radius:14px;
+    width:160px;
+    padding:8px 0;
+    box-shadow:0 12px 28px rgba(0,0,0,0.25);
+    display:none;
+    z-index:9999;
+  }
+  .menu-item{
+    padding:10px 14px;
+    font-size:14px;
+    cursor:pointer;
+    border-bottom:1px solid #eee;
+  }
+  .menu-item:last-child{border-bottom:none;}
+  .menu-item:hover{background:#f3f4f6;}
+
+  .top-hero{display:flex;gap:14px;margin-bottom:14px;align-items:center}
+  .logo{width:84px;height:84px;border-radius:12px;object-fit:cover;box-shadow:0 12px 28px rgba(15,23,42,0.18)}
+  .store-title{font-weight:800;font-size:20px}
+  .store-sub{font-size:13px;color:var(--muted)}
+
+  .product-grid{display:grid;grid-template-columns:1fr 420px;gap:16px}
+  @media(max-width:980px){.product-grid{grid-template-columns:1fr}}
+
+  .images-card{
+    background:var(--glass-strong);
+    border-radius:18px;
+    padding:12px;
+    border:1px solid var(--glass-border);
+    box-shadow:0 18px 45px rgba(15,23,42,0.12);
+    position:relative;
+  }
+
+  .wish-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+    background:#fff;
+    border-radius:50%;
+    padding:8px;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 6px 14px rgba(0,0,0,0.25);
+    z-index:5;
+  }
+
+  .main-image-wrap{
+    border-radius:12px;
+    overflow:hidden;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:380px;
+  }
+  .main-image{max-width:100%;max-height:100%;object-fit:contain;cursor:pointer}
+
+  .thumbs{display:flex;gap:8px;margin-top:10px}
+  .thumb{width:72px;height:72px;border-radius:10px;overflow:hidden;border:1px solid #e6e8ea;cursor:pointer;background:#fff}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+
+  .details-card{
+    background:var(--glass-strong);
+    border-radius:18px;
+    padding:14px;
+    border:1px solid var(--glass-border);
+    box-shadow:0 18px 45px rgba(15,23,42,0.12);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .prod-name{font-size:20px;font-weight:800}
+  .prod-sku{font-size:12px;color:var(--muted)}
+  .price{font-weight:800;font-size:20px;color:#e11d48}
+  .rating{font-size:13px;color:var(--muted)}
+  .specs{font-size:13px;color:var(--muted);margin-top:6px}
+
+  .actions{display:flex;gap:8px;margin-top:8px}
+  .btn{border-radius:999px;border:none;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:600}
+  .btn-primary{background:var(--accent-grad);color:#fff}
+  .btn-outline{background:#fff;border:1px solid #d1d5db}
+
+  #lightboxOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:3000;
+  }
+  #lightboxImg{max-width:94%;max-height:94%;border-radius:12px}
+</style>
+</head>
+
+<body>
+
+<div class="menu-btn" onclick="toggleMenu()">☰ Menu</div>
+
+<div id="menuBox" class="menu-box">
+  <div class="menu-item" onclick="goTrack()">📦 Track Order</div>
+  <div class="menu-item" onclick="goMyOrders()">🧾 My Orders</div>
+  <div class="menu-item" onclick="goSupport()">💬 Support</div>
+  <div class="menu-item" onclick="goLogin()">🔐 Login</div>
+</div>
+
+<div class="shell">
+  <div class="top-hero">
+    <img src="logo-gauri.jpeg" class="logo">
+    <div>
+      <div class="store-title">Gauri Creations</div>
+      <div class="store-sub">Handcrafted decor • Secure UPI checkout</div>
+    </div>
+  </div>
+
+  <div class="product-grid">
+    <div class="images-card">
+      <div class="wish-btn" id="wishBtn" onclick="toggleWishlist()">🤍</div>
+      <div class="main-image-wrap">
+        <img id="mainImage" class="main-image">
+      </div>
+      <div id="thumbs" class="thumbs"></div>
+    </div>
+
+    <div class="details-card">
+      <div>
+        <div id="prodName" class="prod-name">Product</div>
+        <div id="prodSku" class="prod-sku">SKU: -</div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between">
+        <div id="prodPrice" class="price">₹0</div>
+        <div id="prodRating" class="rating">★ -</div>
+      </div>
+
+      <div id="prodDesc" class="specs"></div>
+
+      <div class="actions">
+        <button id="btnBuyNow" class="btn btn-primary">Buy Now</button>
+        <button class="btn btn-outline">Add to My Orders</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightboxOverlay" onclick="closeLightbox()">
+  <img id="lightboxImg">
+</div>
+
+<script>
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+
+let CURRENT_SKU = null; // ✅ UPDATED
+
+/* ❤️ Wishlist helpers — SKU ONLY */
+function getWishlist(){
+  return JSON.parse(localStorage.getItem("gc_wishlist") || "[]");
+}
+function saveWishlist(list){
+  localStorage.setItem("gc_wishlist", JSON.stringify(list));
+}
+function toggleWishlist(){
+  if(!CURRENT_SKU) return;
+  const list = getWishlist();
+  const i = list.indexOf(CURRENT_SKU);
+  if(i >= 0){
+    list.splice(i,1);
+    wishBtn.textContent = "🤍";
+  }else{
+    list.push(CURRENT_SKU);
+    wishBtn.textContent = "❤️";
+  }
+  saveWishlist(list);
+}
+
+function toggleMenu(){
+  const box=document.getElementById("menuBox");
+  box.style.display = box.style.display==="block"?"none":"block";
+}
+function goTrack(){location.href="track.html";}
+function goMyOrders(){location.href="my-orders.html";}
+function goSupport(){window.open("https://wa.me/7745092723","_blank");}
+function goLogin(){location.href="login.html";}
+
+function normalizeMediaUrl(url){
+  if(!url) return "";
+  if(url.includes("googleusercontent")) return url;
+  const m=url.match(/[-A-Za-z0-9_]{20,}/);
+  return m?`https://lh3.googleusercontent.com/d/${m[0]}=w1000`:url;
+}
+function qs(id){return document.getElementById(id);}
+function getQuery(){
+  const q={};
+  location.search.slice(1).split("&").forEach(p=>{
+    const [k,v]=p.split("=");
+    q[decodeURIComponent(k)]=decodeURIComponent(v||"");
+  });
+  return q;
+}
+
+async function loadProduct(){
+  const {sku}=getQuery();
+  if(!sku) return;
+
+  CURRENT_SKU = sku; // ✅ UPDATED
+
+  const res=await fetch(`${SCRIPT_URL}?action=getProduct&sku=`+sku);
+  const data=await res.json();
+  if(!data.success) return;
+
+  const p=data.product;
+
+  qs("prodName").textContent=p.Name;
+  qs("prodSku").textContent="SKU: "+p.SKU;
+  qs("prodPrice").textContent="₹"+p.Price;
+  qs("prodRating").textContent=p.Rating?("★ "+p.Rating):"New";
+  qs("prodDesc").textContent=p.Description;
+
+  const imgs=[];
+  for(let i=1;i<=5;i++){
+    if(p["Image URL "+i]) imgs.push(normalizeMediaUrl(p["Image URL "+i]));
+  }
+
+  qs("mainImage").src=imgs[0]||"";
+  qs("mainImage").onclick=()=>openLightbox(qs("mainImage").src);
+
+  const t=qs("thumbs");
+  t.innerHTML="";
+  imgs.forEach(u=>{
+    const d=document.createElement("div");
+    d.className="thumb";
+    d.innerHTML=`<img src="${u}">`;
+    d.onclick=()=>qs("mainImage").src=u;
+    t.appendChild(d);
+  });
+
+  // ❤️ Sync wishlist heart
+  if(getWishlist().includes(sku)){
+    wishBtn.textContent="❤️";
+  }
+
+  qs("btnBuyNow").onclick=()=>{
+    location.href=`order.html?sku=${encodeURIComponent(sku)}`;
+  };
+}
+
+function openLightbox(src){
+  qs("lightboxImg").src=src;
+  qs("lightboxOverlay").style.display="flex";
+}
+function closeLightbox(){
+  qs("lightboxOverlay").style.display="none";
+}
+
+document.addEventListener("DOMContentLoaded", loadProduct);
+</script>
+</body>
+</html>

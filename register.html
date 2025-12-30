@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register • Gauri Creations</title>
+<!-- Favicon -->
+ <link rel="icon" href="favicon.ico" type="image/x-icon">
+ <link rel="apple-touch-icon" href="favicon.ico"> 
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Poppins,system-ui;
+  background:linear-gradient(135deg,#86e1ff,#ffd4b8);
+}
+.card{
+  width:100%;
+  max-width:400px;
+  background:#ffffffee;
+  padding:28px;
+  border-radius:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  text-align:center;
+}
+.logo{
+  width:110px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+h2{margin:6px 0 14px}
+input,textarea{
+  width:100%;
+  padding:13px;
+  margin-top:12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+textarea{resize:none}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#ec4899);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+.guest-btn{
+  background:#fff;
+  color:#333;
+  border:1px solid #ccc;
+  margin-top:10px;
+}
+.error{
+  color:#dc2626;
+  font-size:13px;
+  margin-top:10px;
+}
+.small{
+  font-size:13px;
+  margin-top:14px;
+}
+.small a{
+  color:#2563eb;
+  font-weight:600;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="logo-gauri.jpeg" class="logo">
+  <h2>Create Account</h2>
+
+  <input id="name" placeholder="Full Name">
+  <input id="email" placeholder="Email">
+  <input id="phone" placeholder="Phone">
+  <textarea id="address" rows="3" placeholder="Address"></textarea>
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="register()">Register</button>
+
+  <!-- ✅ Guest Mode -->
+  <button class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
+
+  <div id="error" class="error"></div>
+
+  <div class="small">
+    Already have an account? <a href="login.html">Login</a>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+
+function continueAsGuest(){
+  window.location.href = "store.html";
+}
+
+async function register(){
+  const body = {
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    address: document.getElementById("address").value.trim(),
+    password: document.getElementById("password").value.trim()
+  };
+
+  const errorBox = document.getElementById("error");
+  errorBox.textContent = "";
+
+  if(!body.name || !body.email || !body.phone || !body.password){
+    errorBox.textContent = "Please fill all required fields";
+    return;
+  }
+
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=customerSignup",{
+      method:"POST",
+      body:JSON.stringify(body)
+    });
+
+    const data = await res.json();
+    if(!data.success){
+      errorBox.textContent = "Registration failed";
+      return;
+    }
+
+    // auto-login after signup
+    localStorage.setItem("gc_customer", JSON.stringify({
+      id:data.customerId,
+      name:body.name,
+      email:body.email
+    }));
+
+    window.location.href = "store.html";
+
+  }catch(err){
+    errorBox.textContent = "Network error. Try again.";
+  }
+}
+</script>
+
+</body>
+</html>

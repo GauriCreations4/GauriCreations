@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login • Gauri Creations</title>
+ <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="favicon.ico"> 
+
+<style>
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Poppins,system-ui;
+  background:linear-gradient(135deg,#86e1ff,#ffd4b8);
+}
+
+.card{
+  width:100%;
+  max-width:380px;
+  background:#ffffffee;
+  padding:28px;
+  border-radius:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  text-align:center;
+}
+
+h2{ margin-bottom:10px; }
+
+input{
+  width:100%;
+  padding:13px;
+  margin-top:12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#ec4899);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.guest-btn{
+  background:#fff;
+  color:#333;
+  border:1px solid #ccc;
+  margin-top:10px;
+}
+
+.links{
+  margin-top:14px;
+  font-size:14px;
+}
+
+.links a{
+  color:#2563eb;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.links a:hover{
+  text-decoration:underline;
+}
+
+.error{
+  color:#dc2626;
+  font-size:13px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Customer Login</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button type="button" onclick="login()">Login</button>
+
+  <!-- ✅ Guest Mode -->
+  <button type="button" class="guest-btn" onclick="continueAsGuest()">
+    Continue as Guest
+  </button>
+
+  <!-- ✅ Register Link -->
+  <div class="links">
+    New here? <a href="register.html">Create an account</a>
+  </div>
+
+  <div id="error" class="error"></div>
+</div>
+
+<script>
+/* ✅ UPDATED WEB APP URL */
+const SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+
+/* ✅ AUTO-REDIRECTS IF ALREADY LOGGED IN */
+if (localStorage.getItem("gc_customer")) {
+  window.location.href = "store.html";
+}
+
+function continueAsGuest(){
+  window.location.href = "store.html";
+}
+  
+async function login(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorBox = document.getElementById("error");
+
+  errorBox.textContent = "";
+
+  if(!email || !password){
+    errorBox.textContent = "Enter email & password";
+    return;
+  }
+
+  try{
+    const url =
+      SCRIPT_URL +
+      "?action=customerLogin" +
+      "&email=" + encodeURIComponent(email) +
+      "&password=" + encodeURIComponent(password);
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if(!data.success){
+      errorBox.textContent = "Invalid email or password";
+      return;
+    }
+
+    localStorage.setItem("gc_customer", JSON.stringify(data.customer));
+
+    window.location.href = "store.html";
+
+  }catch(err){
+    console.error(err);
+    errorBox.textContent = "Network error. Try again.";
+  }
+}
+</script>
+
+</body>
+</html>
