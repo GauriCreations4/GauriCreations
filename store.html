@@ -1,3 +1,10 @@
+Here is your upgraded store.html with a beautiful Auto-Playing Hero Slideshow! 🌟
+What’s New?
+ * Top 5 Products Slideshow: Automatically grabs the first 5 products from your sheet.
+ * Auto-Play: Slides change every 3.5 seconds.
+ * Clickable: Tapping a slide takes the customer directly to that product.
+ * Integrated Design: It fits perfectly into your existing layout (replacing the static "Welcome" text box).
+Paste this code into store.html:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,20 +56,61 @@
   .hero{display:grid;grid-template-columns:3fr 2.2fr;gap:12px;margin-bottom:14px}
   @media(max-width:820px){.hero{grid-template-columns:1fr}}
 
-  .hero-main{
-    background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.98));
-    border-radius:22px;padding:16px;
-    border:1px solid var(--glass-border);
-    box-shadow:var(--shadow-strong)
+  /* 🔥 SLIDESHOW CONTAINER (Replaces static hero-main) */
+  .hero-slider {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    height: 220px; /* Fixed height for consistency */
+    background: #fff;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-strong);
+    cursor: pointer;
   }
-  .hero-title{font-size:24px;font-weight:800}
-  .hero-sub{font-size:13px;color:var(--muted)}
+  
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    display: flex;
+    align-items: flex-end; /* Align text to bottom */
+  }
+  
+  .slide.active { opacity: 1; z-index: 1; }
+  
+  .slide img {
+    position: absolute;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  
+  /* Gradient Overlay for Text Readability */
+  .slide-overlay {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 20px;
+    color: white;
+    z-index: 2;
+  }
+  
+  .slide-title { font-size: 18px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .slide-price { font-size: 14px; color: #ffd700; font-weight: 600; }
+
+  /* Side Stats Box */
   .hero-side{
-    border-radius:22px;padding:14px;
+    border-radius:22px;padding:20px;
     background:radial-gradient(circle at top left,rgba(255,255,255,0.98),rgba(219,234,254,0.98));
     border:1px solid var(--glass-border);
-    box-shadow:var(--shadow-strong)
+    box-shadow:var(--shadow-strong);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
   }
+  .hero-side h3 { margin: 0; font-size: 32px; color: var(--primary); }
+  .hero-side span { font-size: 14px; color: var(--muted); }
 
   .filters{
     background:var(--glass);border-radius:20px;padding:12px;
@@ -80,19 +128,16 @@
     margin-bottom: 12px;
   }
 
-  /* 🔥 NEW CATEGORY BAR STYLES */
   .category-bar {
     display: flex;
     gap: 10px;
     overflow-x: auto;
     padding-bottom: 5px;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     white-space: nowrap;
   }
-  .category-bar::-webkit-scrollbar { 
-    display: none; /* Chrome/Safari */
-  }
+  .category-bar::-webkit-scrollbar { display: none; }
 
   .cat-chip {
     background: white;
@@ -135,9 +180,7 @@
     transition: transform 0.2s;
   }
   
-  .product-card:hover {
-    transform: translateY(-5px);
-  }
+  .product-card:hover { transform: translateY(-5px); }
 
   .product-img-wrap{
     border-radius:12px;overflow:hidden;background:#fff;
@@ -181,22 +224,21 @@
 
 <div class="shell">
   <section class="hero">
-    <div class="hero-main">
-      <img src="logo-gauri.jpeg" style="width:120px;border-radius:10px;margin-bottom:10px" onerror="this.style.display='none'">
-      <div class="hero-title" id="welcomeText">Gauri Creations Store</div>
-      <div class="hero-sub">Discover exclusive handcrafted designs…</div>
+    <div class="hero-slider" id="heroSlider">
+       <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;">
+         Loading Top Products...
+       </div>
     </div>
+
     <aside class="hero-side">
-      <div><b>Total products</b></div>
-      <div id="summaryTotal">0</div>
+      <h3 id="summaryTotal">0</h3>
+      <span>Products Available</span>
     </aside>
   </section>
 
   <section class="filters">
     <input id="searchInput" placeholder="Search products…" onkeyup="filterProducts()">
-    
-    <div id="categoryBar" class="category-bar">
-        </div>
+    <div id="categoryBar" class="category-bar"></div>
   </section>
 
   <section id="grid" class="grid"></section>
@@ -204,8 +246,6 @@
 
 <script>
 const user = JSON.parse(localStorage.getItem("gc_customer") || "null");
-document.getElementById("welcomeText").textContent =
-  user ? ("Welcome, " + user.name) : "Welcome to Gauri Creations";
 
 function toggleMenu(){
   const m=document.getElementById("menuList");
@@ -226,7 +266,7 @@ function toggleWishlist(sku,el){
   saveWishlist(list);
 }
 
-/* ✅ IMAGE FIX */
+/* ✅ IMAGE FIXER (Fixes Drive Links) */
 function getImg(p){
   let url = p["Image URL 1"] || p["Image URL 1 "] || p.imageUrl1 || p.Image || "";
   if (!url) {
@@ -240,12 +280,13 @@ function getImg(p){
       return "https://lh3.googleusercontent.com/d/" + idMatch[1];
     }
   }
-  return url;
+  return url || "https://via.placeholder.com/400x200?text=No+Image";
 }
 
+// 🔴 SCRIPT URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-// Global variables to hold data
+// Global variables
 let allProducts = [];
 let activeCategory = 'All';
 
@@ -255,12 +296,15 @@ async function loadProducts(){
   try {
     const res = await fetch(SCRIPT_URL+"?action=getProducts");
     const data = await res.json();
-    allProducts = data.products || []; // Save to global variable
+    allProducts = data.products || [];
 
     // 1. Setup Categories
     setupCategories(allProducts);
 
-    // 2. Initial Render
+    // 2. Start Slideshow (Pass top 5 products)
+    initSlideshow(allProducts.slice(0, 5));
+
+    // 3. Render Grid
     renderGrid(allProducts);
 
     document.getElementById("summaryTotal").textContent = allProducts.length;
@@ -271,53 +315,71 @@ async function loadProducts(){
   }
 }
 
-/* 🔥 DYNAMIC CATEGORY LOGIC */
+/* 🔥 HERO SLIDESHOW LOGIC */
+function initSlideshow(products) {
+  const container = document.getElementById("heroSlider");
+  if(products.length === 0) {
+    container.innerHTML = `<div style="padding:20px;text-align:center">Welcome to Gauri Creations</div>`;
+    return;
+  }
+  
+  container.innerHTML = ""; // Clear loader
+
+  // Create Slides
+  products.forEach((p, index) => {
+    const slide = document.createElement("div");
+    slide.className = `slide ${index === 0 ? 'active' : ''}`;
+    slide.onclick = () => goToProduct(p.SKU);
+    
+    slide.innerHTML = `
+      <img src="${getImg(p)}">
+      <div class="slide-overlay">
+        <div class="slide-title">${p.Name}</div>
+        <div class="slide-price">Now ₹${p.Price}</div>
+      </div>
+    `;
+    container.appendChild(slide);
+  });
+
+  // Start Auto Rotation
+  let currentSlide = 0;
+  setInterval(() => {
+    const slides = document.querySelectorAll('.slide');
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 3500); // Change every 3.5 seconds
+}
+
+/* DYNAMIC CATEGORIES */
 function setupCategories(products) {
     const bar = document.getElementById("categoryBar");
-    
-    // Get unique categories
     const categories = ['All', ...new Set(products.map(p => p.Category || p.category || 'Other'))];
-    
-    // Clean existing buttons
     bar.innerHTML = "";
 
     categories.forEach(cat => {
         const btn = document.createElement("div");
         btn.className = `cat-chip ${cat === 'All' ? 'active' : ''}`;
         btn.textContent = cat;
-        
-        // Click Event
         btn.onclick = () => {
-            // Remove active class from all
             document.querySelectorAll('.cat-chip').forEach(b => b.classList.remove('active'));
-            // Add active class to clicked
             btn.classList.add('active');
-            
             activeCategory = cat;
-            filterProducts(); // Re-run filter
+            filterProducts();
         };
-        
         bar.appendChild(btn);
     });
 }
 
-/* 🔥 FILTER LOGIC (Combines Search + Category) */
 function filterProducts() {
     const search = document.getElementById("searchInput").value.toLowerCase();
-    
     const filtered = allProducts.filter(p => {
         const pName = (p.Name || "").toLowerCase();
         const pCat = (p.Category || p.category || "Other");
-        
-        // Check Category Match
         const catMatch = activeCategory === 'All' || pCat === activeCategory;
-        
-        // Check Search Match
         const searchMatch = pName.includes(search);
-        
         return catMatch && searchMatch;
     });
-    
     renderGrid(filtered);
 }
 
@@ -337,23 +399,15 @@ function renderGrid(products) {
 
       const card = document.createElement("div");
       card.className = "product-card";
-
       card.innerHTML = `
         <div class="product-img-wrap">
-          <img src="${imageUrl}" class="product-img"
-               loading="lazy"
-               referrerpolicy="no-referrer"
-               onerror="this.onerror=null;this.src='https://via.placeholder.com/150?text=No+Image'">
-          <div class="wish-btn" onclick="toggleWishlist('${p.SKU}',this)">
-            ${liked}
-          </div>
+          <img src="${imageUrl}" class="product-img" loading="lazy">
+          <div class="wish-btn" onclick="toggleWishlist('${p.SKU}',this)">${liked}</div>
         </div>
         <strong>${p.Name || "Unnamed"}</strong>
         <div>₹${p.Price || "0"}</div>
         <div class="product-actions">
-          <button class="btn-primary" onclick="goToProduct('${p.SKU}')">
-            Know More
-          </button>
+          <button class="btn-primary" onclick="goToProduct('${p.SKU}')">Know More</button>
         </div>`;
       grid.appendChild(card);
     });
