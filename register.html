@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register • Gauri Creations</title>
-<!-- Favicon -->
- <link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
  <link rel="apple-touch-icon" href="favicon.ico"> 
 
 <style>
@@ -25,7 +24,10 @@ body{
   padding:28px;
   border-radius:22px;
   box-shadow:0 20px 40px rgba(0,0,0,.25);
-  text-align:center;
+  text-align:center; /* Centers text and inline elements */
+  display: flex;     /* Flexbox for perfect alignment */
+  flex-direction: column;
+  align-items: center; /* Centers block elements like inputs */
 }
 .logo{
   width:110px;
@@ -33,17 +35,24 @@ body{
   margin-bottom:12px;
 }
 h2{margin:6px 0 14px}
+
+/* 🔥 CENTERED INPUTS CSS */
 input,textarea{
-  width:100%;
-  padding:13px;
-  margin-top:12px;
-  border-radius:12px;
-  border:1px solid #ccc;
-  font-size:15px;
+  width: 100%;           /* Fill the available space */
+  max-width: 320px;      /* Prevent them from getting too wide */
+  padding: 13px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  box-sizing: border-box; /* Crucial for centering with padding */
+  text-align: center;    /* Optional: Centers text inside the box */
 }
 textarea{resize:none}
+
 button{
   width:100%;
+  max-width: 320px;      /* Match input width */
   padding:14px;
   margin-top:18px;
   border:none;
@@ -91,7 +100,6 @@ button{
 
   <button onclick="register()">Register</button>
 
-  <!-- ✅ Guest Mode -->
   <button class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
 
   <div id="error" class="error"></div>
