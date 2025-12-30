@@ -4,19 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wishlist • Gauri Creations</title>
- <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+ <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="favicon.ico"> 
 
 <style>
   :root{
     --bg-grad: linear-gradient(135deg,#e3f2ff,#ffe5f3);
-    --glass: rgba(255,255,255,0.9);
+    --glass: rgba(255,255,255,0.95);
     --glass-border: rgba(148,163,184,0.6);
     --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
   }
 
-  *{ box-sizing:border-box }
+  * { box-sizing:border-box }
 
   body{
     margin:0;
@@ -37,17 +36,19 @@
     font-size:24px;
     font-weight:800;
     margin-bottom:6px;
+    text-align: center;
   }
 
   .sub{
     font-size:13px;
     color:#555;
-    margin-bottom:18px;
+    margin-bottom:25px;
+    text-align: center;
   }
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
     gap:16px;
   }
 
@@ -55,22 +56,23 @@
     background:var(--glass);
     border-radius:18px;
     border:1px solid var(--glass-border);
-    box-shadow:0 12px 30px rgba(15,23,42,0.15);
+    box-shadow:0 12px 30px rgba(15,23,42,0.1);
     padding:10px;
     display:flex;
     flex-direction:column;
     gap:8px;
+    position: relative;
   }
 
   .img-wrap{
-    position:relative;
     border-radius:12px;
     overflow:hidden;
-    height:150px;
-    background:#fff;
+    height:160px;
+    background:#f1f5f9;
     display:flex;
     align-items:center;
     justify-content:center;
+    position: relative;
   }
 
   .img-wrap img{
@@ -79,29 +81,44 @@
     object-fit:cover;
   }
 
-  .heart{
-    position:absolute;
-    top:8px;
-    right:8px;
-    font-size:18px;
-    cursor:pointer;
+  /* Delete Button (Top Right) */
+  .btn-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    z-index: 10;
   }
 
   .name{
     font-size:14px;
     font-weight:600;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .price{
     font-weight:700;
-    color:#c62828;
-    font-size:14px;
+    color:#2563eb;
+    font-size:15px;
   }
 
   .actions{
     display:flex;
     gap:6px;
-    margin-top:6px;
+    margin-top:auto;
   }
 
   .btn{
@@ -112,6 +129,8 @@
     cursor:pointer;
     border:none;
     font-weight:600;
+    text-align: center;
+    text-decoration: none;
   }
 
   .btn-primary{
@@ -122,12 +141,23 @@
   .btn-outline{
     background:#fff;
     border:1px solid #ccc;
+    color: #333;
   }
 
   .empty{
     text-align:center;
     padding:60px 20px;
     color:#555;
+    grid-column: 1 / -1;
+  }
+  
+  .loader {
+    text-align: center;
+    width: 100%;
+    padding: 40px;
+    font-weight: bold;
+    color: #666;
+    grid-column: 1 / -1;
   }
 </style>
 </head>
@@ -136,19 +166,16 @@
 
 <div class="shell">
   <h2>❤️ My Wishlist</h2>
-  <div class="sub">Your favourite products, saved for later</div>
+  <div class="sub">Your saved favorites</div>
 
-  <div id="grid" class="grid"></div>
-
-  <div id="emptyState" class="empty" style="display:none">
-    Your wishlist is empty.<br>
-    Browse products and tap ❤️ to save your favourites.
+  <div id="grid" class="grid">
+    <div class="loader">Loading your favorites...</div>
   </div>
 </div>
 
 <script>
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+// 🔴 Ensure this URL matches your deployed script
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
 function getWishlist(){
   return JSON.parse(localStorage.getItem("gc_wishlist") || "[]");
@@ -159,74 +186,86 @@ function saveWishlist(list){
 }
 
 function removeFromWishlist(sku){
-  const list = getWishlist().filter(s => s !== sku);
+  const list = getWishlist().filter(s => String(s) !== String(sku));
   saveWishlist(list);
-  renderWishlist();
+  renderWishlist(); // Refresh UI
 }
 
 async function renderWishlist(){
   const grid = document.getElementById("grid");
-  const empty = document.getElementById("emptyState");
-  const list = getWishlist();
+  const wishlistIds = getWishlist();
 
-  grid.innerHTML = "";
-
-  if(list.length === 0){
-    empty.style.display = "block";
+  if(wishlistIds.length === 0){
+    grid.innerHTML = `
+      <div class="empty">
+        <div style="font-size:40px;margin-bottom:10px">💔</div>
+        Your wishlist is empty.<br>
+        <a href="store.html" style="color:#2563eb;font-weight:bold;margin-top:10px;display:inline-block">Browse Products</a>
+      </div>`;
     return;
   }
 
-  empty.style.display = "none";
+  // 1. Fetch ALL products at once (Faster than loop)
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=getProducts");
+    const data = await res.json();
+    
+    if(!data.success){
+       grid.innerHTML = "<div class='empty'>Error loading products.</div>";
+       return;
+    }
 
-  for(const sku of list){
-    try{
-      const res = await fetch(
-        SCRIPT_URL + "?action=getProduct&sku=" + encodeURIComponent(sku)
-      );
-      const data = await res.json();
-      if(!data.success || !data.product) continue;
+    // 2. Filter locally
+    const myItems = data.products.filter(p => wishlistIds.includes(String(p["SKU"])));
 
-      const p = data.product;
+    grid.innerHTML = ""; // Clear loader
+
+    if(myItems.length === 0){
+       // IDs exist in local storage but products were deleted from sheet
+       grid.innerHTML = "<div class='empty'>Items no longer available.</div>";
+       return;
+    }
+
+    // 3. Render
+    myItems.forEach(p => {
+      // ✅ IMAGE FIX: Checks "Image URL 1" -> "Image" -> Placeholder
+      const imgUrl = p["Image URL 1"] || p["Image"] || "https://via.placeholder.com/300?text=No+Image";
 
       const card = document.createElement("div");
       card.className = "card";
 
       card.innerHTML = `
+        <button class="btn-remove" onclick="removeFromWishlist('${p.SKU}')">✕</button>
+        
         <div class="img-wrap">
-          <img src="${p["Image URL 1"]}">
-          <div class="heart" onclick="removeFromWishlist('${p.SKU}')">❤️</div>
+          <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/300?text=Error'">
         </div>
 
         <div class="name">${p.Name}</div>
         <div class="price">₹${p.Price}</div>
 
         <div class="actions">
-          <button class="btn btn-outline"
-            onclick="location.href='product.html?sku=${encodeURIComponent(p.SKU)}'">
-            Know More
-          </button>
-
-          <button class="btn btn-primary"
-            onclick="location.href='order.html?sku=${encodeURIComponent(p.SKU)}'">
+          <a class="btn btn-outline" href="product.html?sku=${encodeURIComponent(p.SKU)}">
+            View
+          </a>
+          <a class="btn btn-primary" href="order.html?sku=${encodeURIComponent(p.SKU)}">
             Buy Now
-          </button>
+          </a>
         </div>
       `;
 
       grid.appendChild(card);
+    });
 
-    }catch(e){
-      console.error(e);
-    }
+  }catch(e){
+    console.error(e);
+    grid.innerHTML = "<div class='empty'>Network error. Please refresh.</div>";
   }
 }
 
+// Start
 renderWishlist();
 </script>
 
 </body>
 </html>
-
-
-
-
