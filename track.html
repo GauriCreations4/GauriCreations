@@ -4,194 +4,271 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Track Order • Gauri Creations</title>
-
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico">    
 
 <style>
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #86e1ff, #ffd4b8);
-  padding: 20px;
-  color: #222;
-}
-.container {
-  max-width: 430px;
-  margin: auto;
-  background: #ffffffd8;
-  padding: 25px;
-  border-radius: 22px;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-  animation: fadeIn 0.8s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.logo {
-  width: 120px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-}
-input{
-  width:100%;
-  box-sizing:border-box;
-  display:block;
-}
-.btn {
-  width: 100%;
-  padding: 14px;
-  background: #007aff;
-  color: white;
-  border-radius: 14px;
-  font-size: 17px;
-  font-weight: 600;
-  border: none;
-  margin-top: 15px;
-  cursor: pointer;
-}
-h3 {
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: 700;
-}
-.timeline {
-  margin-top: 25px;
-  text-align: left;
-  padding-left: 10px;
-}
-.step {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  opacity: 0.4;
-  transition: 0.3s ease;
-}
-.step.active { opacity: 1; }
-.dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #bbb;
-  margin-right: 12px;
-  margin-top: 3px;
-}
-.active .dot {
-  background: #007aff;
-  box-shadow: 0 0 10px #007aff;
-}
-.label {
-  font-size: 16px;
-  font-weight: 600;
-}
-.delivery {
-  margin-top: 15px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #444;
-  text-align: center;
-}
-.back-btn {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  background: #fff;
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-weight: 600;
-  color: #007aff;
-  border: 1px solid #bcdcff;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  text-decoration: none;
-}
+  :root {
+    --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3);
+    --glass: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --accent: #2563eb;
+    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
+    --text-main: #1e293b;
+    --success: #22c55e;
+    --gray: #cbd5e1;
+  }
+
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-grad);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; box-sizing: border-box;
+  }
+
+  /* ✨ OPTION 2: GLASS CARD CONTAINER */
+  .card {
+    background: var(--glass);
+    width: 100%; max-width: 420px;
+    padding: 30px 20px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    text-align: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .logo { width: 80px; border-radius: 12px; margin-bottom: 10px; }
+
+  h2 { margin: 0 0 5px 0; color: var(--text-main); font-weight: 700; }
+  p { color: #64748b; margin: 0 0 20px 0; font-size: 14px; }
+
+  /* INPUT & BUTTON */
+  .input-group { position: relative; margin-bottom: 20px; }
+  
+  input {
+    width: 100%; padding: 14px; border-radius: 14px;
+    border: 1px solid #cbd5e1; background: rgba(255,255,255,0.6);
+    font-size: 16px; text-align: center; outline: none;
+    box-sizing: border-box; transition: 0.3s;
+  }
+  input:focus { border-color: var(--accent); background: #fff; }
+
+  button {
+    width: 100%; padding: 14px; border: none; border-radius: 14px;
+    background: var(--accent-grad); color: white;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: transform 0.2s;
+  }
+  button:active { transform: scale(0.98); }
+
+  /* 🔥 HYBRID RESULT AREA */
+  .result-box {
+    margin-top: 25px; display: none; /* Hidden initially */
+    animation: slideUp 0.5s ease-out;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* BIG STATUS ICON (From Option 2) */
+  .status-icon { font-size: 50px; margin-bottom: 10px; display: block; }
+  .status-text { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
+  .order-id-display { font-size: 13px; color: #64748b; margin-bottom: 25px; }
+
+  /* 🚀 OPTION 3: HORIZONTAL STEPPER */
+  .stepper {
+    display: flex; justify-content: space-between;
+    position: relative; margin-top: 30px;
+  }
+
+  /* The Line Behind */
+  .stepper::before {
+    content: ''; position: absolute; top: 15px; left: 0; right: 0;
+    height: 4px; background: var(--gray); z-index: 0;
+    border-radius: 4px;
+  }
+
+  /* The Progress Line (Colored) */
+  .progress-line {
+    position: absolute; top: 15px; left: 0;
+    height: 4px; background: var(--success); z-index: 1;
+    border-radius: 4px; width: 0%; /* Dynamic Width */
+    transition: width 0.5s ease;
+  }
+
+  .step {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center;
+    width: 25%; /* 4 Steps = 25% each */
+  }
+
+  .dot {
+    width: 34px; height: 34px; background: #fff; border: 3px solid var(--gray);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: bold; color: #fff;
+    transition: 0.3s;
+  }
+
+  .step-label {
+    font-size: 10px; color: #94a3b8; font-weight: 600;
+    margin-top: 8px; text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* Active State (Completed Steps) */
+  .step.active .dot {
+    background: var(--success); border-color: var(--success);
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+  }
+  .step.active .step-label { color: var(--text-main); }
+
+  /* Back Button */
+  .back-link {
+    display: block; margin-top: 25px;
+    color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500;
+  }
 </style>
 </head>
+
 <body>
 
-<a href="store.html" class="back-btn">⟵ Store</a>
+<div class="card">
+  <img src="logo-gauri.jpeg" class="logo" onerror="this.style.display='none'">
+  <h2>Track Order</h2>
+  <p>See where your package is right now</p>
 
-<div class="container">
+  <div class="input-group">
+    <input type="text" id="orderInput" placeholder="Enter Order ID (e.g. GC-101)">
+  </div>
+  <button onclick="trackOrder()">Track Now</button>
 
-  <img src="logo-gauri.jpeg" class="logo">
-  <h2>Track Your Order</h2>
+  <div id="result" class="result-box">
+    
+    <div class="status-icon" id="mainIcon">📦</div>
+    <div class="status-text" id="mainStatus">Searching...</div>
+    <div class="order-id-display" id="displayId"></div>
 
-  <input id="orderInput" placeholder="Enter Order ID (GC-000001)">
-  <button class="btn" onclick="manualTrack()">Check Status</button>
+    <div class="stepper">
+      <div class="progress-line" id="progressBar"></div>
 
-  <h3 id="orderTitle"></h3>
-
-  <div class="timeline" id="timeline" style="display:none;">
-    <div class="step" id="step1"><div class="dot"></div><div class="label">Order Received</div></div>
-    <div class="step" id="step2"><div class="dot"></div><div class="label">Payment Verified</div></div>
-    <div class="step" id="step3"><div class="dot"></div><div class="label">Packing</div></div>
-    <div class="step" id="step4"><div class="dot"></div><div class="label">Shipped</div></div>
-    <div class="step" id="step5"><div class="dot"></div><div class="label">Out for Delivery</div></div>
-    <div class="step" id="step6"><div class="dot"></div><div class="label">Delivered</div></div>
+      <div class="step" id="step1">
+        <div class="dot">✓</div>
+        <div class="step-label">Ordered</div>
+      </div>
+      <div class="step" id="step2">
+        <div class="dot">⚙️</div>
+        <div class="step-label">Packed</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="dot">🚚</div>
+        <div class="step-label">Shipped</div>
+      </div>
+      <div class="step" id="step4">
+        <div class="dot">🏠</div>
+        <div class="step-label">Delivered</div>
+      </div>
+    </div>
   </div>
 
-  <div class="delivery" id="deliveryDate"></div>
-
+  <a href="store.html" class="back-link">← Back to Store</a>
 </div>
 
 <script>
-const API_URL =
-"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+// 🔴 YOUR SCRIPT URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-const STATUS_INDEX = {
+// Mapping your Sheet Statuses to the 4 UI Steps
+const STEP_MAPPING = {
   "Order Received": 1,
-  "Payment Verified": 2,
-  "Packing": 3,
-  "Shipped": 4,
-  "Out for Delivery": 5,
-  "Delivered": 6
+  "Payment Verified": 1,
+  "Packing": 2,
+  "Shipped": 3,
+  "Out for Delivery": 3,
+  "Delivered": 4,
+  "Cancelled": 0
 };
 
-function highlightSteps(level) {
-  for (let i = 1; i <= 6; i++) {
-    const step = document.getElementById("step" + i);
-    step.classList.toggle("active", i <= level);
+async function trackOrder(){
+  const input = document.getElementById("orderInput");
+  const resultBox = document.getElementById("result");
+  const orderId = input.value.trim().toUpperCase();
+
+  if(!orderId){ alert("Please enter an Order ID"); return; }
+
+  // Reset UI
+  resultBox.style.display = "block";
+  document.getElementById("mainStatus").textContent = "Searching...";
+  document.getElementById("mainIcon").textContent = "🔍";
+  document.getElementById("displayId").textContent = "Checking Order #" + orderId;
+  updateStepper(0); // Clear bar
+
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=trackOrder&orderId=${encodeURIComponent(orderId)}`);
+    const data = await res.json();
+
+    if(!data.success){
+      document.getElementById("mainStatus").textContent = "Order Not Found";
+      document.getElementById("mainIcon").textContent = "❌";
+      document.getElementById("displayId").textContent = "Please check the ID and try again.";
+      return;
+    }
+
+    // Success! Update UI
+    const status = data.status; // e.g. "Shipped"
+    const stepLevel = STEP_MAPPING[status] || 1; // Default to 1 if unknown
+
+    // 1. Update Top Text
+    document.getElementById("mainStatus").textContent = status;
+    document.getElementById("displayId").textContent = "Order #" + orderId;
+    
+    // Set Icon based on status
+    let icon = "📦";
+    if(status.includes("Packed")) icon = "🎁";
+    if(status.includes("Shipped")) icon = "🚚";
+    if(status.includes("Delivered")) icon = "🎉";
+    if(status.includes("Cancel")) icon = "🚫";
+    document.getElementById("mainIcon").textContent = icon;
+
+    // 2. Update Progress Bar
+    updateStepper(stepLevel);
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById("mainStatus").textContent = "Network Error";
+    document.getElementById("mainIcon").textContent = "⚠️";
   }
 }
 
-function fetchStatus(orderId) {
-  fetch(`${API_URL}?action=trackOrder&orderId=${encodeURIComponent(orderId)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (!data.success) {
-        alert("Order not found");
-        return;
-      }
-
-      document.getElementById("orderTitle").textContent =
-        "Order ID: " + orderId;
-
-      document.getElementById("timeline").style.display = "block";
-      highlightSteps(STATUS_INDEX[data.status] || 1);
-    })
-    .catch(() => alert("Network error. Please try again."));
-}
-
-function manualTrack() {
-  const id = document.getElementById("orderInput").value.trim().toUpperCase();
-  if (!id) {
-    alert("Please enter Order ID");
-    return;
+function updateStepper(level) {
+  // Update Dots
+  for(let i=1; i<=4; i++){
+    const el = document.getElementById("step"+i);
+    if(i <= level) el.classList.add("active");
+    else el.classList.remove("active");
   }
-  fetchStatus(id);
+
+  // Update Line Width (0%, 33%, 66%, 100%)
+  const bar = document.getElementById("progressBar");
+  if(level <= 1) bar.style.width = "0%";
+  else if(level === 2) bar.style.width = "33%";
+  else if(level === 3) bar.style.width = "66%";
+  else if(level >= 4) bar.style.width = "100%";
 }
 
-/* AUTO LOAD FROM ?orderId= */
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const autoId = params.get("orderId");
-  if (autoId) {
+// Check for ?orderId= URL parameter
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const autoId = urlParams.get('orderId');
+  if(autoId) {
     document.getElementById("orderInput").value = autoId;
-    fetchStatus(autoId.toUpperCase());
+    trackOrder();
   }
-});
+}
 </script>
 
 </body>
