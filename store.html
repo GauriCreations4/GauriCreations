@@ -17,7 +17,9 @@
     --shadow-strong: 0 10px 30px rgba(15,23,42,0.15);
     --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
     --muted:#6b7280;
-    --primary: #2563eb;
+    
+    /* ✅ FIXED: Apple Style Blue */
+    --primary: #0071e3; 
   }
   *{box-sizing:border-box}
   body{
@@ -28,7 +30,7 @@
 
   .shell{width:100%;max-width:1150px}
 
-  /* 🔥 HEADER SECTION */
+  /* HEADER SECTION */
   .header-row {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--glass-strong);
@@ -121,8 +123,9 @@
   }
   @media(max-width:768px){ .hero-side { height: auto; padding: 15px; flex-direction: row; gap: 10px; } }
 
-  .hero-side h3 { margin: 0; font-size: 32px; color: var(--primary); line-height: 1; }
-  .hero-side span { font-size: 13px; color: var(--muted); }
+  /* ✅ FIXED: Number and Text are strictly BLACK */
+  .hero-side h3 { margin: 0; font-size: 32px; color: #000; line-height: 1; }
+  .hero-side span { font-size: 13px; color: #000; }
 
   /* FILTERS & SEARCH */
   .filters{
@@ -150,7 +153,9 @@
     cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
   .cat-chip.active {
-    background: var(--primary); color: white; border-color: var(--primary);
+    background: var(--primary); /* Uses Apple Blue */
+    color: white; 
+    border-color: var(--primary);
   }
 
   /* PRODUCT GRID */
@@ -391,7 +396,9 @@ function renderGrid(products) {
           <div class="wish-btn" onclick="toggleWishlist('${p.SKU}',this)">${liked}</div>
         </div>
         <strong style="font-size:14px; margin-top:5px; line-height:1.2">${p.Name || "Unnamed"}</strong>
-        <div style="font-weight:700; color:#2563eb">₹${p.Price || "0"}</div>
+        
+        <div style="font-weight:700; color:#000000">₹${p.Price || "0"}</div>
+        
         <div class="product-actions">
           <button class="btn-primary" onclick="goToProduct('${p.SKU}')">Know More</button>
         </div>`;
