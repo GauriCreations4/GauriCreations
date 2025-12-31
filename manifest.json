@@ -1,0 +1,20 @@
+{
+  "name": "Gauri Creations",
+  "short_name": "Gauri",
+  "start_url": "store.html",
+  "display": "standalone",
+  "background_color": "#e3f2ff",
+  "theme_color": "#0071e3",
+  "icons": [
+    {
+      "src": "logo-gauri.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "logo-gauri.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
