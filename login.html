@@ -5,118 +5,126 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login • Gauri Creations</title>
 
-<meta name="google-site-verification" content="08_MQwyTbpxtiqNH_nk7wOzNL_aUIaOZZh4iUQglsTg" />
- 
- <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="apple-touch-icon" href="favicon.ico"> 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0071e3">
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="logo.png"> 
 
 <style>
-*{ box-sizing:border-box; }
-
+/* Base Styles */
+*{ box-sizing:border-box; outline:none; }
 body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:Poppins,system-ui;
-  background:linear-gradient(135deg,#86e1ff,#ffd4b8);
+  margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+  font-family:'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e3f2ff 0%, #ffe5f3 100%);
+  padding: 20px;
 }
 
+/* Card Style */
 .card{
-  width:100%;
-  max-width:380px;
-  background:#ffffffee;
-  padding:28px;
-  border-radius:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  width:100%; max-width:380px;
+  background: rgba(255,255,255,0.95);
+  padding:30px; border-radius:24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
   text-align:center;
+  border: 1px solid rgba(255,255,255,0.5);
 }
 
-h2{ margin-bottom:10px; }
+/* Logo */
+.logo-img {
+  width: 80px; height: 80px; object-fit: contain;
+  margin-bottom: 10px; border-radius: 12px;
+}
 
+h2{ margin:0 0 20px 0; color:#333; font-size: 22px; }
+
+/* Input Fields */
+.input-group {
+  position: relative; margin-bottom: 15px;
+}
 input{
-  width:100%;
-  padding:13px;
-  margin-top:12px;
-  border-radius:12px;
-  border:1px solid #ccc;
-  font-size:15px;
+  width:100%; padding:14px;
+  border-radius:14px; border:1px solid #ddd;
+  font-size:15px; background: #f9f9f9;
+  transition: all 0.3s;
+}
+input:focus { border-color: #0071e3; background: #fff; }
+
+/* Eye Icon for Password */
+.toggle-pw {
+  position: absolute; right: 15px; top: 14px;
+  cursor: pointer; font-size: 18px; color: #777;
+  background: none; border: none; padding: 0;
 }
 
-button{
-  width:100%;
-  padding:14px;
-  margin-top:18px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#2563eb,#ec4899);
-  color:#fff;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
+/* Buttons */
+.btn-primary{
+  width:100%; padding:14px; margin-top:10px;
+  border:none; border-radius:14px;
+  background: linear-gradient(135deg, #0071e3, #42a5f5);
+  color:#fff; font-size:16px; font-weight:600;
+  cursor:pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.2);
 }
+.btn-primary:active { transform: scale(0.98); }
 
 .guest-btn{
-  background:#fff;
-  color:#333;
-  border:1px solid #ccc;
-  margin-top:10px;
+  width: 100%; padding: 12px; margin-top: 10px;
+  background: transparent; color: #666;
+  border: 1px solid #ddd; border-radius: 14px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
 }
 
-.links{
-  margin-top:14px;
-  font-size:14px;
-}
+/* Links & Error */
+.links{ margin-top:20px; font-size:14px; color: #666; }
+.links a{ color:#0071e3; text-decoration:none; font-weight:600; }
+.error{ color:#ff3b30; font-size:13px; margin-top:15px; min-height: 18px; font-weight: 500;}
 
-.links a{
-  color:#2563eb;
-  text-decoration:none;
-  font-weight:600;
+/* Loading Spinner */
+.loader {
+  display: none; width: 20px; height: 20px; margin-left: 10px;
+  border: 3px solid #fff; border-bottom-color: transparent;
+  border-radius: 50%; animation: spin 1s linear infinite;
+  vertical-align: middle;
 }
-
-.links a:hover{
-  text-decoration:underline;
-}
-
-.error{
-  color:#dc2626;
-  font-size:13px;
-  margin-top:10px;
-}
+@keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <h2>Customer Login</h2>
+  <h2>Welcome Back</h2>
 
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
+  <div class="input-group">
+    <input id="email" type="email" placeholder="Email Address">
+  </div>
 
-  <button type="button" onclick="login()">Login</button>
+  <div class="input-group">
+    <input id="password" type="password" placeholder="Password">
+    <button type="button" class="toggle-pw" onclick="togglePw()">👁️</button>
+  </div>
 
-  <!-- ✅ Guest Mode -->
+  <button type="button" class="btn-primary" onclick="login()" id="loginBtn">
+    Login <span class="loader" id="loader"></span>
+  </button>
+
   <button type="button" class="guest-btn" onclick="continueAsGuest()">
     Continue as Guest
   </button>
 
-  <!-- ✅ Register Link -->
+  <div id="error" class="error"></div>
+
   <div class="links">
     New here? <a href="register.html">Create an account</a>
   </div>
-
-  <div id="error" class="error"></div>
 </div>
 
 <script>
-/* ✅ UPDATED WEB APP URL */
-const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+// ✅ YOUR SCRIPT URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-/* ✅ AUTO-REDIRECTS IF ALREADY LOGGED IN */
+// Redirect if already logged in
 if (localStorage.getItem("gc_customer")) {
   window.location.href = "store.html";
 }
@@ -124,41 +132,58 @@ if (localStorage.getItem("gc_customer")) {
 function continueAsGuest(){
   window.location.href = "store.html";
 }
+
+function togglePw(){
+  const p = document.getElementById("password");
+  p.type = p.type === "password" ? "text" : "password";
+}
   
 async function login(){
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const errorBox = document.getElementById("error");
+  const btn = document.getElementById("loginBtn");
+  const loader = document.getElementById("loader");
 
+  // Reset UI
   errorBox.textContent = "";
-
   if(!email || !password){
-    errorBox.textContent = "Enter email & password";
+    errorBox.textContent = "Please enter both email and password.";
     return;
   }
 
+  // Loading State
+  btn.disabled = true;
+  loader.style.display = "inline-block";
+  btn.style.opacity = "0.8";
+
   try{
-    const url =
-      SCRIPT_URL +
-      "?action=customerLogin" +
-      "&email=" + encodeURIComponent(email) +
-      "&password=" + encodeURIComponent(password);
+    // Note: We send plain email. Check your Google Sheet for matching Case!
+    const url = SCRIPT_URL + "?action=customerLogin" + 
+                "&email=" + encodeURIComponent(email) + 
+                "&password=" + encodeURIComponent(password);
 
     const res = await fetch(url);
     const data = await res.json();
 
     if(!data.success){
-      errorBox.textContent = "Invalid email or password";
+      errorBox.textContent = data.message || "Invalid email or password.";
+      btn.disabled = false;
+      loader.style.display = "none";
+      btn.style.opacity = "1";
       return;
     }
 
+    // Success! Save user & go to store
     localStorage.setItem("gc_customer", JSON.stringify(data.customer));
-
     window.location.href = "store.html";
 
-  }catch(err){
+  } catch(err){
     console.error(err);
-    errorBox.textContent = "Network error. Try again.";
+    errorBox.textContent = "Connection failed. Check your internet.";
+    btn.disabled = false;
+    loader.style.display = "none";
+    btn.style.opacity = "1";
   }
 }
 </script>
