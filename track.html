@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Track Order • Gauri Creations</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
 
 <style>
   :root {
@@ -26,7 +28,7 @@
     padding: 20px; box-sizing: border-box;
   }
 
-  /* ✨ OPTION 2: GLASS CARD CONTAINER */
+  /* GLASS CARD */
   .card {
     background: var(--glass);
     width: 100%; max-width: 420px;
@@ -64,7 +66,7 @@
   }
   button:active { transform: scale(0.98); }
 
-  /* 🔥 HYBRID RESULT AREA */
+  /* RESULT AREA */
   .result-box {
     margin-top: 25px; display: none; /* Hidden initially */
     animation: slideUp 0.5s ease-out;
@@ -75,12 +77,12 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* BIG STATUS ICON (From Option 2) */
+  /* STATUS ICON */
   .status-icon { font-size: 50px; margin-bottom: 10px; display: block; }
   .status-text { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
   .order-id-display { font-size: 13px; color: #64748b; margin-bottom: 25px; }
 
-  /* 🚀 OPTION 3: HORIZONTAL STEPPER */
+  /* HORIZONTAL STEPPER */
   .stepper {
     display: flex; justify-content: space-between;
     position: relative; margin-top: 30px;
@@ -93,7 +95,7 @@
     border-radius: 4px;
   }
 
-  /* The Progress Line (Colored) */
+  /* The Progress Line */
   .progress-line {
     position: absolute; top: 15px; left: 0;
     height: 4px; background: var(--success); z-index: 1;
@@ -104,13 +106,13 @@
   .step {
     position: relative; z-index: 2;
     display: flex; flex-direction: column; align-items: center;
-    width: 25%; /* 4 Steps = 25% each */
+    width: 25%;
   }
 
   .dot {
     width: 34px; height: 34px; background: #fff; border: 3px solid var(--gray);
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: bold; color: #fff;
+    font-size: 16px; font-weight: bold; color: #fff; /* Increased font slightly for emoji */
     transition: 0.3s;
   }
 
@@ -120,7 +122,7 @@
     text-align: center;
   }
 
-  /* Active State (Completed Steps) */
+  /* Active State */
   .step.active .dot {
     background: var(--success); border-color: var(--success);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
@@ -138,7 +140,7 @@
 <body>
 
 <div class="card">
-  <img src="logo-gauri.jpeg" class="logo" onerror="this.style.display='none'">
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
   <h2>Track Order</h2>
   <p>See where your package is right now</p>
 
@@ -161,7 +163,7 @@
         <div class="step-label">Ordered</div>
       </div>
       <div class="step" id="step2">
-        <div class="dot">⚙️</div>
+        <div class="dot">📦</div>
         <div class="step-label">Packed</div>
       </div>
       <div class="step" id="step3">
@@ -179,14 +181,15 @@
 </div>
 
 <script>
-// 🔴 YOUR SCRIPT URL
+// 🔴 SCRIPT URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-// Mapping your Sheet Statuses to the 4 UI Steps
+// Mapping Status to Steps
 const STEP_MAPPING = {
   "Order Received": 1,
   "Payment Verified": 1,
   "Packing": 2,
+  "Packed": 2,
   "Shipped": 3,
   "Out for Delivery": 3,
   "Delivered": 4,
@@ -219,19 +222,20 @@ async function trackOrder(){
     }
 
     // Success! Update UI
-    const status = data.status; // e.g. "Shipped"
-    const stepLevel = STEP_MAPPING[status] || 1; // Default to 1 if unknown
+    const status = data.status || "Processing";
+    const stepLevel = STEP_MAPPING[status] || 1;
 
     // 1. Update Top Text
     document.getElementById("mainStatus").textContent = status;
     document.getElementById("displayId").textContent = "Order #" + orderId;
     
     // Set Icon based on status
-    let icon = "📦";
-    if(status.includes("Packed")) icon = "🎁";
-    if(status.includes("Shipped")) icon = "🚚";
-    if(status.includes("Delivered")) icon = "🎉";
-    if(status.includes("Cancel")) icon = "🚫";
+    let icon = "📝"; // Default (Order Received)
+    if(status.includes("Pack")) icon = "📦"; // Packed
+    if(status.includes("Ship") || status.includes("Out")) icon = "🚚"; // Shipped
+    if(status.includes("Deliver")) icon = "🎉"; // Delivered
+    if(status.includes("Cancel")) icon = "🚫"; // Cancelled
+    
     document.getElementById("mainIcon").textContent = icon;
 
     // 2. Update Progress Bar
@@ -252,7 +256,7 @@ function updateStepper(level) {
     else el.classList.remove("active");
   }
 
-  // Update Line Width (0%, 33%, 66%, 100%)
+  // Update Line Width
   const bar = document.getElementById("progressBar");
   if(level <= 1) bar.style.width = "0%";
   else if(level === 2) bar.style.width = "33%";
