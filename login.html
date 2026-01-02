@@ -17,41 +17,56 @@
 body{
   margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
   font-family:'Poppins', sans-serif;
+  /* Fallback background if images don't load */
   background: linear-gradient(135deg, #e3f2ff 0%, #ffe5f3 100%);
   padding: 20px;
+  position: relative;
+  overflow: hidden; /* Stops scrollbars from slideshow */
 }
+
+/* 📸 BACKGROUND SLIDESHOW CONTAINER */
+#bg-slideshow {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1; /* Behind everything */
+  pointer-events: none; /* Let clicks pass through */
+}
+
+.bg-slide {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-size: cover; background-position: center;
+  opacity: 0; /* Start hidden */
+  transition: opacity 2s ease-in-out; /* Smooth fade */
+  filter: grayscale(30%); /* Optional: makes it look classy */
+}
+
+/* Active slide is visible but transparent (0.2 = 20% opacity) */
+.bg-slide.active { opacity: 0.2; transform: scale(1.05); transition: opacity 2s ease-in-out, transform 10s linear; }
 
 /* Card Style */
 .card{
   width:100%; max-width:380px;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.9); /* Slight see-through glass effect */
+  backdrop-filter: blur(10px); /* Blurs the background images behind card */
   padding:30px; border-radius:24px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.1);
   text-align:center;
-  border: 1px solid rgba(255,255,255,0.5);
-}
-
-/* Logo */
-.logo-img {
-  width: 80px; height: 80px; object-fit: contain;
-  margin-bottom: 10px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.6);
+  z-index: 10; /* Above the slideshow */
 }
 
 h2{ margin:0 0 20px 0; color:#333; font-size: 22px; }
 
 /* Input Fields */
-.input-group {
-  position: relative; margin-bottom: 15px;
-}
+.input-group { position: relative; margin-bottom: 15px; }
 input{
   width:100%; padding:14px;
   border-radius:14px; border:1px solid #ddd;
-  font-size:15px; background: #f9f9f9;
+  font-size:15px; background: rgba(255,255,255,0.8);
   transition: all 0.3s;
 }
 input:focus { border-color: #0071e3; background: #fff; }
 
-/* Eye Icon for Password */
+/* Eye Icon */
 .toggle-pw {
   position: absolute; right: 15px; top: 14px;
   cursor: pointer; font-size: 18px; color: #777;
@@ -70,17 +85,16 @@ input:focus { border-color: #0071e3; background: #fff; }
 
 .guest-btn{
   width: 100%; padding: 12px; margin-top: 10px;
-  background: transparent; color: #666;
-  border: 1px solid #ddd; border-radius: 14px;
+  background: rgba(255,255,255,0.5); color: #444;
+  border: 1px solid #ccc; border-radius: 14px;
   font-size: 14px; font-weight: 500; cursor: pointer;
 }
+.guest-btn:hover { background: #fff; }
 
-/* Links & Error */
 .links{ margin-top:20px; font-size:14px; color: #666; }
 .links a{ color:#0071e3; text-decoration:none; font-weight:600; }
 .error{ color:#ff3b30; font-size:13px; margin-top:15px; min-height: 18px; font-weight: 500;}
 
-/* Loading Spinner */
 .loader {
   display: none; width: 20px; height: 20px; margin-left: 10px;
   border: 3px solid #fff; border-bottom-color: transparent;
@@ -92,6 +106,8 @@ input:focus { border-color: #0071e3; background: #fff; }
 </head>
 
 <body>
+
+<div id="bg-slideshow"></div>
 
 <div class="card">
   <h2>Welcome Back</h2>
@@ -121,17 +137,66 @@ input:focus { border-color: #0071e3; background: #fff; }
 </div>
 
 <script>
-// ✅ YOUR SCRIPT URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-// Redirect if already logged in
+// Redirect if logged in
 if (localStorage.getItem("gc_customer")) {
   window.location.href = "store.html";
 }
 
-function continueAsGuest(){
-  window.location.href = "store.html";
+// 📸 LOAD BACKGROUND SLIDESHOW
+window.onload = async function() {
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getProducts");
+    const data = await res.json();
+    if(data.products && data.products.length > 0) {
+      startSlideshow(data.products);
+    }
+  } catch(e) { console.log("Bg load failed"); }
+};
+
+function startSlideshow(products) {
+  const container = document.getElementById("bg-slideshow");
+  // Shuffle and pick random 6 images
+  const shuffled = products.sort(() => 0.5 - Math.random()).slice(0, 6);
+  
+  shuffled.forEach((p, i) => {
+    let img = getImg(p);
+    let div = document.createElement("div");
+    div.className = "bg-slide";
+    div.style.backgroundImage = `url('${img}')`;
+    if(i === 0) div.classList.add("active");
+    container.appendChild(div);
+  });
+
+  // Cycle images every 5 seconds
+  let current = 0;
+  const slides = document.querySelectorAll(".bg-slide");
+  if(slides.length > 1) {
+    setInterval(() => {
+      slides[current].classList.remove("active");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active");
+    }, 5000);
+  }
 }
+
+function getImg(p){
+  let url = p["Image URL 1"] || p.imageUrl1 || p.Image || "";
+  if (!url) {
+    Object.keys(p).forEach(k => {
+      if(k.toLowerCase().includes("image") && p[k]) url = p[k];
+    });
+  }
+  // Google Drive fix
+  if (url && url.includes("drive.google.com") && url.includes("id=")) {
+    const match = url.match(/id=([^&]+)/);
+    if (match) return "https://lh3.googleusercontent.com/d/" + match[1];
+  }
+  return url;
+}
+
+function continueAsGuest(){ window.location.href = "store.html"; }
 
 function togglePw(){
   const p = document.getElementById("password");
@@ -145,20 +210,17 @@ async function login(){
   const btn = document.getElementById("loginBtn");
   const loader = document.getElementById("loader");
 
-  // Reset UI
   errorBox.textContent = "";
   if(!email || !password){
     errorBox.textContent = "Please enter both email and password.";
     return;
   }
 
-  // Loading State
   btn.disabled = true;
   loader.style.display = "inline-block";
   btn.style.opacity = "0.8";
 
   try{
-    // Note: We send plain email. Check your Google Sheet for matching Case!
     const url = SCRIPT_URL + "?action=customerLogin" + 
                 "&email=" + encodeURIComponent(email) + 
                 "&password=" + encodeURIComponent(password);
@@ -174,7 +236,6 @@ async function login(){
       return;
     }
 
-    // Success! Save user & go to store
     localStorage.setItem("gc_customer", JSON.stringify(data.customer));
     window.location.href = "store.html";
 
