@@ -4,206 +4,77 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Gauri Creations • Store</title>
-
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0071e3">
-<meta name="google-site-verification" content="08_MQwyTbpxtiqNH_nk7wOzNL_aUIaOZZh4iUQglsTg" />
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="logo.png">
 
 <style>
-  :root{
-    --bg-grad: linear-gradient(135deg,#e3f2ff,#ffe5f3);
-    --glass: rgba(255,255,255,0.85);
-    --glass-strong: rgba(255,255,255,0.95);
-    --glass-border: rgba(148,163,184,0.6);
-    --shadow-strong: 0 10px 30px rgba(15,23,42,0.15);
-    --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
-    --primary: #0071e3; 
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;min-height:100vh;font-family:'Poppins',sans-serif;
-    background:var(--bg-grad);padding:15px;
-    display:flex;justify-content:center;
-  }
-
+  :root{ --bg-grad: linear-gradient(135deg,#e3f2ff,#ffe5f3); --accent-grad: linear-gradient(135deg,#2563eb,#ec4899); --primary: #0071e3; }
+  body{ margin:0;min-height:100vh;font-family:'Poppins',sans-serif; background:var(--bg-grad);padding:15px; display:flex;justify-content:center; }
   .shell{width:100%;max-width:1150px; padding-bottom: 60px;}
 
+  /* ✨ ANIMATIONS */
+  .menu-btn, .cat-chip, .btn-primary, .btn-icon, .product-card, .header-row { transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  
+  .header-row:hover { transform: translateY(-2px); }
+  .menu-btn:hover { transform: scale(1.1); }
+  .menu-btn:active { transform: scale(0.95); }
+  .cat-chip:hover { transform: scale(1.1); background:#fff; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37,99,235,0.3); }
+  .btn-icon:hover { transform: scale(1.2) rotate(-5deg); }
+  
+  .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); z-index: 10; }
+  .product-card:active { transform: scale(0.98); }
+
   /* HEADER */
-  .header-row {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--glass-strong);
-    padding: 12px 16px;
-    border-radius: 18px;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-strong);
-    margin-bottom: 16px; position: relative; z-index: 100;
-  }
+  .header-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.9); padding: 12px 16px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 16px; }
   .brand { display: flex; align-items: center; gap: 12px; }
   .brand-logo { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
-  .brand-info { display: flex; flex-direction: column; }
-  .brand-name { font-size: 18px; font-weight: 800; color: #000; line-height: 1.2; }
-  .brand-welcome { font-size: 13px; color: #000; font-weight: 600; }
-
-  /* MENU */
-  .menu-btn {
-    background: var(--accent-grad); color: #fff;
-    padding: 8px 14px; border-radius: 99px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
-    border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: transform 0.2s; /* ✨ Added Animation */
-  }
-  .menu-btn:active { transform: scale(0.95); }
-
-  .menu-list{
-    display:none;position:absolute;top:65px;right:0;
-    background:white;border-radius:12px;min-width:180px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);overflow:hidden;
-    z-index: 101; border: 1px solid #eee;
-  }
-  .menu-list a{
-    display:block;padding:12px 16px;text-decoration:none;
-    color:#333;font-size:14px;border-bottom:1px solid #f0f0f0;
-    transition: background 0.2s; /* ✨ Added Hover */
-  }
-  .menu-list a:hover{background:#f8fafc; color: var(--primary);}
+  .menu-btn { background: var(--accent-grad); color: #fff; padding: 8px 14px; border-radius: 99px; font-weight: 600; border: none; cursor: pointer; }
+  .menu-list{ display:none;position:absolute;top:65px;right:0; background:white;border-radius:12px;min-width:180px; box-shadow:0 10px 30px rgba(0,0,0,0.2); overflow:hidden; z-index: 101; }
+  .menu-list a{ display:block;padding:12px 16px;text-decoration:none; color:#333; border-bottom:1px solid #eee; }
+  .menu-list a:hover{ background:#f0f9ff; color: var(--primary); padding-left: 20px; transition: 0.2s; }
 
   /* HERO */
-  .hero{display:grid;grid-template-columns:3fr 1.5fr;gap:12px;margin-bottom:14px}
-  @media(max-width:768px){.hero{grid-template-columns:1fr}}
+  .hero-slider { position: relative; border-radius: 18px; overflow: hidden; height: 200px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; margin-bottom: 20px; }
+  .slide { position: absolute; inset:0; opacity: 0; transition: opacity 0.8s; display: flex; align-items: flex-end; }
+  .slide.active { opacity: 1; }
+  .slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+  .slide-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 15px; color: white; z-index: 2; }
 
-  .hero-slider {
-    position: relative; border-radius: 18px; overflow: hidden;
-    height: 200px; background: #fff;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-strong);
-    cursor: pointer;
-  }
-  .slide {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    opacity: 0; transition: opacity 0.8s ease-in-out;
-    display: flex; align-items: flex-end;
-  }
-  .slide.active { opacity: 1; z-index: 1; }
-  .slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-  .slide-overlay {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    padding: 15px; color: white; z-index: 2;
-  }
-  .slide-title { font-size: 16px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-  .slide-price { font-size: 14px; color: #ffd700; font-weight: 600; }
+  /* FILTER & GRID */
+  #searchInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1; margin-bottom: 12px; transition:0.3s; }
+  #searchInput:focus { border-color: var(--primary); transform: scale(1.01); }
+  .category-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-bottom: 15px; }
+  .cat-chip { background: rgba(255,255,255,0.8); border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 99px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .cat-chip.active { background: var(--primary); color: white; }
 
-  .hero-side{
-    border-radius:18px; padding:20px; background: #fff;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-strong);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    text-align: center; height: 200px;
-  }
-  @media(max-width:768px){ .hero-side { height: auto; padding: 15px; flex-direction: row; gap: 10px; } }
-  .hero-side h3 { margin: 0; font-size: 32px; color: #000; line-height: 1; }
-  .hero-side span { font-size: 13px; color: #000; }
-
-  /* FILTERS */
-  .filters{
-    background:var(--glass-strong); border-radius:18px; padding:12px;
-    border:1px solid var(--glass-border);
-    box-shadow:var(--shadow-strong); margin-bottom:14px;
-  }
-  #searchInput {
-    width: 100%; padding: 12px; border-radius: 12px;
-    border: 1px solid #cbd5e1; background: #f8fafc;
-    margin-bottom: 12px; font-size: 14px;
-  }
-  .category-bar {
-    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .cat-chip {
-    background: white; border: 1px solid #e2e8f0;
-    padding: 8px 16px; border-radius: 999px;
-    font-size: 13px; font-weight: 500; color: #475569;
-    cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  }
-  .cat-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-  .cat-chip:hover { transform: scale(1.05); } /* ✨ Added Chip Hover */
-
-  /* GRID & CARDS */
   .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
-
-  .product-card{
-    border-radius:16px; background:var(--glass-strong);
-    border:1px solid rgba(209,213,219,0.7);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding:10px; display:flex; flex-direction:column;
-    gap:8px; position:relative; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* ✨ Animation Ready */
-  }
-  
-  /* ✨ CARD LIFT EFFECT */
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-  }
-
-  .product-img-wrap{
-    border-radius:12px; overflow:hidden; background:#f1f5f9;
-    height:150px; display:flex; align-items:center; justify-content:center;
-    position:relative;
-  }
+  .product-card{ border-radius:16px; background:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.6); padding:10px; display:flex; flex-direction:column; gap:8px; position:relative; }
+  .product-img-wrap{ border-radius:12px; overflow:hidden; background:#f1f5f9; height:150px; display:flex; align-items:center; justify-content:center; }
   .product-img{ width:100%; height:100%; object-fit:cover; }
+  .wish-btn{ position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.9); border-radius:50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor:pointer; font-size:14px; transition:0.2s; }
+  .wish-btn:hover { transform: scale(1.2); }
+  .btn-primary{ width: 100%; background:var(--accent-grad); color:#fff; border-radius:10px; padding:10px; border:none; font-weight:600; cursor:pointer; margin-top: auto; }
 
-  .wish-btn{
-    position:absolute; top:8px; right:8px;
-    background:rgba(255,255,255,0.9); border-radius:50%;
-    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-    cursor:pointer; font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-  }
-  .wish-btn:active { transform: scale(1.2); }
-
-  .product-actions{ margin-top: auto; }
-  .btn-primary{
-    width: 100%; background:var(--accent-grad); color:#fff;
-    border-radius:10px; padding:10px; border:none;
-    font-size:13px; font-weight:600; cursor:pointer;
-    transition: opacity 0.2s;
-  }
-  .btn-primary:hover { opacity: 0.9; }
-
-  /* SOCIAL ICONS */
-  .social-footer {
-    margin-top: 40px; padding: 10px;
-    text-align: center; display: flex;
-    justify-content: center; align-items: center; gap: 20px;
-  }
-  .btn-icon {
-    width: 55px; height: 55px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white; text-decoration: none;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* ✨ Bouncy Animation */
-  }
-  .btn-icon:hover { transform: scale(1.1) rotate(5deg); }
-  .btn-icon:active { transform: scale(0.9); }
-  .btn-icon svg { width: 30px; height: 30px; fill: currentColor; }
-
+  /* SOCIAL */
+  .social-footer { margin-top: 40px; display: flex; justify-content: center; gap: 20px; }
+  .btn-icon { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+  .btn-icon svg { width: 30px; }
   .wa-bg { background-color: #25D366; }
   .ig-bg { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
 </style>
 </head>
 
 <body>
-
 <div class="shell">
   <div class="header-row">
     <div class="brand">
       <img src="logo.png" class="brand-logo" onerror="this.style.display='none'">
-      <div class="brand-info">
-        <div class="brand-name">Gauri Creations</div>
-        <div class="brand-welcome" id="welcomeText">Welcome</div>
+      <div>
+        <div style="font-weight:800; font-size:18px">Gauri Creations</div>
+        <div style="font-size:12px">Welcome</div>
       </div>
     </div>
     <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
@@ -211,208 +82,104 @@
       <a href="my-orders.html">📦 My Orders</a>
       <a href="track.html">🚚 Track Parcel</a>
       <a href="wishlist.html">❤️ Wishlist</a>
-      <a href="mailto:gauricreations04@gmail.com">📩 Email Support</a>
-      <a href="https://wa.me/917745092723">💬 WhatsApp</a>
+      <a href="https://wa.me/917745092723">💬 Support</a>
       <a href="#" onclick="logoutUser()" style="color:red">🚪 Logout</a>
     </div>
   </div>
 
-  <section class="hero">
-    <div class="hero-slider" id="heroSlider">
-       <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:13px;">Loading Offers...</div>
-    </div>
-    <aside class="hero-side">
-      <h3 id="summaryTotal">0</h3><span>Products<br>Available</span>
-    </aside>
-  </section>
+  <div class="hero-slider" id="heroSlider">
+     <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;">Loading...</div>
+  </div>
 
-  <section class="filters">
-    <input id="searchInput" placeholder="Search products (e.g. Haldi)..." onkeyup="filterProducts()">
+  <div class="filters">
+    <input id="searchInput" placeholder="Search..." onkeyup="filterProducts()">
     <div id="categoryBar" class="category-bar"></div>
-  </section>
+  </div>
 
-  <section id="grid" class="grid"></section>
+  <div id="grid" class="grid"></div>
   
   <div class="social-footer">
-      <a href="https://wa.me/917745092723" class="btn-icon wa-bg" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      </a>
-      <a href="https://instagram.com/gauri_creations4" class="btn-icon ig-bg" aria-label="Instagram">
-          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      </a>
+    <a href="https://wa.me/917745092723" class="btn-icon wa-bg"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg></a>
+    <a href="https://instagram.com/gauri_creations4" class="btn-icon ig-bg"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="white"/></svg></a>
   </div>
 </div>
 
 <script>
-// PWA
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(function(reg) {
-    console.log('App Ready', reg.scope);
-  }).catch(function(err) { console.log('App Fail', err); });
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-const user = JSON.parse(localStorage.getItem("gc_customer") || "null");
-if(user) document.getElementById("welcomeText").textContent = "Hi, " + user.name.split(" ")[0];
-
-function toggleMenu(){
-  const m=document.getElementById("menuList");
-  m.style.display = m.style.display==="block"?"none":"block";
-}
-function logoutUser(){
-  localStorage.removeItem("gc_customer");
-  window.location.href="login.html";
-}
-
-/* ❤️ Wishlist */
+function toggleMenu(){ const m=document.getElementById("menuList"); m.style.display = m.style.display==="block"?"none":"block"; }
+function logoutUser(){ localStorage.removeItem("gc_customer"); window.location.href="login.html"; }
 function getWishlist(){ return JSON.parse(localStorage.getItem("gc_wishlist")||"[]"); }
-function saveWishlist(list){ localStorage.setItem("gc_wishlist",JSON.stringify(list)); }
 function toggleWishlist(sku,el){
-  const list=getWishlist(); const i=list.indexOf(sku);
-  if(i>=0){ list.splice(i,1); el.textContent="🤍"; }
+  let list=getWishlist();
+  if(list.includes(sku)){ list=list.filter(s=>s!==sku); el.textContent="🤍"; }
   else{ list.push(sku); el.textContent="❤️"; }
-  saveWishlist(list);
+  localStorage.setItem("gc_wishlist",JSON.stringify(list));
 }
-
-/* 📷 IMAGE FIXER */
 function getImg(p){
   let url = p["Image URL 1"] || p.imageUrl1 || p.Image || "";
-  if (!url) {
-    Object.keys(p).forEach(k => {
-      if(k.toLowerCase().includes("image") && p[k]) url = p[k];
-    });
-  }
-  if (url && url.includes("drive.google.com") && url.includes("id=")) {
-    const idMatch = url.match(/id=([^&]+)/);
-    if (idMatch && idMatch[1]) {
-      return "https://lh3.googleusercontent.com/d/" + idMatch[1];
-    }
-  }
+  if(!url && p) Object.keys(p).forEach(k=>{ if(k.toLowerCase().includes("image") && p[k]) url=p[k]; });
+  if(url && url.includes("drive.google.com") && url.includes("id=")){ const m=url.match(/id=([^&]+)/); if(m) return "https://lh3.googleusercontent.com/d/"+m[1]; }
   return url || "https://via.placeholder.com/400x300?text=No+Image";
 }
 
-// 🔴 SCRIPT URL (Same as before)
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+let allProducts=[];
+let activeCategory='All';
 
-// Global Data
-let allProducts = [];
-let activeCategory = 'All';
+fetch(SCRIPT_URL+"?action=getProducts").then(r=>r.json()).then(d=>{
+  allProducts=d.products||[];
+  render(allProducts);
+  setupCats();
+  initSlides(allProducts.slice(0,5));
+});
 
-async function loadProducts(){
-  const grid = document.getElementById("grid");
-  try {
-    const res = await fetch(SCRIPT_URL+"?action=getProducts");
-    const data = await res.json();
-    allProducts = data.products || [];
-
-    setupCategories(allProducts);
-    initSlideshow(allProducts.slice(0, 5));
-    renderGrid(allProducts);
-    document.getElementById("summaryTotal").textContent = allProducts.length;
-
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = "<p style='grid-column:1/-1;text-align:center'>Failed to load products.</p>";
-  }
-}
-
-/* 🔥 HERO SLIDESHOW */
-function initSlideshow(products) {
-  const container = document.getElementById("heroSlider");
-  if(products.length === 0) return;
-  container.innerHTML = ""; 
-
-  products.forEach((p, index) => {
-    const slide = document.createElement("div");
-    slide.className = `slide ${index === 0 ? 'active' : ''}`;
-    slide.onclick = () => goToProduct(p.SKU);
-    slide.innerHTML = `
-      <img src="${getImg(p)}">
-      <div class="slide-overlay">
-        <div class="slide-title">${p.Name}</div>
-        <div class="slide-price">₹${p.Price}</div>
-      </div>
-    `;
-    container.appendChild(slide);
+function setupCats(){
+  const cats=['All',...new Set(allProducts.map(p=>p.Category||p.category||'Other'))];
+  const bar=document.getElementById("categoryBar");
+  cats.forEach(c=>{
+    const d=document.createElement("div"); d.className="cat-chip"; d.textContent=c;
+    d.onclick=()=>{ document.querySelectorAll('.cat-chip').forEach(b=>b.classList.remove('active')); d.classList.add('active'); activeCategory=c; filter(); };
+    if(c==='All') d.classList.add('active');
+    bar.appendChild(d);
   });
-
-  let currentSlide = 0;
-  setInterval(() => {
-    const slides = document.querySelectorAll('.slide');
-    if(slides.length < 2) return;
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-  }, 3500);
 }
 
-function setupCategories(products) {
-    const bar = document.getElementById("categoryBar");
-    const categories = ['All', ...new Set(products.map(p => p.Category || p.category || 'Other'))];
-    bar.innerHTML = "";
-
-    categories.forEach(cat => {
-        const btn = document.createElement("div");
-        btn.className = `cat-chip ${cat === 'All' ? 'active' : ''}`;
-        btn.textContent = cat;
-        btn.onclick = () => {
-            document.querySelectorAll('.cat-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeCategory = cat;
-            filterProducts();
-        };
-        bar.appendChild(btn);
-    });
+function filter(){
+  const q=document.getElementById("searchInput").value.toLowerCase();
+  const res=allProducts.filter(p=>{
+    const cat=p.Category||p.category||"Other";
+    return (activeCategory==='All' || cat===activeCategory) && (p.Name||"").toLowerCase().includes(q);
+  });
+  render(res);
 }
 
-function filterProducts() {
-    const search = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = allProducts.filter(p => {
-        const pName = (p.Name || "").toLowerCase();
-        const pCat = (p.Category || p.category || "Other");
-        const catMatch = activeCategory === 'All' || pCat === activeCategory;
-        const searchMatch = pName.includes(search);
-        return catMatch && searchMatch;
-    });
-    renderGrid(filtered);
-}
-
-function renderGrid(products) {
-    const grid = document.getElementById("grid");
-    const wishlist = getWishlist();
-    grid.innerHTML = "";
-    
-    if(products.length === 0){
-       grid.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#666'>No products found.</p>";
-       return;
-    }
-
-    products.forEach(p => {
-      const liked = wishlist.includes(p.SKU) ? "❤️" : "🤍";
-      const imageUrl = getImg(p);
-
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.innerHTML = `
-        <div class="product-img-wrap">
-          <img src="${imageUrl}" class="product-img" loading="lazy">
-          <div class="wish-btn" onclick="toggleWishlist('${p.SKU}',this)">${liked}</div>
+function render(list){
+  const grid=document.getElementById("grid"); grid.innerHTML="";
+  const wl=getWishlist();
+  list.forEach(p=>{
+    const liked=wl.includes(p.SKU)?"❤️":"🤍";
+    const ratingHtml = p.Rating ? `<span style="font-size:12px;color:#f59e0b">★ ${p.Rating}</span>` : "";
+    grid.innerHTML+=`
+      <div class="product-card">
+        <div class="product-img-wrap"><img src="${getImg(p)}" class="product-img"><div class="wish-btn" onclick="toggleWishlist('${p.SKU}',this)">${liked}</div></div>
+        <strong style="font-size:14px;margin-top:5px;">${p.Name}</strong>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+           <div style="font-weight:700;">₹${p.Price}</div>
+           ${ratingHtml}
         </div>
-        <strong style="font-size:14px; margin-top:5px; line-height:1.2">${p.Name || "Unnamed"}</strong>
-        <div style="font-weight:700; color:#000000">₹${p.Price || "0"}</div>
-        <div class="product-actions">
-          <button class="btn-primary" onclick="goToProduct('${p.SKU}')">Know More</button>
-        </div>`;
-      grid.appendChild(card);
-    });
+        <button class="btn-primary" onclick="location.href='product.html?sku=${encodeURIComponent(p.SKU)}'">Know More</button>
+      </div>`;
+  });
 }
-
-function goToProduct(sku){
-  if(!sku) return;
-  window.location.href = "product.html?sku="+encodeURIComponent(sku);
+function initSlides(list){
+  const c=document.getElementById("heroSlider"); c.innerHTML="";
+  list.forEach((p,i)=>{
+    c.innerHTML+=`<div class="slide ${i===0?'active':''}" onclick="location.href='product.html?sku=${p.SKU}'"><img src="${getImg(p)}"><div class="slide-overlay"><div style="font-weight:700">${p.Name}</div></div></div>`;
+  });
+  let cur=0; const s=document.querySelectorAll('.slide');
+  setInterval(()=>{ s[cur].classList.remove('active'); cur=(cur+1)%s.length; s[cur].classList.add('active'); },3500);
 }
-
-loadProducts();
 </script>
-
 </body>
 </html>
