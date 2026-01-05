@@ -7,7 +7,11 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
 <style>
-  body{ margin:0; padding:20px; font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#e3f2ff,#ffe5f3); min-height:100vh; }
+  body{ margin:0; padding:20px; font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#e3f2ff,#ffe5f3); min-height:100vh; display:flex; justify-content:center; }
+  
+  /* FIXED WIDTH CONTAINER */
+  .container { width: 100%; max-width: 800px; padding-bottom: 50px; }
+
   h2{ text-align:center; color:#333; margin-bottom:20px; }
 
   /* ANIMATED CARDS */
@@ -37,20 +41,24 @@
   .modal { background:white; padding:25px; border-radius:20px; width:90%; max-width:350px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.2); animation: popUp 0.3s; }
   @keyframes popUp { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
   
-  textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:10px; margin:10px 0; font-family:inherit; }
+  textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:10px; margin:10px 0; font-family:inherit; box-sizing: border-box; }
   .star-rating { font-size:30px; cursor:pointer; color:#ddd; }
   .star-rating span:hover, .star-rating span.active { color:#ffd700; }
 
+  /* SUCCESS MESSAGE MODAL */
+  .success-icon { font-size: 50px; margin-bottom: 10px; }
+  
   .back-link { display:block; text-align:center; margin-top:20px; color:#666; text-decoration:none; }
 </style>
 </head>
 <body>
 
-<h2>📦 My Orders</h2>
-<div id="loading" style="text-align:center">Loading your orders...</div>
-<div id="ordersList"></div>
-
-<a href="store.html" class="back-link">← Back to Store</a>
+<div class="container">
+  <h2>📦 My Orders</h2>
+  <div id="loading" style="text-align:center">Loading your orders...</div>
+  <div id="ordersList"></div>
+  <a href="store.html" class="back-link">← Back to Store</a>
+</div>
 
 <div class="modal-overlay" id="reviewModal">
   <div class="modal">
@@ -61,6 +69,15 @@
     <textarea id="reviewText" rows="3" placeholder="Write your review..."></textarea>
     <button class="btn-review" onclick="submitReview()">Submit Review</button>
     <button style="background:transparent; border:none; color:#999; margin-top:10px; cursor:pointer" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="success-icon">🎉</div>
+    <h3>Thank You!</h3>
+    <p>Your review has been submitted successfully.</p>
+    <button class="btn-review" onclick="document.getElementById('successModal').style.display='none'">Close</button>
   </div>
 </div>
 
@@ -77,10 +94,9 @@ fetch(SCRIPT_URL+"?action=listOrders")
   document.getElementById("loading").style.display="none";
   const list = document.getElementById("ordersList");
   
-  // 🔥 MATCHING LOGIC: Match by Phone OR Email (More reliable than ID)
   const myOrders = d.orders.filter(o => 
     String(o["Phone"]) === String(user.phone) || 
-    String(o["Customer Name"]) === String(user.name) // Fallback
+    String(o["Customer Name"]) === String(user.name)
   );
 
   if(myOrders.length === 0){
@@ -89,7 +105,7 @@ fetch(SCRIPT_URL+"?action=listOrders")
   }
 
   myOrders.reverse().forEach(o => {
-    // Only show Review button if delivered (optional logic, showing always for now)
+    // Show Review button
     const canReview = true; 
     
     list.innerHTML += `
@@ -141,6 +157,7 @@ async function submitReview(){
   if(currentRating === 0){ alert("Please select star rating"); return; }
 
   const btn = document.querySelector(".modal .btn-review");
+  const originalText = btn.textContent;
   btn.textContent = "Submitting...";
   
   await fetch(SCRIPT_URL, {
@@ -154,9 +171,11 @@ async function submitReview(){
     })
   });
 
-  alert("Review Submitted! Thank you.");
+  // CLOSE REVIEW MODAL & OPEN SUCCESS MODAL
   closeModal();
-  btn.textContent = "Submit Review";
+  document.getElementById("successModal").style.display = "flex";
+  
+  btn.textContent = originalText;
 }
 </script>
 </body>
