@@ -2,378 +2,414 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Add Product • Gauri Creations</title>
-
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
 <style>
   :root {
     --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
-    --glass-bg: rgba(255, 255, 255, 0.18);
+    --glass-bg: rgba(255, 255, 255, 0.25);
     --glass-border: rgba(255, 255, 255, 0.6);
-    --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.40);
+    --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.25);
   }
 
-  *{ box-sizing:border-box; }
+  * { box-sizing: border-box; }
 
   body {
-    margin:0;
-    min-height:100vh;
-    font-family:Poppins, system-ui;
-    background:var(--bg-grad);
-    display:flex;
-    justify-content:center;
-    padding:18px;
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-grad);
+    display: flex;
+    justify-content: center;
+    /* Safe Area padding to prevent bottom overlay bug on mobile browsers */
+    padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
   }
 
-  .shell { width:100%; max-width:980px; }
+  .shell { width: 100%; max-width: 980px; }
 
   .card {
-    border-radius:26px;
-    background:var(--glass-bg);
-    border:1px solid var(--glass-border);
-    backdrop-filter:blur(22px);
-    padding:18px;
-    box-shadow:var(--shadow-strong);
+    border-radius: 26px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    padding: 20px;
+    box-shadow: var(--shadow-strong);
   }
 
   .card-header {
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
   }
 
-  .card-title { font-size:20px; font-weight:700; }
-  .card-sub { font-size:12px; color:#555; }
+  .card-title { font-size: 20px; font-weight: 700; color: #0f172a; }
+  .card-sub { font-size: 12px; color: #475569; }
 
   .pill-link {
-  /* 1. Circle Shape & Glass Effect */
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35); /* Translucent white */
-  backdrop-filter: blur(12px);          /* Blur effect */
-  -webkit-backdrop-filter: blur(12px);  /* Safari support */
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  
-  /* 2. Center the Icon */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* 3. Hide the text "← Back" so only the icon shows */
-  font-size: 0; 
-  text-decoration: none;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, background 0.2s;
-}
-
-/* 4. Add the iOS Chevron Icon */
-.pill-link::before {
-  content: '';
-  width: 10px;
-  height: 18px;
-  /* Dark Grey Arrow Icon */
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='20' viewBox='0 0 12 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L2 10L10 18' stroke='%23333' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  transform: translateX(-1px); /* Optical centering */
-}
-
-/* 5. Hover & Click Effects */
-.pill-link:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: scale(1.05);
-}
-
-.pill-link:active {
-  transform: scale(0.92);
-}
-
-  .layout {
-    display:grid;
-    grid-template-columns:1.3fr 1fr;
-    gap:14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0; 
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, background 0.2s;
   }
 
-  @media(max-width:900px){
-    .layout{ grid-template-columns:1fr; }
+  .pill-link::before {
+    content: '';
+    width: 10px;
+    height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='20' viewBox='0 0 12 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L2 10L10 18' stroke='%23333' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translateX(-1px);
+  }
+
+  .pill-link:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 14px;
+  }
+
+  @media(max-width: 900px){
+    .layout { grid-template-columns: 1fr; }
   }
 
   .section-card {
-    background:white;
-    border-radius:20px;
-    padding:14px;
-    border:1px solid #e5e7eb;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   }
 
-  .section-title { font-size:14px; font-weight:600; margin-bottom:4px; }
-  .section-sub { font-size:11px; color:#777; margin-bottom:10px; }
+  label { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; color: #1e293b; }
 
-  label { font-size:12px; font-weight:600; margin-bottom:4px; display:block; }
-
-  .input, .textarea{
-    width:100%;
-    padding:9px 12px;
-    border-radius:12px;
-    border:1px solid #ccc;
-    background:#f5f5f5;
-    font-size:13px;
+  .input, .textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
   }
 
-  .textarea{ resize:vertical; min-height:80px; }
+  .input:focus, .textarea:focus {
+    border-color: #2563eb;
+    background: #fff;
+  }
+
+  .textarea { resize: vertical; min-height: 80px; }
 
   .field-row {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
   }
 
-  @media(max-width:600px){
-    .field-row{ grid-template-columns:1fr; }
+  @media(max-width: 600px){
+    .field-row { grid-template-columns: 1fr; }
   }
 
   .drop-zone {
-    border:1.5px dashed #999;
-    padding:14px;
-    border-radius:16px;
-    background:#fafafa;
-    text-align:center;
-    cursor:pointer;
-    font-size:12px;
+    border: 1.5px dashed #94a3b8;
+    padding: 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: #64748b;
+    transition: all 0.2s;
   }
   
-  .drop-zone:hover {
-    background:#eee;
+  .drop-zone.dragover, .drop-zone:hover {
+    background: #e2e8f0;
+    border-color: #2563eb;
   }
 
   .preview-grid {
-    margin-top:10px;
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:8px;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
 
   .preview-card {
-    position:relative;
-    height:90px;
-    border-radius:14px;
-    overflow:hidden;
-    background:#ddd;
+    position: relative;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e2e8f0;
   }
 
-  .preview-card img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+  .preview-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
-  .remove-btn{
-    position:absolute;
-    top:4px; right:4px;
-    background:#e11d48;
-    color:white;
-    border:none;
-    border-radius:999px;
-    padding:3px 7px;
-    font-size:10px;
-    cursor:pointer;
+  .remove-btn {
+    position: absolute;
+    top: 4px; right: 4px;
+    background: #e11d48;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .video-chip{
-    margin-top:8px;
-    background:#def7ec;
-    padding:6px 10px;
-    border-radius:10px;
-    font-size:11px;
-    display:inline-flex;
-    gap:6px;
+  .video-chip {
+    margin-top: 8px;
+    background: #def7ec;
+    color: #03543f;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  .footer-row{
-    margin-top:16px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+  .footer-row {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .btn-primary{
-    background:linear-gradient(135deg,#2563eb,#ec4899);
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:999px;
-    font-size:14px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    cursor:pointer;
+  .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #ec4899);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
   }
 
-  .status-text{ font-size:12px; color:#777; }
-  .status-text.ok{ color:#15803d; }
-  .status-text.err{ color:#e11d48; }
+  .status-text { font-size: 12px; color: #64748b; font-weight: 500; }
+  .status-text.ok { color: #15803d; }
+  .status-text.err { color: #e11d48; }
 </style>
 </head>
 
 <body>
 <div class="shell">
-<div class="card">
+  <div class="card">
 
-<div class="card-header">
-  <div>
-    <div class="card-title">Add New Product</div>
-    <div class="card-sub">Upload images & details.</div>
+    <div class="card-header">
+      <div>
+        <div class="card-title">Add New Product</div>
+        <div class="card-sub">Upload images & details for Gauri Creations.</div>
+      </div>
+      <a href="admin.html" class="pill-link" title="Back to Admin">← Back</a>
+    </div>
+
+    <div class="layout">
+      <section class="section-card">
+        <div style="margin-bottom: 8px;">
+          <label for="name">Product Name *</label>
+          <input id="name" class="input" type="text" placeholder="e.g. Traditional Platter" />
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="price">Price (₹) *</label>
+            <input id="price" class="input" type="number" placeholder="249" />
+          </div>
+          <div>
+            <label for="category">Category *</label>
+            <input id="category" class="input" type="text" placeholder="e.g. Decorative Platter" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="stock">Stock *</label>
+            <input id="stock" class="input" type="number" placeholder="10" />
+          </div>
+          <div>
+            <label for="weight">Weight (g)</label>
+            <input id="weight" class="input" type="text" placeholder="500g" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div><label for="length">Length (cm)</label><input id="length" class="input" type="number" /></div>
+          <div><label for="width">Width (cm)</label><input id="width" class="input" type="number" /></div>
+        </div>
+
+        <div class="field-row">
+          <div><label for="height">Height (cm)</label><input id="height" class="input" type="number" /></div>
+          <div>
+            <label for="videoUrlInput">Video URL</label>
+            <input id="videoUrlInput" class="input" type="text" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div>
+          <label for="description">Description</label>
+          <textarea id="description" class="textarea" placeholder="Enter handcrafted item details..."></textarea>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <label>Product Images (Max 5)</label>
+        <div id="imageDropZone" class="drop-zone">
+          📁 Click or Drag & Drop Images Here
+        </div>
+        <input id="imageInput" type="file" accept="image/*" multiple hidden>
+        <div id="imagePreview" class="preview-grid"></div>
+
+        <br>
+        <label>Product Video</label>
+        <div id="videoDropZone" class="drop-zone">
+          🎥 Click or Drag & Drop Video Here
+        </div>
+        <input id="videoInput" type="file" accept="video/*" hidden>
+        <div id="videoInfo" class="video-chip" style="display:none;">
+          🎬 <span id="videoName"></span>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer-row">
+      <div id="statusText" class="status-text">Fill details and click Add Product.</div>
+      <button id="saveBtn" class="btn-primary">➕ Add Product</button>
+    </div>
+
   </div>
-  <a href="admin.html" class="pill-link">← Back</a>
-</div>
-
-<div class="layout">
-<section class="section-card">
-<label>Product Name *</label>
-<input id="name" class="input" type="text"/>
-
-<div class="field-row">
-  <div>
-    <label>Price (₹) *</label>
-    <input id="price" class="input" type="number"/>
-  </div>
-  <div>
-    <label>Category *</label>
-    <input id="category" class="input" type="text"/>
-  </div>
-</div>
-
-<div class="field-row">
-  <div>
-    <label>Stock *</label>
-    <input id="stock" class="input" type="number"/>
-  </div>
-  <div>
-    <label>Weight</label>
-    <input id="weight" class="input" type="text"/>
-  </div>
-</div>
-
-<div class="field-row">
-  <div><label>Length</label><input id="length" class="input" type="number"/></div>
-  <div><label>Width</label><input id="width" class="input" type="number"/></div>
-</div>
-
-<div class="field-row">
-  <div><label>Height</label><input id="height" class="input" type="number"/></div>
-  <div><label>Video URL</label><input id="videoUrlInput" class="input" type="text" placeholder="Or upload video below"/></div>
-</div>
-
-<label>Description</label>
-<textarea id="description" class="textarea"></textarea>
-</section>
-
-<section class="section-card">
-<label>Images</label>
-<div id="imageDropZone" class="drop-zone" onclick="document.getElementById('imageInput').click()">
-  Click here to select images
-</div>
-<input id="imageInput" type="file" accept="image/*" multiple hidden>
-<div id="imagePreview" class="preview-grid"></div>
-
-<br>
-<label>Video</label>
-<div id="videoDropZone" class="drop-zone" onclick="document.getElementById('videoInput').click()">
-  Click here to select video
-</div>
-<input id="videoInput" type="file" accept="video/*" hidden>
-<div id="videoInfo" class="video-chip" style="display:none;">
-🎬 <span id="videoName"></span>
-</div>
-</section>
-</div>
-
-<div class="footer-row">
-  <div id="statusText" class="status-text">Fill details and click Add Product.</div>
-  <button id="saveBtn" class="btn-primary">➕ Add Product</button>
-</div>
-
-</div>
 </div>
 
 <script>
-// Wait for page to fully load before running script
 document.addEventListener('DOMContentLoaded', function() {
     
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
-  
-    // Global variables
+    
     let imageFiles = [];
     let videoFile = null;
 
-    // Element Selectors
     const qs = id => document.getElementById(id);
     const imageInput = qs("imageInput");
     const imagePreview = qs("imagePreview");
+    const imageDropZone = qs("imageDropZone");
+    
     const videoInput = qs("videoInput");
     const videoInfo = qs("videoInfo");
     const videoNameEl = qs("videoName");
+    const videoDropZone = qs("videoDropZone");
+
     const statusText = qs("statusText");
     const saveBtn = qs("saveBtn");
 
-    /* ================== 1. IMAGE HANDLING ================== */
+    /* ================== 1. DRAG & DROP & FILE SELECTION ================== */
     
-    if(imageInput){
-      imageInput.onchange = () => {
-        const files = Array.from(imageInput.files);
-        
-        if (imageFiles.length + files.length > 5) {
-          alert("Maximum 5 images allowed.");
-          return;
-        }
-        
-        files.forEach(file => {
-          imageFiles.push(file);
+    // Trigger hidden inputs on dropzone click
+    imageDropZone.onclick = () => imageInput.click();
+    videoDropZone.onclick = () => videoInput.click();
+
+    // Prevent default browser drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      document.body.addEventListener(eventName, e => e.preventDefault());
+    });
+
+    // Dropzone highlight effects
+    [imageDropZone, videoDropZone].forEach(zone => {
+      zone.addEventListener('dragover', () => zone.classList.add('dragover'));
+      zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    });
+
+    // Image Drag & Drop
+    imageDropZone.addEventListener('drop', (e) => {
+      imageDropZone.classList.remove('dragover');
+      handleImages(Array.from(e.dataTransfer.files));
+    });
+
+    imageInput.onchange = () => handleImages(Array.from(imageInput.files));
+
+    function handleImages(files) {
+      const validImages = files.filter(f => f.type.startsWith('image/'));
+      if (imageFiles.length + validImages.length > 5) {
+        alert("Maximum 5 images allowed.");
+        return;
+      }
+      
+      validImages.forEach(file => {
+        imageFiles.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const div = document.createElement("div");
+          div.className = "preview-card";
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button class="remove-btn" type="button">×</button>
+          `;
           
-          // Create preview
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const div = document.createElement("div");
-            div.className = "preview-card";
-            div.innerHTML = `
-              <img src="${e.target.result}">
-              <button class="remove-btn" type="button">×</button>
-            `;
-            
-            // Add remove logic
-            div.querySelector(".remove-btn").onclick = function() {
-              imageFiles = imageFiles.filter(f => f.name !== file.name);
-              div.remove();
-            };
-            
-            imagePreview.appendChild(div);
+          div.querySelector(".remove-btn").onclick = function() {
+            imageFiles = imageFiles.filter(f => f !== file);
+            div.remove();
           };
-          reader.readAsDataURL(file);
-        });
-        imageInput.value = ""; // Reset to allow re-selecting same file
-      };
+          
+          imagePreview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+      imageInput.value = ""; 
     }
 
-    /* ================== 2. VIDEO HANDLING ================== */
+    // Video Drag & Drop
+    videoDropZone.addEventListener('drop', (e) => {
+      videoDropZone.classList.remove('dragover');
+      if (e.dataTransfer.files[0] && e.dataTransfer.files[0].type.startsWith('video/')) {
+        setVideoFile(e.dataTransfer.files[0]);
+      }
+    });
 
-    if(videoInput){
-      videoInput.onchange = () => {
-        if (videoInput.files[0]) {
-          videoFile = videoInput.files[0];
-          videoInfo.style.display = "inline-flex";
-          videoNameEl.textContent = videoFile.name;
-          qs("videoUrlInput").value = ""; 
-          qs("videoUrlInput").disabled = true;
-          qs("videoUrlInput").placeholder = "File selected: " + videoFile.name;
-        }
-      };
+    videoInput.onchange = () => {
+      if (videoInput.files[0]) setVideoFile(videoInput.files[0]);
+    };
+
+    function setVideoFile(file) {
+      videoFile = file;
+      videoInfo.style.display = "inline-flex";
+      videoNameEl.textContent = videoFile.name;
+      qs("videoUrlInput").value = ""; 
+      qs("videoUrlInput").disabled = true;
+      qs("videoUrlInput").placeholder = "Uploaded: " + videoFile.name;
     }
 
-    /* ================== 3. HELPER: CONVERT TO BASE64 ================== */
-
+    /* ================== 2. HELPER: CONVERT TO BASE64 ================== */
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -381,36 +417,42 @@ document.addEventListener('DOMContentLoaded', function() {
         reader.onerror = error => reject(error);
     });
 
-    /* ================== 4. SUBMIT LOGIC ================== */
+    /* ================== 3. CORS-SAFE API FETCH ================== */
+    async function callAppsScript(payload) {
+      // Sending text/plain avoids CORS preflight checks in Google Apps Script
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
 
-    if(saveBtn){
+    /* ================== 4. SUBMIT LOGIC ================== */
+    if(saveBtn) {
       saveBtn.onclick = async () => {
-        // Validation
         if (!qs("name").value || !qs("price").value) {
           alert("Please fill in Product Name and Price.");
           return;
         }
 
         saveBtn.disabled = true;
-        saveBtn.innerHTML = "⏳ Uploading Media...";
-        statusText.textContent = "Please wait, uploading images...";
+        saveBtn.innerHTML = "⏳ Processing...";
+        statusText.textContent = "Uploading images...";
         statusText.className = "status-text";
 
         try {
-          // A. Upload Images
+          // A. Upload Images Sequentially
           let uploadedImageUrls = [];
-          for (const file of imageFiles) {
-            const base64 = await toBase64(file);
-            const res = await fetch(SCRIPT_URL, {
-              method: "POST",
-              body: JSON.stringify({ 
-                action: "uploadMedia",
-                fileName: file.name,
-                mimeType: file.type,
-                base64: base64
-              })
+          for (let i = 0; i < imageFiles.length; i++) {
+            statusText.textContent = `Uploading image ${i + 1} of ${imageFiles.length}...`;
+            const base64 = await toBase64(imageFiles[i]);
+            const data = await callAppsScript({
+              action: "uploadMedia",
+              fileName: imageFiles[i].name,
+              mimeType: imageFiles[i].type,
+              base64: base64
             });
-            const data = await res.json();
             if (data.success) uploadedImageUrls.push(data.url);
           }
 
@@ -419,22 +461,17 @@ document.addEventListener('DOMContentLoaded', function() {
           if (videoFile) {
             statusText.textContent = "Uploading video (this may take time)...";
             const vBase64 = await toBase64(videoFile);
-            const vRes = await fetch(SCRIPT_URL, {
-              method: "POST",
-              body: JSON.stringify({
-                action: "uploadMedia",
-                fileName: videoFile.name,
-                mimeType: videoFile.type,
-                base64: vBase64
-              })
+            const vData = await callAppsScript({
+              action: "uploadMedia",
+              fileName: videoFile.name,
+              mimeType: videoFile.type,
+              base64: vBase64
             });
-            const vData = await vRes.json();
             if (vData.success) finalVideoUrl = vData.url;
           }
 
-          // C. Save Product
-          saveBtn.innerHTML = "⏳ Saving Product...";
-          
+          // C. Save Product Row
+          statusText.textContent = "Saving product details...";
           const productBody = {
             action: "createProduct",
             name: qs("name").value,
@@ -454,19 +491,14 @@ document.addEventListener('DOMContentLoaded', function() {
             imageUrl5: uploadedImageUrls[4] || ""
           };
 
-          const finalRes = await fetch(SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify(productBody)
-          });
-
-          const finalData = await finalRes.json();
+          const finalData = await callAppsScript(productBody);
 
           if (finalData.success) {
             statusText.textContent = "Product Saved Successfully! ✔";
             statusText.className = "status-text ok";
             setTimeout(resetForm, 2000);
           } else {
-            throw new Error(finalData.message || "Unknown error");
+            throw new Error(finalData.message || "Failed to save product.");
           }
 
         } catch (err) {
@@ -484,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .forEach(id => qs(id).value = "");
       
       qs("videoUrlInput").disabled = false;
-      qs("videoUrlInput").placeholder = "Or upload video below";
+      qs("videoUrlInput").placeholder = "https://...";
       
       imageFiles = [];
       imagePreview.innerHTML = "";
