@@ -2,97 +2,209 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Admin • Manage Orders | Gauri Creations</title>
 
+<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 
 <style>
-body{
-  margin:0;
-  font-family:Poppins,system-ui;
-  background:linear-gradient(135deg,#e3f2ff,#ffe5f3);
-  padding:20px;
-}
-.container{
-  max-width:1200px;
-  margin:auto;
-  background:#ffffffee;
-  padding:20px;
-  border-radius:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.2);
-}
-h2{margin-bottom:15px}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-th,td{
-  padding:10px;
-  border-bottom:1px solid #ddd;
-  text-align:left;
-}
-th{background:#f1f5f9}
-select,input{
-  padding:6px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:13px;
-}
-.badge{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
-}
-.paid{background:#22c55e;color:#fff}
-.pending{background:#f59e0b;color:#fff}
+  :root {
+    --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(148, 163, 184, 0.5);
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
+  }
 
-.toast{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#22c55e;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:999px;
-  font-size:13px;
-  font-weight:600;
-  box-shadow:0 10px 25px rgba(0,0,0,.2);
-  display:none;
-}
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-grad);
+    min-height: 100vh;
+    padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Header Navigation */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .top-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pill-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.8);
+    background: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    color: #0f172a;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* Main Card */
+  .container {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+  }
+
+  .status-text {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 800px;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  select, input {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 13px;
+    outline: none;
+    background: #ffffff;
+  }
+
+  select:focus, input:focus {
+    border-color: #2563eb;
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+
+  .paid { background: #dcfce7; color: #166534; }
+  .pending { background: #fef3c7; color: #92400e; }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    right: 20px;
+    background: #16a34a;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 100;
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h2>📦 Admin – Manage Orders</h2>
+<div class="shell">
+  <!-- Top Navigation Header -->
+  <header class="topbar">
+    <div class="top-title">📦 Manage Orders</div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <a href="manage-products.html" class="pill-btn">🛍️ Products</a>
+      <a href="manage-reviews.html" class="pill-btn">⭐ Reviews</a>
+      <a href="admin.html" class="pill-btn">🏠 Dashboard</a>
+    </div>
+  </header>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Order ID</th>
-        <th>Customer</th>
-        <th>Product</th>
-        <th>Total ₹</th>
-        <th>Payment</th>
-        <th>Status</th>
-        <th>AWB</th>
-        <th>Delivery Date</th>
-      </tr>
-    </thead>
-    <tbody id="ordersBody"></tbody>
-  </table>
+  <!-- Orders Container -->
+  <div class="container">
+    <div id="statusText" class="status-text">Loading orders live from Google Sheets...</div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Total (₹)</th>
+            <th>Payment</th>
+            <th>Fulfillment Status</th>
+            <th>AWB / Tracking</th>
+            <th>Delivery Date</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody">
+          <tr><td colspan="8" style="text-align: center; color: #94a3b8;">Loading order data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div id="toast" class="toast">Saved ✔</div>
 
 <script>
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
 const STATUS_OPTIONS = [
   "Order Received",
@@ -103,102 +215,190 @@ const STATUS_OPTIONS = [
   "Delivered"
 ];
 
-function showToast(){
+// Memory store to prevent stale state issues when editing payment status in-session
+let ORDERS_MAP = new Map();
+
+/* CORS-safe fetch helper */
+async function callAppsScript(payload) {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
+
+/* Safety HTML Escape */
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* Date formatter helper for <input type="date"> */
+function formatDateForInput(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr; 
+  return d.toISOString().split("T")[0];
+}
+
+function showToast(message = "Saved ✔") {
   const t = document.getElementById("toast");
-  t.style.display="block";
-  setTimeout(()=>t.style.display="none",1800);
+  t.textContent = message;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 1800);
 }
 
-async function loadOrders(){
-  const res = await fetch(SCRIPT_URL + "?action=listOrders");
-  const data = await res.json();
-  if(!data.success) return alert("Failed to load orders");
+/* Load orders */
+async function loadOrders() {
+  const statusEl = document.getElementById("statusText");
+  statusEl.textContent = "Fetching orders...";
 
-  const tbody = document.getElementById("ordersBody");
-  tbody.innerHTML="";
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=listOrders");
+    const data = await res.json();
 
-  data.orders.reverse().forEach(o=>{
-    const tr = document.createElement("tr");
+    if (!data.success) {
+      throw new Error(data.message || "Failed to load orders");
+    }
 
-    tr.innerHTML = `
-      <td>${o["Order ID"]}</td>
-      <td>${o["Customer Name"]}<br><small>${o["Phone"]}</small></td>
-      <td>${o["Product Name"]} × ${o["Qty"]}</td>
-      <td>${o["Total"]}</td>
+    const tbody = document.getElementById("ordersBody");
+    tbody.innerHTML = "";
+    ORDERS_MAP.clear();
 
-      <td>
-        <span class="badge ${o["Payment Status"]==="Paid"?"paid":"pending"}">
-          ${o["Payment Status"]}
-        </span><br>
-        <select onchange="updatePayment('${o["Order ID"]}',this.value)">
-          <option value="Pending" ${o["Payment Status"]==="Pending"?"selected":""}>Pending</option>
-          <option value="Paid" ${o["Payment Status"]==="Paid"?"selected":""}>Paid</option>
-        </select>
-      </td>
+    const orders = data.orders || [];
 
-      <td>
-        <select onchange="updateStatus('${o["Order ID"]}',this.value,'${o["Payment Status"]}')">
-          ${STATUS_OPTIONS.map(s=>`
-            <option ${o["Status"]===s?"selected":""}>${s}</option>
-          `).join("")}
-        </select>
-      </td>
+    if (orders.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94a3b8;">No customer orders placed yet.</td></tr>';
+      statusEl.textContent = "0 orders found.";
+      return;
+    }
 
-      <td>
-        <input value="${o["AWB"]||""}"
-        onchange="saveField('${o["Order ID"]}','awb',this.value)">
-      </td>
+    orders.reverse().forEach(o => {
+      const orderId = String(o["Order ID"] || "");
+      ORDERS_MAP.set(orderId, o);
 
-      <td>
-        <input type="date"
-        value="${o["Expected Delivery Date"]||""}"
-        onchange="saveField('${o["Order ID"]}','expectedDelivery',this.value)">
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+      const tr = document.createElement("tr");
 
-/* ✅ FORM DATA POST — THIS IS THE KEY FIX */
-async function saveField(orderId, field, value){
-  const form = new FormData();
-  form.append("action","updateOrderStatus");
-  form.append("orderId",orderId);
-  form.append(field,value);
+      const paymentStatus = o["Payment Status"] || "Pending";
+      const isPaid = paymentStatus === "Paid";
+      const currentStatus = o["Status"] || "Order Received";
+      const formattedDate = formatDateForInput(o["Expected Delivery Date"]);
 
-  const res = await fetch(SCRIPT_URL,{
-    method:"POST",
-    body:form
-  });
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(orderId)}</strong></td>
+        <td>
+          ${escapeHtml(o["Customer Name"])}<br>
+          <small style="color:#64748b;">${escapeHtml(o["Phone"])}</small>
+        </td>
+        <td>${escapeHtml(o["Product Name"])} × ${escapeHtml(o["Qty"])}</td>
+        <td><strong>₹${escapeHtml(o["Total"])}</strong></td>
 
-  const txt = await res.text();
-  console.log("Admin update:", txt);
-  showToast();
-}
+        <td>
+          <span id="badge-${escapeHtml(orderId)}" class="badge ${isPaid ? "paid" : "pending"}">
+            ${escapeHtml(paymentStatus)}
+          </span><br>
+          <select onchange="updatePayment('${escapeHtml(orderId)}', this.value)">
+            <option value="Pending" ${!isPaid ? "selected" : ""}>Pending</option>
+            <option value="Paid" ${isPaid ? "selected" : ""}>Paid</option>
+          </select>
+        </td>
 
-async function updatePayment(orderId, value){
-  await saveField(orderId,"paymentStatus",value);
+        <td>
+          <select onchange="updateStatus('${escapeHtml(orderId)}', this.value)">
+            ${STATUS_OPTIONS.map(s => `
+              <option value="${s}" ${currentStatus === s ? "selected" : ""}>${s}</option>
+            `).join("")}
+          </select>
+        </td>
 
-  if(value !== "Paid"){
-    await saveField(orderId,"status","Order Received");
+        <td>
+          <input type="text" value="${escapeHtml(o["AWB"] || "")}" 
+            placeholder="Tracking ID"
+            onchange="saveField('${escapeHtml(orderId)}', 'awb', this.value)">
+        </td>
+
+        <td>
+          <input type="date" value="${escapeHtml(formattedDate)}" 
+            onchange="saveField('${escapeHtml(orderId)}', 'expectedDelivery', this.value)">
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    statusEl.textContent = `Displaying ${orders.length} order(s).`;
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("statusText").textContent = "Error loading orders: " + err.message;
+    document.getElementById("ordersBody").innerHTML = '<tr><td colspan="8" style="text-align: center; color: #e11d48;">Failed to load order catalog.</td></tr>';
   }
 }
 
-async function updateStatus(orderId, status, payment){
-  if(payment !== "Paid"){
-    alert("Payment not verified yet");
-    return loadOrders();
+/* Save individual field updates */
+async function saveField(orderId, field, value) {
+  try {
+    const data = await callAppsScript({
+      action: "updateOrderStatus",
+      orderId: orderId,
+      [field]: value
+    });
+
+    if (data.success) {
+      showToast();
+      if (ORDERS_MAP.has(orderId)) {
+        ORDERS_MAP.get(orderId)[field] = value;
+      }
+    } else {
+      throw new Error(data.message || "Failed to update order");
+    }
+  } catch (err) {
+    console.error("Update failed:", err);
+    alert("Error saving field: " + err.message);
   }
-  await saveField(orderId,"status",status);
 }
 
-loadOrders();
+/* Update Payment status */
+async function updatePayment(orderId, value) {
+  await saveField(orderId, "paymentStatus", value);
+
+  if (ORDERS_MAP.has(orderId)) {
+    ORDERS_MAP.get(orderId)["Payment Status"] = value;
+  }
+
+  const badge = document.getElementById(`badge-${orderId}`);
+  if (badge) {
+    badge.textContent = value;
+    badge.className = `badge ${value === "Paid" ? "paid" : "pending"}`;
+  }
+
+  if (value !== "Paid") {
+    await saveField(orderId, "status", "Order Received");
+  }
+}
+
+/* Update Fulfillment status with live payment verification */
+async function updateStatus(orderId, status) {
+  const localOrder = ORDERS_MAP.get(orderId);
+  const currentPayment = localOrder ? localOrder["Payment Status"] : "Pending";
+
+  if (currentPayment !== "Paid") {
+    alert("⚠️ Payment has not been verified for this order yet.");
+    loadOrders();
+    return;
+  }
+
+  await saveField(orderId, "status", status);
+}
+
+document.addEventListener("DOMContentLoaded", loadOrders);
 </script>
 
 </body>
 </html>
-
-
-
-
-
