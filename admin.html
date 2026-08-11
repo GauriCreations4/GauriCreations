@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Admin Dashboard • Gauri Creations</title>
+
 <!-- Favicon -->
- <link rel="icon" href="favicon.ico" type="image/x-icon">
- <link rel="apple-touch-icon" href="favicon.ico"> 
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="favicon.ico"> 
 
 <style>
   :root {
     --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
-    --glass-bg: rgba(255, 255, 255, 0.20);
-    --glass-border: rgba(255, 255, 255, 0.55);
-    --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.40);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.25);
     --accent-blue: #2563eb;
     --accent-pink: #ec4899;
     --accent-green: #22c55e;
@@ -21,19 +22,17 @@
     --danger-red: #ef4444;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
     min-height: 100vh;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Poppins", sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg-grad);
     display: flex;
     justify-content: center;
-    align-items: stretch;
-    padding: 18px;
+    align-items: flex-start;
+    padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
     color: #0f172a;
   }
 
@@ -45,23 +44,21 @@
     gap: 14px;
   }
 
-  /* ===========================
-     LOGIN OVERLAY
-     =========================== */
+  /* LOGIN OVERLAY */
   #loginOverlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at top, #ffffffee, #000000cc);
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(0, 0, 0, 0.85));
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 100;
   }
 
   .login-box {
     width: 92%;
     max-width: 340px;
-    padding: 22px 20px 18px;
+    padding: 24px 20px 20px;
     background: rgba(15, 23, 42, 0.96);
     border-radius: 22px;
     color: #e5e7eb;
@@ -69,16 +66,8 @@
     text-align: center;
   }
 
-  .login-box h2 {
-    margin: 0 0 6px;
-    font-size: 20px;
-  }
-
-  .login-sub {
-    font-size: 12px;
-    color: #9ca3af;
-    margin-bottom: 12px;
-  }
+  .login-box h2 { margin: 0 0 6px; font-size: 20px; }
+  .login-sub { font-size: 12px; color: #9ca3af; margin-bottom: 12px; }
 
   .login-input {
     width: 100%;
@@ -90,16 +79,17 @@
     color: #e5e7eb;
     font-size: 14px;
     text-align: center;
+    outline: none;
   }
 
   .btn-login {
-    margin-top: 12px;
+    margin-top: 14px;
     padding: 10px 18px;
     border-radius: 999px;
     border: none;
     background: linear-gradient(135deg, #22c55e, #a3e635);
     color: #022c22;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     width: 100%;
@@ -108,62 +98,53 @@
   .login-error {
     font-size: 12px;
     color: #fecaca;
-    margin-top: 6px;
+    margin-top: 8px;
     display: none;
   }
 
-  /* ===========================
-     TOPBAR
-     =========================== */
+  /* TOPBAR */
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
+    padding: 12px 18px;
     border-radius: 22px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     box-shadow: var(--shadow-strong);
-  }
-
-  .top-left {
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
   }
+
+  .top-left { display: flex; align-items: center; gap: 12px; }
 
   .logo {
     width: 46px;
     height: 46px;
-    border-radius: 16px;
+    border-radius: 14px;
     object-fit: cover;
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.45);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
   }
 
-  .title-main {
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .subtitle {
-    font-size: 12px;
-    color: #4b5563;
-  }
+  .title-main { font-size: 18px; font-weight: 700; }
+  .subtitle { font-size: 12px; color: #4b5563; }
 
   .top-right {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    align-items: center;
   }
 
   .pill-btn {
     border-radius: 999px;
     border: 1px solid rgba(148, 163, 184, 0.8);
-    background: rgba(255,255,255,0.9);
-    padding: 6px 13px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 14px;
     font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -172,41 +153,29 @@
     color: #0f172a;
   }
 
-  .pill-btn span.icon {
-    font-size: 14px;
-  }
-
   .pill-btn.primary {
     background: linear-gradient(135deg, #2563eb, #ec4899);
     color: white;
     border: none;
   }
 
-  /* ===========================
-     LAYOUT
-     =========================== */
-  #adminMain {
-    display: none;
-  }
-
+  /* LAYOUT */
   .main-layout {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
-    gap: 12px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+    gap: 14px;
   }
 
   @media (max-width: 900px) {
-    .main-layout {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    .main-layout { grid-template-columns: minmax(0, 1fr); }
   }
 
   .card {
     border-radius: 22px;
-    background: rgba(255,255,255,0.96);
-    border: 1px solid rgba(148,163,184,0.6);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.6);
     box-shadow: var(--shadow-strong);
-    padding: 14px;
+    padding: 16px;
   }
 
   .card-header {
@@ -214,77 +183,54 @@
     justify-content: space-between;
     gap: 8px;
     align-items: baseline;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
-  .card-title {
-    font-size: 15px;
-    font-weight: 600;
-  }
+  .card-title { font-size: 15px; font-weight: 700; }
+  .card-sub { font-size: 11px; color: #6b7280; }
 
-  .card-sub {
-    font-size: 11px;
-    color: #6b7280;
-  }
-
-  /* ===========================
-     METRIC CARDS
-     =========================== */
+  /* METRICS */
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-top: 4px;
   }
 
+  @media (min-width: 600px) {
+    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
   .metric {
-    border-radius: 18px;
-    padding: 10px 11px;
-    background: linear-gradient(135deg, #ffffff, #e5f0ff);
-    border: 1px solid rgba(226,232,240,0.9);
+    border-radius: 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    border: 1px solid rgba(226, 232, 240, 0.9);
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
-  .metric-label {
-    font-size: 11px;
-    color: #6b7280;
-  }
-
-  .metric-value {
-    font-size: 20px;
-    font-weight: 700;
-  }
+  .metric-label { font-size: 11px; color: #6b7280; font-weight: 600; }
+  .metric-value { font-size: 22px; font-weight: 800; color: #0f172a; }
 
   .metric-pill {
     align-self: flex-start;
     margin-top: 4px;
     padding: 3px 8px;
     border-radius: 999px;
-    font-size: 11px;
+    font-size: 10px;
+    font-weight: 700;
   }
 
-  .metric-pill.blue {
-    background: rgba(37,99,235,0.1);
-    color: #1d4ed8;
-  }
-  .metric-pill.green {
-    background: rgba(34,197,94,0.1);
-    color: #15803d;
-  }
-  .metric-pill.amber {
-    background: rgba(245,158,11,0.12);
-    color: #b45309;
-  }
-  .metric-pill.red {
-    background: rgba(239,68,68,0.12);
-    color: #b91c1c;
-  }
+  .metric-pill.blue { background: rgba(37, 99, 235, 0.12); color: #1d4ed8; }
+  .metric-pill.green { background: rgba(34, 197, 94, 0.12); color: #15803d; }
+  .metric-pill.amber { background: rgba(245, 158, 11, 0.15); color: #b45309; }
+  .metric-pill.red { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
 
-  /* ===========================
-     LATEST ORDERS TABLE
-     =========================== */
+  /* ORDERS TABLE */
+  .table-wrapper { width: 100%; overflow-x: auto; }
+
   .orders-table {
     width: 100%;
     border-collapse: collapse;
@@ -292,9 +238,8 @@
     font-size: 12px;
   }
 
-  .orders-table th,
-  .orders-table td {
-    padding: 6px 6px;
+  .orders-table th, .orders-table td {
+    padding: 8px 6px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
   }
@@ -302,8 +247,8 @@
   .orders-table th {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #6b7280;
+    letter-spacing: 0.04em;
   }
 
   .badge {
@@ -311,39 +256,27 @@
     align-items: center;
     padding: 2px 8px;
     border-radius: 999px;
-    font-size: 11px;
+    font-size: 10px;
+    font-weight: 700;
   }
 
-  .badge.pending {
-    background: rgba(251,191,36,0.15);
-    color: #92400e;
-  }
+  .badge.pending { background: rgba(251, 191, 36, 0.2); color: #92400e; }
+  .badge.paid { background: rgba(22, 163, 74, 0.15); color: #166534; }
+  .badge.shipped { background: rgba(37, 99, 235, 0.15); color: #1d4ed8; }
 
-  .badge.paid {
-    background: rgba(22,163,74,0.12);
-    color: #166534;
-  }
-
-  .badge.shipped {
-    background: rgba(37,99,235,0.12);
-    color: #1d4ed8;
-  }
-
-  /* ===========================
-     QUICK ACTIONS
-     =========================== */
+  /* QUICK ACTIONS */
   .quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 10px;
     margin-top: 6px;
   }
 
   .qa-btn {
-    border-radius: 18px;
-    padding: 9px 10px;
-    background: linear-gradient(135deg, #ffffff, #f5e9ff);
-    border: 1px solid rgba(216,180,254,0.9);
+    border-radius: 16px;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -351,75 +284,66 @@
     text-decoration: none;
     color: #111827;
     cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
   }
 
-  .qa-label {
-    font-weight: 600;
+  .qa-btn:hover {
+    transform: translateY(-2px);
+    border-color: #2563eb;
   }
 
-  .qa-sub {
-    font-size: 11px;
-    color: #6b7280;
-  }
+  .qa-label { font-weight: 700; color: #0f172a; }
+  .qa-sub { font-size: 10px; color: #6b7280; }
 
-  /* ===========================
-     STATUS FOOTER
-     =========================== */
   #statusBar {
     font-size: 11px;
     color: #6b7280;
-    margin-top: 4px;
+    margin-top: 12px;
     text-align: right;
+    font-weight: 500;
   }
 </style>
 </head>
 <body>
 
+<!-- LOGIN OVERLAY -->
 <div id="loginOverlay">
   <div class="login-box">
     <h2>Admin Login</h2>
-    <div class="login-sub">
-      Enter your admin PIN to open the Gauri Creations dashboard.
-    </div>
-    <input id="adminPin" type="password" class="login-input" placeholder="Admin PIN" />
+    <div class="login-sub">Enter your PIN to access the Gauri Creations dashboard.</div>
+    <input id="adminPin" type="password" class="login-input" placeholder="Admin PIN" autofocus />
     <button id="loginBtn" class="btn-login">Unlock Dashboard</button>
     <div id="loginError" class="login-error">Incorrect PIN. Try again.</div>
   </div>
 </div>
 
-<div class="shell" id="adminMain">
+<div class="shell" id="adminMain" style="display:none;">
 
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="top-left">
-      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" />
+      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/46?text=GC'" />
       <div>
         <div class="title-main">Admin Dashboard</div>
-        <div class="subtitle">Overview of products, orders & performance.</div>
+        <div class="subtitle">Store overview & control panel</div>
       </div>
     </div>
     <div class="top-right">
-      <a href="store.html" class="pill-btn">
-        <span class="icon">🛍️</span> View Store
-      </a>
-      <a href="admin-add-product.html" class="pill-btn primary">
-        <span class="icon">➕</span> New Product
-      </a>
-      <button class="pill-btn" onclick="adminLogout()">
-        <span class="icon">🔒</span> Logout
-      </button>
+      <a href="index.html" class="pill-btn">🛍️ View Store</a>
+      <a href="admin-add-product.html" class="pill-btn primary">➕ New Product</a>
+      <button class="pill-btn" onclick="adminLogout()">🔒 Logout</button>
     </div>
   </header>
 
   <!-- MAIN GRID -->
   <main class="main-layout">
 
-    <!-- LEFT SIDE: METRICS + ORDERS -->
+    <!-- LEFT: METRICS + ORDERS -->
     <section class="card">
       <div class="card-header">
         <div>
           <div class="card-title">Snapshot</div>
-          <div class="card-sub">Key metrics from Products & Orders sheets.</div>
+          <div class="card-sub">Live totals from Google Sheets</div>
         </div>
       </div>
 
@@ -427,90 +351,82 @@
         <div class="metric">
           <div class="metric-label">Total Products</div>
           <div id="metricProducts" class="metric-value">–</div>
-          <div class="metric-pill.blue">Live in catalog</div>
+          <div class="metric-pill blue">Live Catalog</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Low Stock (&lt;= 5)</div>
+          <div class="metric-label">Low / Out of Stock</div>
           <div id="metricLowStock" class="metric-value">–</div>
-          <div class="metric-pill.amber">Need restock</div>
+          <div class="metric-pill amber">Need Restock</div>
         </div>
         <div class="metric">
           <div class="metric-label">Total Orders</div>
           <div id="metricOrders" class="metric-value">–</div>
-          <div class="metric-pill.green">All-time</div>
+          <div class="metric-pill green">All-time</div>
         </div>
         <div class="metric">
           <div class="metric-label">Pending Payments</div>
           <div id="metricPending" class="metric-value">–</div>
-          <div class="metric-pill.red">Awaiting payment</div>
+          <div class="metric-pill red">Awaiting Action</div>
         </div>
       </div>
 
-      <div style="margin-top: 10px;">
-        <div class="card-header" style="margin-bottom:4px;">
-          <div class="card-title">Latest Orders</div>
-          <div class="card-sub">Last few orders from your Orders sheet.</div>
+      <div style="margin-top: 16px;">
+        <div class="card-header" style="margin-bottom:6px;">
+          <div class="card-title">Recent Orders</div>
+          <div class="card-sub">Latest customer transactions</div>
         </div>
 
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Product</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Payment</th>
-            </tr>
-          </thead>
-          <tbody id="latestOrdersBody">
-            <tr><td colspan="5">Loading…</td></tr>
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody id="latestOrdersBody">
+              <tr><td colspan="5">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- RIGHT SIDE: QUICK ACTIONS / PANELS -->
+    <!-- RIGHT: QUICK ACTIONS -->
     <aside class="card">
       <div class="card-header">
         <div>
           <div class="card-title">Quick Actions</div>
-          <div class="card-sub">Jump into common admin tools.</div>
+          <div class="card-sub">Direct links to admin tools</div>
         </div>
       </div>
 
       <div class="quick-actions">
         <a href="admin-add-product.html" class="qa-btn">
-          <div class="qa-label">Add Product</div>
-          <div class="qa-sub">Upload images, set price & stock.</div>
+          <div class="qa-label">➕ Add Product</div>
+          <div class="qa-sub">Upload images & details</div>
         </a>
 
-        <a href="admin-manage-products.html" class="qa-btn">
-          <div class="qa-label">Manage Products</div>
-          <div class="qa-sub">Edit details, images & stock.</div>
+        <a href="manage-products.html" class="qa-btn">
+          <div class="qa-label">📦 Products</div>
+          <div class="qa-sub">Edit catalog & stock</div>
         </a>
 
-        <a href="admin-order.html" class="qa-btn">
-          <div class="qa-label">Manage Orders</div>
-          <div class="qa-sub">Update status, AWB & delivery.</div>
+        <a href="manage-orders.html" class="qa-btn">
+          <div class="qa-label">📋 Orders</div>
+          <div class="qa-sub">Tracking & status</div>
         </a>
 
-        <a href="seller-hub.html" class="qa-btn">
-          <div class="qa-label">Seller Hub</div>
-          <div class="qa-sub">Labels, shipments & partners.</div>
-        </a>
-
-        <a href="track.html" class="qa-btn">
-          <div class="qa-label">Track Panel</div>
-          <div class="qa-sub">Test tracking view like a customer.</div>
-        </a>
-
-        <a href="#" class="qa-btn" onclick="alert('Coming soon: analytics & charts 📊')">
-          <div class="qa-label">Analytics</div>
-          <div class="qa-sub">Sales & performance charts.</div>
+        <a href="manage-reviews.html" class="qa-btn">
+          <div class="qa-label">⭐ Reviews</div>
+          <div class="qa-sub">Approve & delete feedback</div>
         </a>
       </div>
 
-      <div id="statusBar">Loading dashboard data…</div>
+      <div id="statusBar">Connecting to server...</div>
     </aside>
 
   </main>
@@ -518,16 +434,11 @@
 </div>
 
 <script>
-/* ==============================
-   CONFIG
-   ============================== */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec"; // update if changed
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 const ADMIN_PIN = "3105";
 const ADMIN_FLAG = "gc_admin_auth";
 
-/* ==============================
-   LOGIN HANDLING
-   ============================== */
+/* LOGIN LOGIC */
 function initLogin() {
   const overlay = document.getElementById("loginOverlay");
   const main = document.getElementById("adminMain");
@@ -566,12 +477,10 @@ function adminLogout() {
   location.reload();
 }
 
-/* ==============================
-   DASHBOARD DATA LOADING
-   ============================== */
+/* FETCH DASHBOARD DATA */
 async function loadDashboard() {
   const statusBar = document.getElementById("statusBar");
-  statusBar.textContent = "Loading products & orders…";
+  statusBar.textContent = "Fetching latest store metrics...";
 
   try {
     const [productsRes, ordersRes] = await Promise.all([
@@ -588,10 +497,10 @@ async function loadDashboard() {
     updateMetrics(products, orders);
     renderLatestOrders(orders);
 
-    statusBar.textContent = `Loaded ${products.length} products & ${orders.length} orders.`;
+    statusBar.textContent = `Connected • ${products.length} Products | ${orders.length} Orders`;
   } catch (err) {
     console.error(err);
-    statusBar.textContent = "Error loading dashboard. Please refresh.";
+    statusBar.textContent = "Connection error. Please refresh.";
   }
 }
 
@@ -599,14 +508,14 @@ function updateMetrics(products, orders) {
   // Total products
   document.getElementById("metricProducts").textContent = products.length;
 
-  // Low stock <= 5
+  // Low stock / Out of stock (stock <= 5)
   const lowStockCount = products.filter(p => {
     const stock = Number(p["Stock"] || 0);
-    return stock > 0 && stock <= 5;
+    return stock <= 5;
   }).length;
   document.getElementById("metricLowStock").textContent = lowStockCount;
 
-  // Orders
+  // Total orders
   document.getElementById("metricOrders").textContent = orders.length;
 
   // Pending payments
@@ -622,74 +531,42 @@ function renderLatestOrders(allOrders) {
   tbody.innerHTML = "";
 
   if (!allOrders.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 5;
-    td.textContent = "No orders yet.";
-    tbody.appendChild(tr);
-    tr.appendChild(td);
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">No orders placed yet.</td></tr>';
     return;
   }
 
-  // Sort by Timestamp descending if exists
-  const orders = [...allOrders].sort((a, b) => {
-    const t1 = new Date(a["Timestamp"] || 0).getTime();
-    const t2 = new Date(b["Timestamp"] || 0).getTime();
-    return t2 - t1;
-  }).slice(0, 6); // latest 6
+  // Show latest 6 orders
+  const orders = [...allOrders].reverse().slice(0, 6);
 
   orders.forEach(o => {
     const tr = document.createElement("tr");
 
-    const tdId = document.createElement("td");
-    tdId.textContent = o["Order ID"] || "-";
-
-    const tdProd = document.createElement("td");
-    tdProd.textContent = o["Product Name"] || "-";
-
-    const tdTotal = document.createElement("td");
-    tdTotal.textContent = "₹" + (o["Total"] || "0");
-
-    const tdStatus = document.createElement("td");
-    const sBadge = document.createElement("span");
-    sBadge.className = "badge";
+    const orderId = o["Order ID"] || "-";
+    const prodName = o["Product Name"] || "-";
+    const total = "₹" + (o["Total"] || "0");
     const statusText = (o["Status"] || "Order Received").toString();
-    sBadge.textContent = statusText;
-
-    if (/delivered/i.test(statusText)) sBadge.classList.add("paid");
-    else if (/shipped|dispatched/i.test(statusText)) sBadge.classList.add("shipped");
-    else sBadge.classList.add("pending");
-    tdStatus.appendChild(sBadge);
-
-    const tdPay = document.createElement("td");
-    const pBadge = document.createElement("span");
-    pBadge.className = "badge";
     const payText = (o["Payment Status"] || "Pending").toString();
-    pBadge.textContent = payText;
-    if (/paid/i.test(payText)) pBadge.classList.add("paid");
-    else pBadge.classList.add("pending");
-    tdPay.appendChild(pBadge);
 
-    tr.appendChild(tdId);
-    tr.appendChild(tdProd);
-    tr.appendChild(tdTotal);
-    tr.appendChild(tdStatus);
-    tr.appendChild(tdPay);
+    let statusClass = "pending";
+    if (/delivered/i.test(statusText)) statusClass = "paid";
+    else if (/shipped|dispatched/i.test(statusText)) statusClass = "shipped";
+
+    let payClass = /paid/i.test(payText) ? "paid" : "pending";
+
+    tr.innerHTML = `
+      <td><strong>${orderId}</strong></td>
+      <td>${prodName}</td>
+      <td>${total}</td>
+      <td><span class="badge ${statusClass}">${statusText}</span></td>
+      <td><span class="badge ${payClass}">${payText}</span></td>
+    `;
 
     tbody.appendChild(tr);
   });
 }
 
-/* ==============================
-   INIT
-   ============================== */
 window.onload = initLogin;
 </script>
 
 </body>
 </html>
-
-
-
-
-
