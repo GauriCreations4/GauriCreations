@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Main Storefront / Home -->
+  <!-- Main Storefront Routes -->
   <url>
     <loc>https://gauricreations.github.io/</loc>
     <lastmod>2026-08-11</lastmod>
-    <changefreq>daily</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
 
@@ -16,7 +16,14 @@
     <priority>0.90</priority>
   </url>
 
-  <!-- Product Detail Template -->
+  <url>
+    <loc>https://gauricreations.github.io/store.html</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Product Details Template -->
   <url>
     <loc>https://gauricreations.github.io/product.html</loc>
     <lastmod>2026-08-11</lastmod>
@@ -24,7 +31,7 @@
     <priority>0.80</priority>
   </url>
 
-  <!-- Parcel Tracking Page -->
+  <!-- Tracking & Order Confirmation -->
   <url>
     <loc>https://gauricreations.github.io/track.html</loc>
     <lastmod>2026-08-11</lastmod>
@@ -32,7 +39,14 @@
     <priority>0.70</priority>
   </url>
 
-  <!-- Customer Authentication -->
+  <url>
+    <loc>https://gauricreations.github.io/confirmation.html</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+
+  <!-- Customer Portal & Auth -->
   <url>
     <loc>https://gauricreations.github.io/login.html</loc>
     <lastmod>2026-08-11</lastmod>
