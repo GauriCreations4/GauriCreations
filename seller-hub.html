@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Seller Hub • Shipping & Fulfillment | Gauri Creations</title>
 
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -22,7 +21,6 @@
 
   * { box-sizing: border-box; }
 
-  /* DASHBOARD STYLES (Screen Only) */
   body { 
     margin: 0; 
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
@@ -34,15 +32,8 @@
     color: #0f172a;
   }
 
-  .shell {
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  .shell { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 16px; }
 
-  /* Header Bar */
   .topbar {
     display: flex;
     align-items: center;
@@ -88,17 +79,8 @@
     border: 1px solid var(--border-color);
   }
 
-  .status-text {
-    font-size: 13px;
-    color: #64748b;
-    margin-bottom: 12px;
-    font-weight: 500;
-  }
-
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
+  .status-text { font-size: 13px; color: #64748b; margin-bottom: 12px; font-weight: 500; }
+  .table-wrapper { width: 100%; overflow-x: auto; }
 
   table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
   th, td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; text-align: left; vertical-align: middle; }
@@ -110,7 +92,6 @@
   .btn-primary { background: linear-gradient(135deg, #2563eb, #ec4899); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
   .btn-support { background: #16a34a; color: #fff; }
 
-  /* PRINT TEMPLATE STYLES (Hidden on Screen) */
   #printArea { display: none; }
 
   @media print {
@@ -160,17 +141,16 @@
 <body>
 
 <div class="shell">
-  <!-- Top Navigation Header -->
+  <!-- ✅ EXACT REPOSITORY ROUTES IN TOPBAR -->
   <header class="topbar">
     <div class="top-title">🚚 Seller Hub – Shipping & Fulfillment</div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <a href="manage-orders.html" class="pill-btn">📋 Orders</a>
-      <a href="manage-products.html" class="pill-btn">📦 Products</a>
+      <a href="admin-order.html" class="pill-btn">📋 Orders</a>
+      <a href="admin-manage-products.html" class="pill-btn">📦 Products</a>
       <a href="admin.html" class="pill-btn">🏠 Dashboard</a>
     </div>
   </header>
 
-  <!-- Table Container -->
   <div class="container">
     <div id="statusText" class="status-text">Loading paid orders live from Google Sheets...</div>
 
@@ -201,7 +181,6 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAn
 let globalOrders = [];
 const STATUS_FLOW = ["Packing", "Shipped", "Out for Delivery", "Delivered"];
 
-/* CORS-Safe POST fetch helper */
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
@@ -211,7 +190,6 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
-/* Escape raw HTML string */
 function escapeHtml(str) {
   if (!str) return "";
   return String(str)
@@ -222,7 +200,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-/* Load Paid Orders */
 async function loadOrders() {
   const statusEl = document.getElementById("statusText");
   statusEl.textContent = "Fetching orders...";
@@ -289,7 +266,6 @@ async function loadOrders() {
   }
 }
 
-/* Generate Print Shipping Label & Tax Invoice */
 function printLabel(orderId) {
   const order = globalOrders.find(o => String(o["Order ID"]) === String(orderId));
   if (!order) return alert("Order data not found!");
@@ -388,25 +364,21 @@ function printLabel(orderId) {
     </div>
   `;
 
-  // QR Code
   new QRCode(document.getElementById(`qrcode-${orderId}`), {
     text: `${orderId} | ${order["Customer Name"]} | ₹${total}`,
     width: 120,
     height: 120
   });
 
-  // Barcode
   JsBarcode(`#barcode-${orderId}`, String(orderId), {
     format: "CODE128",
     height: 38,
     displayValue: true
   });
 
-  // Trigger Print
   setTimeout(() => window.print(), 500);
 }
 
-/* Update Order Status */
 async function updateOrder(orderId, field, value) {
   try {
     const data = await callAppsScript({
