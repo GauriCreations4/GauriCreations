@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Login • Gauri Creations</title>
 
 <link rel="manifest" href="manifest.json">
@@ -12,96 +12,170 @@
 <link rel="apple-touch-icon" href="logo.png"> 
 
 <style>
-/* Base Styles */
-*{ box-sizing:border-box; outline:none; }
-body{
-  margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-  font-family:'Poppins', sans-serif;
-  /* Fallback background if images don't load */
-  background: linear-gradient(135deg, #e3f2ff 0%, #ffe5f3 100%);
-  padding: 20px;
-  position: relative;
-  overflow: hidden; /* Stops scrollbars from slideshow */
-}
+  * { box-sizing: border-box; outline: none; }
 
-/* 📸 BACKGROUND SLIDESHOW CONTAINER */
-#bg-slideshow {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -1; /* Behind everything */
-  pointer-events: none; /* Let clicks pass through */
-}
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #e3f2ff 0%, #ffe5f3 100%);
+    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px;
+    position: relative;
+    overflow: hidden;
+  }
 
-.bg-slide {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background-size: cover; background-position: center;
-  opacity: 0; /* Start hidden */
-  transition: opacity 2s ease-in-out; /* Smooth fade */
-  filter: grayscale(30%); /* Optional: makes it look classy */
-}
+  /* BACKGROUND SLIDESHOW */
+  #bg-slideshow {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
 
-/* Active slide is visible but transparent (0.2 = 20% opacity) */
-.bg-slide.active { opacity: 0.2; transform: scale(1.05); transition: opacity 2s ease-in-out, transform 10s linear; }
+  .bg-slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease-in-out, transform 10s linear;
+    filter: grayscale(20%);
+  }
 
-/* Card Style */
-.card{
-  width:100%; max-width:380px;
-  background: rgba(255,255,255,0.9); /* Slight see-through glass effect */
-  backdrop-filter: blur(10px); /* Blurs the background images behind card */
-  padding:30px; border-radius:24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  text-align:center;
-  border: 1px solid rgba(255,255,255,0.6);
-  z-index: 10; /* Above the slideshow */
-}
+  .bg-slide.active {
+    opacity: 0.25;
+    transform: scale(1.05);
+  }
 
-h2{ margin:0 0 20px 0; color:#333; font-size: 22px; }
+  /* CARD STYLES */
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 32px 28px;
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    z-index: 10;
+  }
 
-/* Input Fields */
-.input-group { position: relative; margin-bottom: 15px; }
-input{
-  width:100%; padding:14px;
-  border-radius:14px; border:1px solid #ddd;
-  font-size:15px; background: rgba(255,255,255,0.8);
-  transition: all 0.3s;
-}
-input:focus { border-color: #0071e3; background: #fff; }
+  h2 {
+    margin: 0 0 20px 0;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 800;
+  }
 
-/* Eye Icon */
-.toggle-pw {
-  position: absolute; right: 15px; top: 14px;
-  cursor: pointer; font-size: 18px; color: #777;
-  background: none; border: none; padding: 0;
-}
+  .input-group {
+    position: relative;
+    margin-bottom: 14px;
+  }
 
-/* Buttons */
-.btn-primary{
-  width:100%; padding:14px; margin-top:10px;
-  border:none; border-radius:14px;
-  background: linear-gradient(135deg, #0071e3, #42a5f5);
-  color:#fff; font-size:16px; font-weight:600;
-  cursor:pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.2);
-}
-.btn-primary:active { transform: scale(0.98); }
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.85);
+    transition: all 0.2s;
+  }
 
-.guest-btn{
-  width: 100%; padding: 12px; margin-top: 10px;
-  background: rgba(255,255,255,0.5); color: #444;
-  border: 1px solid #ccc; border-radius: 14px;
-  font-size: 14px; font-weight: 500; cursor: pointer;
-}
-.guest-btn:hover { background: #fff; }
+  input:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+  }
 
-.links{ margin-top:20px; font-size:14px; color: #666; }
-.links a{ color:#0071e3; text-decoration:none; font-weight:600; }
-.error{ color:#ff3b30; font-size:13px; margin-top:15px; min-height: 18px; font-weight: 500;}
+  .toggle-pw {
+    position: absolute;
+    right: 14px;
+    top: 13px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #64748b;
+    background: none;
+    border: none;
+    padding: 0;
+  }
 
-.loader {
-  display: none; width: 20px; height: 20px; margin-left: 10px;
-  border: 3px solid #fff; border-bottom-color: transparent;
-  border-radius: 50%; animation: spin 1s linear infinite;
-  vertical-align: middle;
-}
-@keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary:active { transform: scale(0.98); }
+
+  .guest-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .guest-btn:hover { background: #ffffff; }
+
+  .links {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .links a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .error {
+    color: #e11d48;
+    font-size: 13px;
+    margin-top: 14px;
+    min-height: 18px;
+    font-weight: 600;
+  }
+
+  .loader {
+    display: none;
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    border: 2px solid #ffffff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 </style>
 </head>
 
@@ -112,18 +186,21 @@ input:focus { border-color: #0071e3; background: #fff; }
 <div class="card">
   <h2>Welcome Back</h2>
 
-  <div class="input-group">
-    <input id="email" type="email" placeholder="Email Address">
-  </div>
+  <form id="loginForm" onsubmit="event.preventDefault(); login();">
+    <div class="input-group">
+      <input id="email" type="email" placeholder="Email Address" required />
+    </div>
 
-  <div class="input-group">
-    <input id="password" type="password" placeholder="Password">
-    <button type="button" class="toggle-pw" onclick="togglePw()">👁️</button>
-  </div>
+    <div class="input-group">
+      <input id="password" type="password" placeholder="Password" required />
+      <button type="button" class="toggle-pw" onclick="togglePw()">👁️</button>
+    </div>
 
-  <button type="button" class="btn-primary" onclick="login()" id="loginBtn">
-    Login <span class="loader" id="loader"></span>
-  </button>
+    <button type="submit" class="btn-primary" id="loginBtn">
+      <span>Login</span>
+      <span class="loader" id="loader"></span>
+    </button>
+  </form>
 
   <button type="button" class="guest-btn" onclick="continueAsGuest()">
     Continue as Guest
@@ -139,40 +216,67 @@ input:focus { border-color: #0071e3; background: #fff; }
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-// Redirect if logged in
+// Redirect immediately if already logged in
 if (localStorage.getItem("gc_customer")) {
-  window.location.href = "store.html";
+  window.location.href = "index.html";
 }
 
-// 📸 LOAD BACKGROUND SLIDESHOW
+/* CORS-Safe Fetch Helper */
+async function callAppsScript(payload) {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
+
+/* Image Normalizer for Google Drive Assets */
+function normalizeImageForThumb(url) {
+  if (!url) return "";
+  url = String(url).trim();
+  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
+    if (url.includes('=w') || url.includes('=s')) return url;
+  }
+  const m = url.match(/[-A-Za-z0-9_]+/g);
+  if (m && m.length) {
+    const candidate = m.reduce((a, b) => a.length > b.length ? a : b, "");
+    if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w800`;
+  }
+  return url;
+}
+
+/* Background Slideshow Loader */
 window.onload = async function() {
   try {
     const res = await fetch(SCRIPT_URL + "?action=getProducts");
     const data = await res.json();
-    if(data.products && data.products.length > 0) {
+    if (data.products && data.products.length > 0) {
       startSlideshow(data.products);
     }
-  } catch(e) { console.log("Bg load failed"); }
+  } catch(e) { 
+    console.log("Background image load bypassed"); 
+  }
 };
 
 function startSlideshow(products) {
   const container = document.getElementById("bg-slideshow");
-  // Shuffle and pick random 6 images
   const shuffled = products.sort(() => 0.5 - Math.random()).slice(0, 6);
   
   shuffled.forEach((p, i) => {
-    let img = getImg(p);
+    let img = normalizeImageForThumb(p["Image URL 1"] || p.imageUrl1 || p.Image || "");
+    if (!img) return;
+    
     let div = document.createElement("div");
     div.className = "bg-slide";
     div.style.backgroundImage = `url('${img}')`;
-    if(i === 0) div.classList.add("active");
+    if (i === 0) div.classList.add("active");
     container.appendChild(div);
   });
 
-  // Cycle images every 5 seconds
   let current = 0;
   const slides = document.querySelectorAll(".bg-slide");
-  if(slides.length > 1) {
+  if (slides.length > 1) {
     setInterval(() => {
       slides[current].classList.remove("active");
       current = (current + 1) % slides.length;
@@ -181,29 +285,16 @@ function startSlideshow(products) {
   }
 }
 
-function getImg(p){
-  let url = p["Image URL 1"] || p.imageUrl1 || p.Image || "";
-  if (!url) {
-    Object.keys(p).forEach(k => {
-      if(k.toLowerCase().includes("image") && p[k]) url = p[k];
-    });
-  }
-  // Google Drive fix
-  if (url && url.includes("drive.google.com") && url.includes("id=")) {
-    const match = url.match(/id=([^&]+)/);
-    if (match) return "https://lh3.googleusercontent.com/d/" + match[1];
-  }
-  return url;
+function continueAsGuest() { 
+  window.location.href = "index.html"; 
 }
 
-function continueAsGuest(){ window.location.href = "store.html"; }
-
-function togglePw(){
+function togglePw() {
   const p = document.getElementById("password");
   p.type = p.type === "password" ? "text" : "password";
 }
-  
-async function login(){
+
+async function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const errorBox = document.getElementById("error");
@@ -211,8 +302,9 @@ async function login(){
   const loader = document.getElementById("loader");
 
   errorBox.textContent = "";
-  if(!email || !password){
-    errorBox.textContent = "Please enter both email and password.";
+
+  if (!email || !password) {
+    errorBox.textContent = "Please fill in both email and password.";
     return;
   }
 
@@ -220,15 +312,14 @@ async function login(){
   loader.style.display = "inline-block";
   btn.style.opacity = "0.8";
 
-  try{
-    const url = SCRIPT_URL + "?action=customerLogin" + 
-                "&email=" + encodeURIComponent(email) + 
-                "&password=" + encodeURIComponent(password);
+  try {
+    const data = await callAppsScript({
+      action: "customerLogin",
+      email: email,
+      password: password
+    });
 
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if(!data.success){
+    if (!data.success) {
       errorBox.textContent = data.message || "Invalid email or password.";
       btn.disabled = false;
       loader.style.display = "none";
@@ -237,11 +328,11 @@ async function login(){
     }
 
     localStorage.setItem("gc_customer", JSON.stringify(data.customer));
-    window.location.href = "store.html";
+    window.location.href = "index.html";
 
-  } catch(err){
+  } catch (err) {
     console.error(err);
-    errorBox.textContent = "Connection failed. Check your internet.";
+    errorBox.textContent = "Connection failed. Please check your network.";
     btn.disabled = false;
     loader.style.display = "none";
     btn.style.opacity = "1";
