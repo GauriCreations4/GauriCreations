@@ -2,155 +2,221 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Track Order • Gauri Creations</title>
+
+<!-- Favicon & PWA -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2563eb">
 
 <style>
   :root {
     --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3);
-    --glass: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass: rgba(255, 255, 255, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.7);
     --accent: #2563eb;
     --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
-    --text-main: #1e293b;
+    --text-main: #0f172a;
     --success: #22c55e;
     --gray: #cbd5e1;
   }
 
+  * { box-sizing: border-box; }
+
   body {
-    margin: 0; min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
+    margin: 0; 
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg-grad);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; box-sizing: border-box;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px; 
+    color: var(--text-main);
   }
 
   /* GLASS CARD */
   .card {
     background: var(--glass);
-    width: 100%; max-width: 420px;
-    padding: 30px 20px;
+    width: 100%; 
+    max-width: 440px;
+    padding: 30px 22px;
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
     border: 1px solid var(--glass-border);
     text-align: center;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
-  .logo { width: 80px; border-radius: 12px; margin-bottom: 10px; }
+  .logo { 
+    width: 60px; 
+    height: 60px;
+    border-radius: 16px; 
+    object-fit: cover;
+    margin-bottom: 12px; 
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
 
-  h2 { margin: 0 0 5px 0; color: var(--text-main); font-weight: 700; }
-  p { color: #64748b; margin: 0 0 20px 0; font-size: 14px; }
+  h2 { margin: 0 0 4px 0; color: var(--text-main); font-weight: 800; font-size: 22px; }
+  p { color: #64748b; margin: 0 0 20px 0; font-size: 13px; }
 
   /* INPUT & BUTTON */
-  .input-group { position: relative; margin-bottom: 20px; }
+  .input-group { position: relative; margin-bottom: 16px; }
   
   input {
-    width: 100%; padding: 14px; border-radius: 14px;
-    border: 1px solid #cbd5e1; background: rgba(255,255,255,0.6);
-    font-size: 16px; text-align: center; outline: none;
-    box-sizing: border-box; transition: 0.3s;
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 14px;
+    border: 1px solid #cbd5e1; 
+    background: #ffffff;
+    font-size: 15px; 
+    text-align: center; 
+    outline: none;
+    transition: border-color 0.2s;
   }
-  input:focus { border-color: var(--accent); background: #fff; }
+  
+  input:focus { border-color: var(--accent); }
 
   button {
-    width: 100%; padding: 14px; border: none; border-radius: 14px;
-    background: var(--accent-grad); color: white;
-    font-size: 16px; font-weight: 600; cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    transition: transform 0.2s;
+    width: 100%; 
+    padding: 14px; 
+    border: none; 
+    border-radius: 999px;
+    background: var(--accent-grad); 
+    color: #ffffff;
+    font-size: 15px; 
+    font-weight: 700; 
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    transition: transform 0.15s, opacity 0.2s;
   }
+  
   button:active { transform: scale(0.98); }
 
   /* RESULT AREA */
   .result-box {
-    margin-top: 25px; display: none; /* Hidden initially */
-    animation: slideUp 0.5s ease-out;
+    margin-top: 24px; 
+    display: none;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   /* STATUS ICON */
-  .status-icon { font-size: 50px; margin-bottom: 10px; display: block; }
-  .status-text { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
-  .order-id-display { font-size: 13px; color: #64748b; margin-bottom: 25px; }
+  .status-icon { font-size: 48px; margin-bottom: 8px; display: block; }
+  .status-text { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .order-id-display { font-size: 13px; color: #64748b; margin-bottom: 24px; }
 
   /* HORIZONTAL STEPPER */
   .stepper {
-    display: flex; justify-content: space-between;
-    position: relative; margin-top: 30px;
+    display: flex; 
+    justify-content: space-between;
+    position: relative; 
+    margin-top: 28px;
   }
 
-  /* The Line Behind */
+  /* Background Line */
   .stepper::before {
-    content: ''; position: absolute; top: 15px; left: 0; right: 0;
-    height: 4px; background: var(--gray); z-index: 0;
+    content: ''; 
+    position: absolute; 
+    top: 16px; 
+    left: 10px; 
+    right: 10px;
+    height: 4px; 
+    background: var(--gray); 
+    z-index: 0;
     border-radius: 4px;
   }
 
-  /* The Progress Line */
+  /* Active Progress Line */
   .progress-line {
-    position: absolute; top: 15px; left: 0;
-    height: 4px; background: var(--success); z-index: 1;
-    border-radius: 4px; width: 0%; /* Dynamic Width */
+    position: absolute; 
+    top: 16px; 
+    left: 10px;
+    height: 4px; 
+    background: var(--success); 
+    z-index: 1;
+    border-radius: 4px; 
+    width: 0%; 
     transition: width 0.5s ease;
   }
 
   .step {
-    position: relative; z-index: 2;
-    display: flex; flex-direction: column; align-items: center;
+    position: relative; 
+    z-index: 2;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
     width: 25%;
   }
 
   .dot {
-    width: 34px; height: 34px; background: #fff; border: 3px solid var(--gray);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: bold; color: #fff; /* Increased font slightly for emoji */
-    transition: 0.3s;
+    width: 32px; 
+    height: 32px; 
+    background: #ffffff; 
+    border: 3px solid var(--gray);
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 13px; 
+    font-weight: bold; 
+    color: #ffffff;
+    transition: background 0.3s, border-color 0.3s;
   }
 
   .step-label {
-    font-size: 10px; color: #94a3b8; font-weight: 600;
-    margin-top: 8px; text-transform: uppercase;
+    font-size: 10px; 
+    color: #94a3b8; 
+    font-weight: 700;
+    margin-top: 8px; 
+    text-transform: uppercase;
     text-align: center;
   }
 
-  /* Active State */
+  /* Active Stepper Dots */
   .step.active .dot {
-    background: var(--success); border-color: var(--success);
+    background: var(--success); 
+    border-color: var(--success);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
   }
+  
   .step.active .step-label { color: var(--text-main); }
 
   /* Back Button */
   .back-link {
-    display: block; margin-top: 25px;
-    color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500;
+    display: block; 
+    margin-top: 24px;
+    color: #64748b; 
+    text-decoration: none; 
+    font-size: 13px; 
+    font-weight: 600;
+    transition: color 0.2s;
   }
+
+  .back-link:hover { color: var(--accent); }
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <img src="logo.png" class="logo" onerror="this.style.display='none'">
-  <h2>Track Order</h2>
-  <p>See where your package is right now</p>
+  <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
+  <h2>Track Parcel</h2>
+  <p>Check live shipment and delivery progress</p>
 
   <div class="input-group">
-    <input type="text" id="orderInput" placeholder="Enter Order ID (e.g. GC-101)">
+    <input type="text" id="orderInput" placeholder="Enter Order ID (e.g. GC-101)" autofocus />
   </div>
-  <button onclick="trackOrder()">Track Now</button>
+  <button id="trackBtn" onclick="trackOrder()">Track Now</button>
 
   <div id="result" class="result-box">
-    
     <div class="status-icon" id="mainIcon">📦</div>
     <div class="status-text" id="mainStatus">Searching...</div>
     <div class="order-id-display" id="displayId"></div>
@@ -177,14 +243,13 @@
     </div>
   </div>
 
-  <a href="store.html" class="back-link">← Back to Store</a>
+  <a href="index.html" class="back-link">← Back to Store</a>
 </div>
 
 <script>
-// 🔴 SCRIPT URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-// Mapping Status to Steps
+// Mapping Status to Stepper Bar Levels
 const STEP_MAPPING = {
   "Order Received": 1,
   "Payment Verified": 1,
@@ -196,83 +261,107 @@ const STEP_MAPPING = {
   "Cancelled": 0
 };
 
-async function trackOrder(){
+/* Safety HTML Escape */
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+async function trackOrder() {
   const input = document.getElementById("orderInput");
   const resultBox = document.getElementById("result");
+  const trackBtn = document.getElementById("trackBtn");
   const orderId = input.value.trim().toUpperCase();
 
-  if(!orderId){ alert("Please enter an Order ID"); return; }
+  if (!orderId) { 
+    alert("Please enter a valid Order ID"); 
+    return; 
+  }
 
-  // Reset UI
+  // Reset UI State
   resultBox.style.display = "block";
   document.getElementById("mainStatus").textContent = "Searching...";
   document.getElementById("mainIcon").textContent = "🔍";
-  document.getElementById("displayId").textContent = "Checking Order #" + orderId;
-  updateStepper(0); // Clear bar
+  document.getElementById("displayId").textContent = "Checking Order #" + escapeHtml(orderId);
+  updateStepper(0);
+
+  trackBtn.disabled = true;
+  trackBtn.textContent = "Checking...";
 
   try {
     const res = await fetch(`${SCRIPT_URL}?action=trackOrder&orderId=${encodeURIComponent(orderId)}`);
     const data = await res.json();
 
-    if(!data.success){
+    if (!data.success) {
       document.getElementById("mainStatus").textContent = "Order Not Found";
       document.getElementById("mainIcon").textContent = "❌";
-      document.getElementById("displayId").textContent = "Please check the ID and try again.";
+      document.getElementById("displayId").textContent = "Please verify your Order ID and try again.";
       return;
     }
 
-    // Success! Update UI
-    const status = data.status || "Processing";
-    const stepLevel = STEP_MAPPING[status] || 1;
+    const status = data.status || "Order Received";
+    const stepLevel = STEP_MAPPING[status] !== undefined ? STEP_MAPPING[status] : 1;
 
-    // 1. Update Top Text
+    // Set Header Status
     document.getElementById("mainStatus").textContent = status;
-    document.getElementById("displayId").textContent = "Order #" + orderId;
+    document.getElementById("displayId").textContent = "Order #" + escapeHtml(orderId);
     
-    // Set Icon based on status
-    let icon = "📝"; // Default (Order Received)
-    if(status.includes("Pack")) icon = "📦"; // Packed
-    if(status.includes("Ship") || status.includes("Out")) icon = "🚚"; // Shipped
-    if(status.includes("Deliver")) icon = "🎉"; // Delivered
-    if(status.includes("Cancel")) icon = "🚫"; // Cancelled
+    // Status Icon Assignment
+    let icon = "📝";
+    if (status.includes("Pack")) icon = "📦";
+    if (status.includes("Ship") || status.includes("Out")) icon = "🚚";
+    if (status.includes("Deliver")) icon = "🎉";
+    if (status.includes("Cancel")) icon = "🚫";
     
     document.getElementById("mainIcon").textContent = icon;
 
-    // 2. Update Progress Bar
+    // Progress Line Update
     updateStepper(stepLevel);
 
   } catch(e) {
     console.error(e);
     document.getElementById("mainStatus").textContent = "Network Error";
     document.getElementById("mainIcon").textContent = "⚠️";
+    document.getElementById("displayId").textContent = "Connection failed. Please try again.";
+  } finally {
+    trackBtn.disabled = false;
+    trackBtn.textContent = "Track Now";
   }
 }
 
 function updateStepper(level) {
-  // Update Dots
-  for(let i=1; i<=4; i++){
-    const el = document.getElementById("step"+i);
-    if(i <= level) el.classList.add("active");
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById("step" + i);
+    if (i <= level) el.classList.add("active");
     else el.classList.remove("active");
   }
 
-  // Update Line Width
   const bar = document.getElementById("progressBar");
-  if(level <= 1) bar.style.width = "0%";
-  else if(level === 2) bar.style.width = "33%";
-  else if(level === 3) bar.style.width = "66%";
-  else if(level >= 4) bar.style.width = "100%";
+  if (level <= 1) bar.style.width = "0%";
+  else if (level === 2) bar.style.width = "30%";
+  else if (level === 3) bar.style.width = "65%";
+  else if (level >= 4) bar.style.width = "95%";
 }
 
-// Check for ?orderId= URL parameter
-window.onload = function() {
+// Auto-track if 'orderId' is in query URL
+document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const autoId = urlParams.get('orderId');
-  if(autoId) {
-    document.getElementById("orderInput").value = autoId;
+  if (autoId) {
+    document.getElementById("orderInput").value = decodeURIComponent(autoId).trim();
     trackOrder();
   }
-}
+
+  // Submit on Enter Key Press
+  document.getElementById("orderInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") trackOrder();
+  });
+});
 </script>
 
 </body>
