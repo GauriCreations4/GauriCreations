@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Admin Dashboard • Gauri Creations</title>
 
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico"> 
+<link rel="apple-touch-icon" href="logo-gauri.jpeg"> 
 
 <style>
   :root {
@@ -15,11 +14,6 @@
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(255, 255, 255, 0.6);
     --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.25);
-    --accent-blue: #2563eb;
-    --accent-pink: #ec4899;
-    --accent-green: #22c55e;
-    --accent-amber: #f59e0b;
-    --danger-red: #ef4444;
   }
 
   * { box-sizing: border-box; }
@@ -36,13 +30,7 @@
     color: #0f172a;
   }
 
-  .shell {
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+  .shell { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 14px; }
 
   /* LOGIN OVERLAY */
   #loginOverlay {
@@ -95,12 +83,7 @@
     width: 100%;
   }
 
-  .login-error {
-    font-size: 12px;
-    color: #fecaca;
-    margin-top: 8px;
-    display: none;
-  }
+  .login-error { font-size: 12px; color: #fecaca; margin-top: 8px; display: none; }
 
   /* TOPBAR */
   .topbar {
@@ -131,12 +114,7 @@
   .title-main { font-size: 18px; font-weight: 700; }
   .subtitle { font-size: 12px; color: #4b5563; }
 
-  .top-right {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .top-right { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
   .pill-btn {
     border-radius: 999px;
@@ -160,15 +138,8 @@
   }
 
   /* LAYOUT */
-  .main-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
-    gap: 14px;
-  }
-
-  @media (max-width: 900px) {
-    .main-layout { grid-template-columns: minmax(0, 1fr); }
-  }
+  .main-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr); gap: 14px; }
+  @media (max-width: 900px) { .main-layout { grid-template-columns: minmax(0, 1fr); } }
 
   .card {
     border-radius: 22px;
@@ -178,28 +149,13 @@
     padding: 16px;
   }
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: baseline;
-    margin-bottom: 8px;
-  }
-
+  .card-header { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 8px; }
   .card-title { font-size: 15px; font-weight: 700; }
   .card-sub { font-size: 11px; color: #6b7280; }
 
   /* METRICS */
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 4px;
-  }
-
-  @media (min-width: 600px) {
-    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
-  }
+  .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
+  @media (min-width: 600px) { .metrics-grid { grid-template-columns: repeat(4, 1fr); } }
 
   .metric {
     border-radius: 16px;
@@ -214,63 +170,23 @@
   .metric-label { font-size: 11px; color: #6b7280; font-weight: 600; }
   .metric-value { font-size: 22px; font-weight: 800; color: #0f172a; }
 
-  .metric-pill {
-    align-self: flex-start;
-    margin-top: 4px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 700;
-  }
-
+  .metric-pill { align-self: flex-start; margin-top: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
   .metric-pill.blue { background: rgba(37, 99, 235, 0.12); color: #1d4ed8; }
   .metric-pill.green { background: rgba(34, 197, 94, 0.12); color: #15803d; }
   .metric-pill.amber { background: rgba(245, 158, 11, 0.15); color: #b45309; }
   .metric-pill.red { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
 
-  /* ORDERS TABLE */
   .table-wrapper { width: 100%; overflow-x: auto; }
+  .orders-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }
+  .orders-table th, .orders-table td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  .orders-table th { font-size: 11px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.04em; }
 
-  .orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 6px;
-    font-size: 12px;
-  }
-
-  .orders-table th, .orders-table td {
-    padding: 8px 6px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .orders-table th {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #6b7280;
-    letter-spacing: 0.04em;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 700;
-  }
-
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
   .badge.pending { background: rgba(251, 191, 36, 0.2); color: #92400e; }
   .badge.paid { background: rgba(22, 163, 74, 0.15); color: #166534; }
   .badge.shipped { background: rgba(37, 99, 235, 0.15); color: #1d4ed8; }
 
-  /* QUICK ACTIONS */
-  .quick-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 10px;
-    margin-top: 6px;
-  }
+  .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 6px; }
 
   .qa-btn {
     border-radius: 16px;
@@ -287,26 +203,15 @@
     transition: transform 0.15s, border-color 0.15s;
   }
 
-  .qa-btn:hover {
-    transform: translateY(-2px);
-    border-color: #2563eb;
-  }
-
+  .qa-btn:hover { transform: translateY(-2px); border-color: #2563eb; }
   .qa-label { font-weight: 700; color: #0f172a; }
   .qa-sub { font-size: 10px; color: #6b7280; }
 
-  #statusBar {
-    font-size: 11px;
-    color: #6b7280;
-    margin-top: 12px;
-    text-align: right;
-    font-weight: 500;
-  }
+  #statusBar { font-size: 11px; color: #6b7280; margin-top: 12px; text-align: right; font-weight: 500; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
 <div id="loginOverlay">
   <div class="login-box">
     <h2>Admin Login</h2>
@@ -319,7 +224,6 @@
 
 <div class="shell" id="adminMain" style="display:none;">
 
-  <!-- TOPBAR -->
   <header class="topbar">
     <div class="top-left">
       <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/46?text=GC'" />
@@ -335,10 +239,8 @@
     </div>
   </header>
 
-  <!-- MAIN GRID -->
   <main class="main-layout">
 
-    <!-- LEFT: METRICS + ORDERS -->
     <section class="card">
       <div class="card-header">
         <div>
@@ -395,7 +297,6 @@
       </div>
     </section>
 
-    <!-- RIGHT: QUICK ACTIONS -->
     <aside class="card">
       <div class="card-header">
         <div>
@@ -404,6 +305,7 @@
         </div>
       </div>
 
+      <!-- ✅ EXACT FILE NAMES FROM REPOSITORY -->
       <div class="quick-actions">
         <a href="admin-add-product.html" class="qa-btn">
           <div class="qa-label">➕ Add Product</div>
@@ -415,7 +317,7 @@
           <div class="qa-sub">Edit catalog & stock</div>
         </a>
 
-        <a href="admin-orders.html" class="qa-btn">
+        <a href="admin-order.html" class="qa-btn">
           <div class="qa-label">📋 Orders</div>
           <div class="qa-sub">Tracking & status</div>
         </a>
@@ -423,6 +325,11 @@
         <a href="admin-manage-reviews.html" class="qa-btn">
           <div class="qa-label">⭐ Reviews</div>
           <div class="qa-sub">Approve & delete feedback</div>
+        </a>
+
+        <a href="seller-hub.html" class="qa-btn">
+          <div class="qa-label">🚚 Seller Hub</div>
+          <div class="qa-sub">Print shipping labels</div>
         </a>
       </div>
 
@@ -438,7 +345,6 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAn
 const ADMIN_PIN = "3105";
 const ADMIN_FLAG = "gc_admin_auth";
 
-/* LOGIN LOGIC */
 function initLogin() {
   const overlay = document.getElementById("loginOverlay");
   const main = document.getElementById("adminMain");
@@ -477,7 +383,6 @@ function adminLogout() {
   location.reload();
 }
 
-/* FETCH DASHBOARD DATA */
 async function loadDashboard() {
   const statusBar = document.getElementById("statusBar");
   statusBar.textContent = "Fetching latest store metrics...";
@@ -505,20 +410,16 @@ async function loadDashboard() {
 }
 
 function updateMetrics(products, orders) {
-  // Total products
   document.getElementById("metricProducts").textContent = products.length;
 
-  // Low stock / Out of stock (stock <= 5)
   const lowStockCount = products.filter(p => {
     const stock = Number(p["Stock"] || 0);
     return stock <= 5;
   }).length;
   document.getElementById("metricLowStock").textContent = lowStockCount;
 
-  // Total orders
   document.getElementById("metricOrders").textContent = orders.length;
 
-  // Pending payments
   const pendingPayments = orders.filter(o => {
     const pay = (o["Payment Status"] || "").toString().toLowerCase();
     return pay === "pending" || pay === "unpaid" || pay === "";
@@ -535,7 +436,6 @@ function renderLatestOrders(allOrders) {
     return;
   }
 
-  // Show latest 6 orders
   const orders = [...allOrders].reverse().slice(0, 6);
 
   orders.forEach(o => {
