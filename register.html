@@ -2,105 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Register • Gauri Creations</title>
+
+<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
- <link rel="apple-touch-icon" href="favicon.ico"> 
+<link rel="apple-touch-icon" href="favicon.ico"> 
 
 <style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:Poppins,system-ui;
-  background:linear-gradient(135deg,#86e1ff,#ffd4b8);
-}
-.card{
-  width:100%;
-  max-width:400px;
-  background:#ffffffee;
-  padding:28px;
-  border-radius:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-  text-align:center; /* Centers text and inline elements */
-  display: flex;     /* Flexbox for perfect alignment */
-  flex-direction: column;
-  align-items: center; /* Centers block elements like inputs */
-}
-.logo{
-  width:110px;
-  border-radius:14px;
-  margin-bottom:12px;
-}
-h2{margin:6px 0 14px}
+  :root {
+    --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    --primary-blue: #2563eb;
+    --accent-pink: #ec4899;
+  }
 
-/* 🔥 CENTERED INPUTS CSS */
-input,textarea{
-  width: 100%;           /* Fill the available space */
-  max-width: 320px;      /* Prevent them from getting too wide */
-  padding: 13px;
-  margin-top: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  box-sizing: border-box; /* Crucial for centering with padding */
-  text-align: center;    /* Optional: Centers text inside the box */
-}
-textarea{resize:none}
+  * { box-sizing: border-box; }
 
-button{
-  width:100%;
-  max-width: 320px;      /* Match input width */
-  padding:14px;
-  margin-top:18px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#2563eb,#ec4899);
-  color:#fff;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-}
-.guest-btn{
-  background:#fff;
-  color:#333;
-  border:1px solid #ccc;
-  margin-top:10px;
-}
-.error{
-  color:#dc2626;
-  font-size:13px;
-  margin-top:10px;
-}
-.small{
-  font-size:13px;
-  margin-top:14px;
-}
-.small a{
-  color:#2563eb;
-  font-weight:600;
-  text-decoration:none;
-}
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-grad);
+    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px;
+    color: #0f172a;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-bg);
+    padding: 30px 24px;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    object-fit: cover;
+    margin-bottom: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  h2 { margin: 4px 0 16px; font-size: 22px; font-weight: 800; }
+
+  /* Input Controls */
+  input, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: 14px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--primary-blue);
+  }
+
+  textarea { resize: vertical; min-height: 70px; }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--accent-pink));
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  button:active { transform: scale(0.98); }
+
+  .guest-btn {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    margin-top: 10px;
+    box-shadow: none;
+  }
+
+  .guest-btn:hover { background: #f8fafc; }
+
+  .error {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+    font-weight: 600;
+  }
+
+  .small {
+    font-size: 13px;
+    margin-top: 18px;
+    color: #64748b;
+  }
+
+  .small a {
+    color: var(--primary-blue);
+    font-weight: 700;
+    text-decoration: none;
+  }
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <img src="logo-gauri.jpeg" class="logo">
+  <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
   <h2>Create Account</h2>
 
-  <input id="name" placeholder="Full Name">
-  <input id="email" placeholder="Email">
-  <input id="phone" placeholder="Phone">
-  <textarea id="address" rows="3" placeholder="Address"></textarea>
-  <input id="password" type="password" placeholder="Password">
+  <input id="name" placeholder="Full Name *" required />
+  <input id="email" type="email" placeholder="Email Address *" required />
+  <input id="phone" type="tel" placeholder="10-Digit Phone Number *" required />
+  <textarea id="address" rows="3" placeholder="Delivery Address (House No, Street, City)"></textarea>
+  <input id="password" type="password" placeholder="Password *" required />
 
-  <button onclick="register()">Register</button>
-
-  <button class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
+  <button id="registerBtn" onclick="register()">Create Account</button>
+  <button type="button" class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
 
   <div id="error" class="error"></div>
 
@@ -110,53 +149,74 @@ button{
 </div>
 
 <script>
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-function continueAsGuest(){
-  window.location.href = "store.html";
+/* CORS-Safe Fetch Helper */
+async function callAppsScript(payload) {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
 }
 
-async function register(){
-  const body = {
-    name: document.getElementById("name").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    address: document.getElementById("address").value.trim(),
-    password: document.getElementById("password").value.trim()
-  };
+function continueAsGuest() {
+  window.location.href = "index.html";
+}
+
+async function register() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const password = document.getElementById("password").value.trim();
 
   const errorBox = document.getElementById("error");
+  const regBtn = document.getElementById("registerBtn");
   errorBox.textContent = "";
 
-  if(!body.name || !body.email || !body.phone || !body.password){
-    errorBox.textContent = "Please fill all required fields";
+  if (!name || !email || !phone || !password) {
+    errorBox.textContent = "Please fill in all required fields (*)";
     return;
   }
 
-  try{
-    const res = await fetch(SCRIPT_URL + "?action=customerSignup",{
-      method:"POST",
-      body:JSON.stringify(body)
+  regBtn.disabled = true;
+  regBtn.textContent = "Creating Account...";
+
+  try {
+    const data = await callAppsScript({
+      action: "customerSignup",
+      name: name,
+      email: email,
+      phone: phone,
+      address: address,
+      password: password
     });
 
-    const data = await res.json();
-    if(!data.success){
-      errorBox.textContent = "Registration failed";
+    if (!data.success) {
+      errorBox.textContent = data.message || "Registration failed. Try a different email.";
+      regBtn.disabled = false;
+      regBtn.textContent = "Create Account";
       return;
     }
 
-    // auto-login after signup
+    // Auto-login session storage including phone and address
     localStorage.setItem("gc_customer", JSON.stringify({
-      id:data.customerId,
-      name:body.name,
-      email:body.email
+      id: data.customerId,
+      name: name,
+      email: email,
+      phone: phone,
+      address: address
     }));
 
-    window.location.href = "store.html";
+    window.location.href = "index.html";
 
-  }catch(err){
-    errorBox.textContent = "Network error. Try again.";
+  } catch (err) {
+    console.error(err);
+    errorBox.textContent = "Network error. Please try again.";
+    regBtn.disabled = false;
+    regBtn.textContent = "Create Account";
   }
 }
 </script>
