@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Complete Payment • Gauri Creations</title>
 
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
 
 <style>
   :root {
@@ -67,9 +66,7 @@
     color: #475569;
   }
 
-  .summary-row strong {
-    color: #0f172a;
-  }
+  .summary-row strong { color: #0f172a; }
 
   .qr-wrap { 
     margin: 12px 0;
@@ -108,7 +105,7 @@
     text-decoration: none;
     color: #0f172a;
     font-size: 14px;
-    transition: transform 0.1s, border-color 0.2s;
+    transition: transform 0.1s;
   }
 
   .pay-pill:active { transform: scale(0.98); }
@@ -131,7 +128,6 @@
 
   .confirm-btn:active { transform: scale(0.98); }
 
-  /* SCANNING ANIMATION */
   .wait-area {
     margin-top: 20px;
     display: none;
@@ -165,14 +161,8 @@
     100% { transform: translateX(46px); }
   }
 
-  .switch-track.active {
-    background: #22c55e;
-  }
-
-  .switch-track.active .switch-thumb {
-    animation: none;
-    transform: translateX(46px);
-  }
+  .switch-track.active { background: #22c55e; }
+  .switch-track.active .switch-thumb { animation: none; transform: translateX(46px); }
 
   .status-text {
     margin-top: 12px;
@@ -187,7 +177,6 @@
 <body>
 
 <div class="card">
-
   <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
   
   <h2 style="margin: 0 0 4px 0; font-size: 20px; font-weight: 800;">Complete Payment</h2>
@@ -229,12 +218,8 @@ document.getElementById("summaryOrderId").textContent = orderId || "N/A";
 
 let pollInterval = null;
 
-/* 1. LOAD ORDER DETAILS */
 async function loadOrder() {
-  if (!orderId) {
-    document.getElementById("summaryProduct").textContent = "Order ID Missing";
-    return;
-  }
+  if (!orderId) return;
 
   try {
     const res = await fetch(`${SCRIPT_URL}?action=listOrders`);
@@ -255,7 +240,6 @@ async function loadOrder() {
   }
 }
 
-/* 2. START POLLING FOR PAYMENT VERIFICATION */
 function startPaymentCheck() {
   document.getElementById("confirmButton").style.display = "none";
   document.getElementById("waitArea").style.display = "flex";
@@ -264,7 +248,6 @@ function startPaymentCheck() {
   pollInterval = setInterval(checkPayment, 4000); 
 }
 
-/* 3. CHECK PAYMENT STATUS */
 async function checkPayment() {
   if (!orderId) return;
 
@@ -282,9 +265,9 @@ async function checkPayment() {
       textEl.textContent = "Payment Verified Successfully! ✔";
       textEl.style.color = "#16a34a";
       
-      // FIXED ROUTE: Redirect to order-confirmed.html
+      // ✅ REDIRECTS TO confirmation.html FROM YOUR REPOSITORY
       setTimeout(() => {
-        window.location.href = `order-confirmed.html?orderId=${encodeURIComponent(orderId)}`;
+        window.location.href = `confirmation.html?orderId=${encodeURIComponent(orderId)}`;
       }, 1500);
     }
   } catch (err) {
