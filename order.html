@@ -2,24 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order • Gauri Creations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Checkout • Gauri Creations</title>
 
+<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 
 <style>
-body { margin: 0; font-family: "Poppins", sans-serif; background: linear-gradient(135deg, #86e1ff, #ffd4b8); padding: 20px; color: #222; }
-.container { max-width: 520px; margin: auto; background: #ffffffd8; padding: 25px; border-radius: 22px; backdrop-filter: blur(10px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); text-align: center; }
-.logo { width: 130px; display: block; margin: 0 auto 20px; border-radius: 12px; }
-.product-box { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 18px; text-align: left; }
-.product-img { width: 95px; height: 95px; border-radius: 15px; object-fit: cover; background: #eee; }
-.input-field { width: 92%; margin: 12px auto 0; display: block; padding: 13px; border-radius: 12px; border: 1px solid #bbb; font-size: 15px; background:white; }
-.summary { background: #fff; padding: 14px; border-radius: 15px; border: 1px solid #ddd; width: 92%; margin: 18px auto 0; text-align: left; }
-.summary div { font-size: 15px; margin-bottom: 6px; }
-.btn-proceed { width: 92%; padding: 14px; background: #007aff; color: white; border-radius: 14px; font-size: 17px; font-weight: 600; margin: 18px auto 0; border: none; display: block; cursor:pointer; }
-.qty-row { width: 92%; margin: 18px auto 14px; display: flex; justify-content: space-between; align-items: center; }
-.qty-btn { padding: 8px 16px; border-radius: 10px; background: #007aff; color: white; border: none; font-size: 18px; font-weight: 600; cursor:pointer; }
+  :root {
+    --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
+    --card-bg: rgba(255, 255, 255, 0.94);
+    --border-color: rgba(255, 255, 255, 0.7);
+    --shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+    --primary-blue: #2563eb;
+    --text-dark: #0f172a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body { 
+    margin: 0; 
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: var(--bg-grad); 
+    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px; 
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .container { 
+    width: 100%;
+    max-width: 480px; 
+    background: var(--card-bg); 
+    padding: 24px 20px; 
+    border-radius: 24px; 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow); 
+    border: 1px solid var(--border-color);
+  }
+
+  /* Header Bar */
+  .header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .back-btn {
+    text-decoration: none;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .logo { 
+    width: 44px; 
+    height: 44px;
+    border-radius: 12px; 
+    object-fit: cover;
+  }
+
+  h2 { margin: 0 0 16px 0; font-size: 20px; text-align: center; font-weight: 800; }
+
+  /* Product Info Box */
+  .product-box { 
+    display: flex; 
+    align-items: center; 
+    gap: 14px; 
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+
+  .product-img { 
+    width: 80px; 
+    height: 80px; 
+    border-radius: 12px; 
+    object-fit: cover; 
+    background: #f1f5f9; 
+    flex-shrink: 0;
+  }
+
+  .product-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+  .product-price { font-weight: 800; color: #e11d48; font-size: 15px; }
+  .product-weight { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+  /* Quantity Selector */
+  .qty-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #ffffff;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+
+  .qty-btn { 
+    width: 32px;
+    height: 32px;
+    border-radius: 50%; 
+    background: var(--primary-blue); 
+    color: white; 
+    border: none; 
+    font-size: 18px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+  }
+
+  .qty-btn:active { transform: scale(0.92); }
+
+  /* Form Controls */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .input-field { 
+    width: 100%; 
+    padding: 12px 14px; 
+    border-radius: 12px; 
+    border: 1px solid #cbd5e1; 
+    font-size: 14px; 
+    background: #ffffff; 
+    outline: none;
+    font-family: inherit;
+  }
+
+  .input-field:focus { border-color: var(--primary-blue); }
+
+  /* Order Summary */
+  .summary { 
+    background: #ffffff; 
+    padding: 16px; 
+    border-radius: 16px; 
+    border: 1px solid #e2e8f0; 
+    margin-bottom: 18px;
+  }
+
+  .summary-row { 
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px; 
+    color: #475569;
+    margin-bottom: 8px; 
+  }
+
+  .summary-row.total {
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 8px;
+    margin-bottom: 0;
+    font-weight: 800;
+    font-size: 15px;
+    color: #0f172a;
+  }
+
+  .btn-proceed { 
+    width: 100%; 
+    padding: 14px; 
+    background: var(--primary-blue); 
+    color: white; 
+    border-radius: 999px; 
+    font-size: 16px; 
+    font-weight: 700; 
+    border: none; 
+    cursor: pointer; 
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .btn-proceed:active { transform: scale(0.98); }
 </style>
 </head>
 
@@ -27,46 +193,58 @@ body { margin: 0; font-family: "Poppins", sans-serif; background: linear-gradien
 
 <div class="container">
 
-<img src="logo-gauri.jpeg" class="logo">
-
-<h2>Order Details</h2>
-
-<div class="product-box">
-  <img id="prodImg" class="product-img">
-  <div>
-    <div id="prodName" style="font-size:18px;font-weight:600;">Loading...</div>
-    <div id="prodPrice" style="font-weight:600; color:#c62828;">₹0</div>
-    <div id="prodWeight" style="font-size:13px;color:#666;">Weight: - g</div>
+  <div class="header-bar">
+    <a href="index.html" class="back-btn">← Cancel</a>
+    <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/44?text=GC'">
   </div>
-</div>
 
-<div class="qty-row">
-  <button type="button" class="qty-btn" onclick="updateQty(-1)">−</button>
-  <div><strong>Quantity:</strong> <span id="qty">1</span></div>
-  <button type="button" class="qty-btn" onclick="updateQty(1)">+</button>
-</div>
+  <h2>Checkout Order</h2>
 
-<input id="custName" class="input-field" placeholder="Your Full Name">
-<input id="custPhone" class="input-field" placeholder="Phone Number">
-<input id="custPincode" class="input-field" placeholder="Pincode (6 digits)">
-<textarea id="custAddress" class="input-field" rows="3" placeholder="Full Delivery Address"></textarea>
-<textarea id="custNotes" class="input-field" rows="2" placeholder="Notes (optional)"></textarea>
+  <!-- Product Card -->
+  <div class="product-box">
+    <img id="prodImg" class="product-img" alt="Product Image">
+    <div>
+      <div id="prodName" class="product-title">Loading item...</div>
+      <div id="prodPrice" class="product-price">₹0</div>
+      <div id="prodWeight" class="product-weight">Weight: - g</div>
+    </div>
+  </div>
 
-<div class="summary">
-  <div><strong>Price:</strong> ₹<span id="sumPrice">0</span></div>
-  <div><strong>Delivery Charges:</strong> ₹<span id="sumDelivery">0</span></div>
-  <div><strong>Total Amount:</strong> ₹<span id="sumTotal">0</span></div>
-  <div><strong>Expected Delivery:</strong> <span id="deliveryDate">-</span></div>
-</div>
+  <!-- Quantity Control -->
+  <div class="qty-row">
+    <span style="font-size:14px; font-weight:600;">Quantity:</span>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button type="button" class="qty-btn" onclick="updateQty(-1)">−</button>
+      <span id="qty" style="font-weight:800; font-size:16px;">1</span>
+      <button type="button" class="qty-btn" onclick="updateQty(1)">+</button>
+    </div>
+  </div>
 
-<button type="button" class="btn-proceed" onclick="submitOrder(event)">Proceed to Payment</button>
+  <!-- Customer Address Inputs -->
+  <div class="form-group">
+    <input id="custName" class="input-field" placeholder="Full Name *" required />
+    <input id="custPhone" class="input-field" type="tel" placeholder="Phone Number *" required />
+    <input id="custPincode" class="input-field" type="number" placeholder="6-Digit Pincode *" maxlength="6" required />
+    <textarea id="custAddress" class="input-field" rows="3" placeholder="Full Delivery Address (House No, Street, City) *" required></textarea>
+    <textarea id="custNotes" class="input-field" rows="2" placeholder="Delivery Instructions / Notes (Optional)"></textarea>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="summary">
+    <div class="summary-row"><span>Item Subtotal:</span> <span>₹<span id="sumPrice">0</span></span></div>
+    <div class="summary-row"><span>Delivery Charges:</span> <span>₹<span id="sumDelivery">0</span></span></div>
+    <div class="summary-row"><span>Expected Delivery:</span> <span id="deliveryDate" style="font-weight:600;">-</span></div>
+    <div class="summary-row total"><span>Total Amount:</span> <span>₹<span id="sumTotal">0</span></span></div>
+  </div>
+
+  <button type="button" class="btn-proceed" id="proceedBtn" onclick="submitOrder(event)">Proceed to Payment</button>
 
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
-/* DOM Elements */
+/* Elements */
 const qtyEl = document.getElementById("qty");
 const sumPrice = document.getElementById("sumPrice");
 const sumDelivery = document.getElementById("sumDelivery");
@@ -79,57 +257,63 @@ const custPincode = document.getElementById("custPincode");
 const custAddress = document.getElementById("custAddress");
 const custNotes = document.getElementById("custNotes");
 
-/* STATE */
+/* State */
 let qty = 1;
 let prodName = "";
 let prodPrice = 0;
 let weightPerItem = 0;
 
-/* ✅ 1. IMAGE FIX: Smart Link Converter */
-function getImg(p) {
-  // 1. Try to find the URL in common column names
-  let url = p["Image URL 1"] || p["Image URL 1 "] || p["imageUrl1"] || p["Image"] || "";
-  
-  // 2. If no URL found, check all keys
-  if (!url) {
-    const keys = Object.keys(p);
-    for (const k of keys) {
-      if (k.toLowerCase().includes("image") && p[k]) {
-        url = p[k];
-        break;
-      }
-    }
-  }
+/* CORS-Safe Fetch Helper */
+async function callAppsScript(payload) {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
 
-  // 3. Convert Drive Links to "Direct" Links (High Speed)
-  if (url && url.includes("drive.google.com") && url.includes("id=")) {
-    const match = url.match(/id=([^&]+)/);
-    if (match && match[1]) {
-      return "https://lh3.googleusercontent.com/d/" + match[1]; 
-    }
+/* Image Normalizer for Google Drive Assets */
+function normalizeImageForThumb(url) {
+  if (!url) return "";
+  url = String(url).trim();
+  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
+    if (url.includes('=w') || url.includes('=s')) return url;
+  }
+  const m = url.match(/[-A-Za-z0-9_]+/g);
+  if (m && m.length) {
+    const candidate = m.reduce((a, b) => a.length > b.length ? a : b, "");
+    if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w600`;
   }
   return url;
 }
 
-/* SHIPPING LOGIC */
-function shippingByWeight(g){
-  if(g <= 250) return 49;
-  if(g <= 500) return 59;
-  if(g <= 1000) return 79;
+/* Auto-fill Customer Data if Logged In */
+function initCustomerSession() {
+  const user = JSON.parse(localStorage.getItem("gc_customer") || "null");
+  if (user) {
+    if (user.name) custName.value = user.name;
+    if (user.phone) custPhone.value = user.phone;
+  }
+}
+
+/* Weight-Based Shipping Calculation */
+function shippingByWeight(g) {
+  if (g <= 0) return 49;
+  if (g <= 250) return 49;
+  if (g <= 500) return 59;
+  if (g <= 1000) return 79;
   return 79 + Math.ceil((g - 1000) / 500) * 30;
 }
 
-/* UPDATE UI */
-function updateSummary(){
+/* Update Order Summary */
+function updateSummary() {
   qtyEl.textContent = qty;
-
-  if(!prodPrice) return;
+  if (!prodPrice) return;
 
   const subtotal = prodPrice * qty;
   const pin = custPincode.value.trim();
-  const delivery = /^\d{6}$/.test(pin)
-    ? shippingByWeight(weightPerItem * qty)
-    : 0;
+  const delivery = /^\d{6}$/.test(pin) ? shippingByWeight(weightPerItem * qty) : 0;
 
   sumPrice.textContent = subtotal;
   sumDelivery.textContent = delivery;
@@ -140,50 +324,61 @@ function updateSummary(){
   deliveryDate.textContent = d.toDateString();
 }
 
-function updateQty(v){
+function updateQty(v) {
   qty = Math.max(1, qty + v);
   updateSummary();
 }
 
-/* LOAD PRODUCT */
+/* Fetch Product Details */
 const sku = new URLSearchParams(window.location.search).get("sku");
 
-fetch(`${SCRIPT_URL}?action=getProduct&sku=${encodeURIComponent(sku)}`)
-.then(r=>r.json())
-.then(d=>{
-  if(!d.success || !d.product){
-    alert("Product not found");
+async function loadProductDetails() {
+  if (!sku) {
+    alert("No product selected.");
+    window.location.href = "index.html";
     return;
   }
 
-  const p = d.product;
-  prodName = p["Name"];
-  prodPrice = Number(p["Price"]);
-  weightPerItem = Number(p["Weight"] || 0);
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getProduct&sku=${encodeURIComponent(sku)}`);
+    const d = await res.json();
 
-  // Set Product Details
-  document.getElementById("prodName").textContent = prodName;
-  document.getElementById("prodPrice").textContent = "₹" + prodPrice;
-  document.getElementById("prodWeight").textContent = `Weight: ${weightPerItem} g`;
-  
-  // Set Image using the FIX
-  const imgUrl = getImg(p);
-  document.getElementById("prodImg").src = imgUrl;
-  document.getElementById("prodImg").onerror = function() {
-      this.src = 'https://via.placeholder.com/150?text=No+Image';
-  };
+    if (!d.success || !d.product) {
+      alert("Product details could not be found.");
+      window.location.href = "index.html";
+      return;
+    }
 
-  updateSummary();
-});
+    const p = d.product;
+    prodName = p["Name"] || "Handcrafted Item";
+    prodPrice = Number(p["Price"] || 0);
+    weightPerItem = Number(p["Weight"] || 0);
+
+    document.getElementById("prodName").textContent = prodName;
+    document.getElementById("prodPrice").textContent = "₹" + prodPrice;
+    document.getElementById("prodWeight").textContent = `Weight: ${weightPerItem} g`;
+
+    const imgUrl = normalizeImageForThumb(p["Image URL 1"] || p["Image URL 2"] || "");
+    const imgEl = document.getElementById("prodImg");
+    imgEl.src = imgUrl;
+    imgEl.onerror = function() {
+      this.src = 'https://via.placeholder.com/80?text=No+Image';
+    };
+
+    updateSummary();
+  } catch (err) {
+    console.error("Error loading product:", err);
+  }
+}
 
 custPincode.addEventListener("input", updateSummary);
 
-/* SUBMIT ORDER */
-async function submitOrder(e){
-  if(e) e.preventDefault();
+/* Submit Order */
+async function submitOrder(e) {
+  if (e) e.preventDefault();
 
-  if(!custName.value || !custPhone.value || !custAddress.value || !/^\d{6}$/.test(custPincode.value)){
-    alert("Please fill all required fields");
+  if (!custName.value.trim() || !custPhone.value.trim() || !custAddress.value.trim() || !/^\d{6}$/.test(custPincode.value.trim())) {
+    alert("Please fill in your Name, Phone Number, Address, and a valid 6-Digit Pincode.");
     return;
   }
 
@@ -191,42 +386,44 @@ async function submitOrder(e){
   const delivery = shippingByWeight(weightPerItem * qty);
   const total = subtotal + delivery;
 
-  const btn = document.querySelector(".btn-proceed");
+  const btn = document.getElementById("proceedBtn");
   btn.disabled = true;
-  btn.textContent = "Processing...";
-
-  const form = new FormData();
-  form.append("action","createOrder");
-  form.append("product",prodName);
-  form.append("qty",qty);
-  form.append("price",prodPrice);
-  form.append("subtotal",subtotal);
-  form.append("delivery",delivery);
-  form.append("total",total);
-  form.append("name",custName.value);
-  form.append("phone",custPhone.value);
-  form.append("address",custAddress.value);
-  form.append("pincode",custPincode.value);
-  form.append("notes",custNotes.value||"");
+  btn.textContent = "Creating Order...";
 
   try {
-      const res = await fetch(SCRIPT_URL,{method:"POST",body:form});
-      const data = await res.json();
+    const data = await callAppsScript({
+      action: "createOrder",
+      product: prodName,
+      qty: qty,
+      price: prodPrice,
+      subtotal: subtotal,
+      delivery: delivery,
+      total: total,
+      name: custName.value.trim(),
+      phone: custPhone.value.trim(),
+      address: custAddress.value.trim(),
+      pincode: custPincode.value.trim(),
+      notes: custNotes.value.trim()
+    });
 
-      if(data.success){
-        window.location.href = `payment.html?orderId=${data.orderId}`;
-      }else{
-        alert("Order failed: " + (data.message || "Unknown error"));
-        btn.disabled = false;
-        btn.textContent = "Proceed to Payment";
-      }
-  } catch(err) {
-      console.error(err);
-      alert("Network Error. Please try again.");
-      btn.disabled = false;
-      btn.textContent = "Proceed to Payment";
+    if (data.success && data.orderId) {
+      window.location.href = `payment.html?orderId=${encodeURIComponent(data.orderId)}`;
+    } else {
+      throw new Error(data.message || "Order creation failed.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Order processing failed: " + err.message);
+    btn.disabled = false;
+    btn.textContent = "Proceed to Payment";
   }
 }
+
+/* Initialization */
+document.addEventListener("DOMContentLoaded", () => {
+  initCustomerSession();
+  loadProductDetails();
+});
 </script>
 
 </body>
