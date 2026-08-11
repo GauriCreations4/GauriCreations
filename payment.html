@@ -2,157 +2,185 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Complete Payment • Gauri Creations</title>
 
+<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 
 <style>
-:root {
-  --accent-grad: linear-gradient(135deg,#2563eb,#ec4899);
-}
+  :root {
+    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
+    --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 15px 35px rgba(15, 23, 42, 0.18);
+  }
 
-body {
-  margin: 0;
-  padding: 20px;
-  min-height: 100vh;
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg,#86e1ff,#ffd4b8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  * { box-sizing: border-box; }
 
-.card {
-  width: 100%;
-  max-width: 480px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 22px;
-  padding: 22px 20px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  text-align: center;
-}
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-grad);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px;
+    color: #0f172a;
+  }
 
-.logo { width:80px; height:80px; border-radius:18px; margin-bottom: 10px; }
+  .card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
 
-.summary {
-  padding: 14px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  margin: 12px 0 20px;
-  text-align: left;
-}
-.summary-row {
-  display:flex;
-  justify-content:space-between;
-  margin:5px 0;
-  font-size: 14px;
-}
+  .logo { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 16px; 
+    object-fit: cover;
+    margin-bottom: 8px; 
+  }
 
-.qr-wrap { 
-    margin: 15px 0;
-    padding: 10px;
-    background: white;
+  .summary {
+    padding: 14px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    margin: 14px 0;
+    text-align: left;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+    font-size: 14px;
+    color: #475569;
+  }
+
+  .summary-row strong {
+    color: #0f172a;
+  }
+
+  .qr-wrap { 
+    margin: 12px 0;
+    padding: 12px;
+    background: #ffffff;
     display: inline-block;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.qr { width:160px; height:160px; }
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
 
-.pay-buttons {
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:10px;
-}
-.pay-pill {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  padding:12px 16px;
-  border-radius:12px;
-  font-weight:600;
-  background:#fff;
-  border:1px solid #ddd;
-  text-decoration:none;
-  color:#333;
-  transition: transform 0.1s;
-}
-.pay-pill:active { transform: scale(0.98); }
-.pay-pill img { width:24px; height:24px; }
+  .qr { 
+    width: 160px; 
+    height: 160px; 
+    object-fit: contain;
+    display: block;
+  }
 
-.confirm-btn {
-  margin-top:18px;
-  width:100%;
-  padding:14px;
-  background:var(--accent-grad);
-  border-radius:999px;
-  font-weight:600;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-  font-size: 16px;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-}
+  .pay-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
 
-/* 🔥 ANIMATION STYLES: Left-Right Scanning */
-.wait-area {
-  margin-top: 25px;
-  display: none; /* Hidden initially */
-  flex-direction: column;
-  align-items: center;
-}
+  .pay-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    text-decoration: none;
+    color: #0f172a;
+    font-size: 14px;
+    transition: transform 0.1s, border-color 0.2s;
+  }
 
-.switch-track {
-  position: relative;
-  width: 100px;
-  height: 50px;
-  background: #e2e8f0;
-  border-radius: 50px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-  transition: background 0.3s;
-}
+  .pay-pill:active { transform: scale(0.98); }
+  .pay-pill img { width: 22px; height: 22px; object-fit: contain; }
 
-.switch-thumb {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 40px;
-  height: 40px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  
-  /* THIS IS THE LEFT-RIGHT ANIMATION */
-  animation: scanning 1.2s ease-in-out infinite alternate;
-}
+  .confirm-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-grad);
+    border-radius: 999px;
+    font-weight: 700;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: transform 0.1s, opacity 0.2s;
+  }
 
-@keyframes scanning {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(50px); } /* Moves to the right end */
-}
+  .confirm-btn:active { transform: scale(0.98); }
 
-/* State: SUCCESS (Green & Stopped) */
-.switch-track.active {
-  background: #22c55e; /* Green */
-}
+  /* SCANNING ANIMATION */
+  .wait-area {
+    margin-top: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.switch-track.active .switch-thumb {
-  animation: none; /* Stop moving */
-  transform: translateX(50px); /* Stay on the right */
-}
+  .switch-track {
+    position: relative;
+    width: 90px;
+    height: 44px;
+    background: #e2e8f0;
+    border-radius: 50px;
+    transition: background 0.3s;
+  }
 
-.status-text {
-  margin-top: 15px;
-  font-weight: 500;
-  color: #666;
-  font-size: 14px;
-  transition: color 0.3s;
-}
+  .switch-thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    animation: scanning 1.2s ease-in-out infinite alternate;
+  }
 
+  @keyframes scanning {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(46px); }
+  }
+
+  .switch-track.active {
+    background: #22c55e;
+  }
+
+  .switch-track.active .switch-thumb {
+    animation: none;
+    transform: translateX(46px);
+  }
+
+  .status-text {
+    margin-top: 12px;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
 </style>
 </head>
 
@@ -160,35 +188,35 @@ body {
 
 <div class="card">
 
-  <img src="logo-gauri.jpeg" class="logo">
+  <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
   
-  <h2 style="margin:5px 0;">Complete Payment</h2>
-  <p style="color:#666; font-size:14px; margin:0 0 15px;">Scan QR or use buttons below</p>
+  <h2 style="margin: 0 0 4px 0; font-size: 20px; font-weight: 800;">Complete Payment</h2>
+  <p style="color: #64748b; font-size: 13px; margin: 0 0 12px 0;">Scan QR code or click payment apps below</p>
 
   <div class="summary">
     <div class="summary-row"><span>Product</span><strong id="summaryProduct">Loading...</strong></div>
     <div class="summary-row"><span>Order ID</span><strong id="summaryOrderId">-</strong></div>
-    <div class="summary-row"><span>Total Amount</span><strong id="summaryTotal" style="color:#2563eb">₹0</strong></div>
+    <div class="summary-row"><span>Total Amount</span><strong id="summaryTotal" style="color: #2563eb;">₹0</strong></div>
   </div>
 
   <div class="qr-wrap">
-    <img src="upi-qr.jpeg" class="qr">
+    <img src="upi-qr.jpeg" alt="UPI QR Code" class="qr" onerror="this.src='https://via.placeholder.com/160?text=Scan+UPI'">
   </div>
 
   <div class="pay-buttons">
-    <a id="btnGpay" class="pay-pill"><img src="gpay.PNG">Pay with GPay</a>
-    <a id="btnPhonePe" class="pay-pill"><img src="phonepe.PNG">Pay with PhonePe</a>
+    <a id="btnGpay" class="pay-pill"><img src="gpay.PNG" onerror="this.style.display='none'">Pay with GPay</a>
+    <a id="btnPhonePe" class="pay-pill"><img src="phonepe.PNG" onerror="this.style.display='none'">Pay with PhonePe</a>
   </div>
 
   <button id="confirmButton" class="confirm-btn">
-    I have made the payment
+    I Have Made the Payment
   </button>
 
   <div class="wait-area" id="waitArea">
     <div class="switch-track" id="statusSwitch">
       <div class="switch-thumb"></div>
     </div>
-    <div class="status-text" id="statusText">Verifying Payment...</div>
+    <div class="status-text" id="statusText">Verifying payment with bank...</div>
   </div>
 
 </div>
@@ -197,62 +225,75 @@ body {
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
 
 const orderId = new URLSearchParams(window.location.search).get("orderId");
-document.getElementById("summaryOrderId").textContent = orderId;
+document.getElementById("summaryOrderId").textContent = orderId || "N/A";
 
 let pollInterval = null;
 
-/* 1. LOAD ORDER */
-fetch(`${SCRIPT_URL}?action=getOrders`)
-.then(r=>r.json())
-.then(d=>{
-  if(!d.success) return;
-  const o = d.orders.find(x => x["Order ID"] === orderId);
-  if(!o) return;
+/* 1. LOAD ORDER DETAILS */
+async function loadOrder() {
+  if (!orderId) {
+    document.getElementById("summaryProduct").textContent = "Order ID Missing";
+    return;
+  }
 
-  document.getElementById("summaryProduct").textContent = o["Product Name"];
-  document.getElementById("summaryTotal").textContent = "₹" + o["Total"];
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=listOrders`);
+    const d = await res.json();
 
-  const upi = `upi://pay?pa=vinayaksasane999-2@oksbi&pn=Gauri Creations&am=${o["Total"]}&cu=INR`;
-  document.getElementById("btnGpay").href = upi;
-  document.getElementById("btnPhonePe").href = upi;
-});
+    if (!d.success || !d.orders) return;
+    const o = d.orders.find(x => String(x["Order ID"]) === String(orderId));
+    if (!o) return;
 
-/* 2. START POLLING */
-function startPaymentCheck(){
-  // Hide button, show animation
+    document.getElementById("summaryProduct").textContent = o["Product Name"] || "Handcrafted Item";
+    document.getElementById("summaryTotal").textContent = "₹" + (o["Total"] || "0");
+
+    const upi = `upi://pay?pa=vinayaksasane999-2@oksbi&pn=Gauri Creations&am=${o["Total"]}&cu=INR`;
+    document.getElementById("btnGpay").href = upi;
+    document.getElementById("btnPhonePe").href = upi;
+  } catch (err) {
+    console.error("Failed to load order:", err);
+  }
+}
+
+/* 2. START POLLING FOR PAYMENT VERIFICATION */
+function startPaymentCheck() {
   document.getElementById("confirmButton").style.display = "none";
   document.getElementById("waitArea").style.display = "flex";
   
-  checkPayment(); // Check immediately
-  pollInterval = setInterval(checkPayment, 4000); // Check every 4 sec
+  checkPayment(); 
+  pollInterval = setInterval(checkPayment, 4000); 
 }
 
-/* 3. CHECK STATUS & STOP ANIMATION */
-function checkPayment(){
-  fetch(`${SCRIPT_URL}?action=checkPayment&orderId=${orderId}`)
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.success && d.paymentStatus === "Paid"){
+/* 3. CHECK PAYMENT STATUS */
+async function checkPayment() {
+  if (!orderId) return;
+
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=checkPayment&orderId=${encodeURIComponent(orderId)}`);
+    const d = await res.json();
+
+    if (d.success && d.paymentStatus === "Paid") {
       clearInterval(pollInterval);
       
-      // 🔥 Stop Animation & Turn Green
       const switchEl = document.getElementById("statusSwitch");
       const textEl = document.getElementById("statusText");
 
-      switchEl.classList.add("active"); // Turns Green & Stops Motion
-      textEl.textContent = "Payment Successful!";
-      textEl.style.color = "#22c55e";
-      textEl.style.fontWeight = "bold";
+      switchEl.classList.add("active");
+      textEl.textContent = "Payment Verified Successfully! ✔";
+      textEl.style.color = "#16a34a";
       
-      // Redirect
-      setTimeout(()=>{
-        window.location.href = `confirmation.html?orderId=${orderId}`;
+      // FIXED ROUTE: Redirect to order-confirmed.html
+      setTimeout(() => {
+        window.location.href = `order-confirmed.html?orderId=${encodeURIComponent(orderId)}`;
       }, 1500);
     }
-  });
+  } catch (err) {
+    console.error("Payment check error:", err);
+  }
 }
 
 document.getElementById("confirmButton").addEventListener("click", startPaymentCheck);
+document.addEventListener("DOMContentLoaded", loadOrder);
 </script>
 
 </body>
