@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Admin • Manage Orders | Gauri Creations</title>
 
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 
@@ -15,7 +14,6 @@
     --card-bg: rgba(255, 255, 255, 0.95);
     --border-color: rgba(148, 163, 184, 0.5);
     --shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
   }
 
   * { box-sizing: border-box; }
@@ -28,6 +26,7 @@
     padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
     display: flex;
     justify-content: center;
+    color: #0f172a;
   }
 
   .shell {
@@ -38,7 +37,6 @@
     gap: 16px;
   }
 
-  /* Header Navigation */
   .topbar {
     display: flex;
     align-items: center;
@@ -76,7 +74,6 @@
     font-size: 13px;
   }
 
-  /* Main Card */
   .container {
     background: var(--card-bg);
     padding: 20px;
@@ -128,9 +125,7 @@
     background: #ffffff;
   }
 
-  select:focus, input:focus {
-    border-color: #2563eb;
-  }
+  select:focus, input:focus { border-color: #2563eb; }
 
   .badge {
     padding: 4px 10px;
@@ -144,7 +139,6 @@
   .paid { background: #dcfce7; color: #166534; }
   .pending { background: #fef3c7; color: #92400e; }
 
-  /* Toast Notification */
   .toast {
     position: fixed;
     bottom: calc(20px + env(safe-area-inset-bottom));
@@ -165,17 +159,15 @@
 <body>
 
 <div class="shell">
-  <!-- Top Navigation Header -->
   <header class="topbar">
     <div class="top-title">📦 Manage Orders</div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <a href="manage-products.html" class="pill-btn">🛍️ Products</a>
-      <a href="manage-reviews.html" class="pill-btn">⭐ Reviews</a>
+      <a href="admin-manage-products.html" class="pill-btn">🛍️ Products</a>
+      <a href="admin-manage-reviews.html" class="pill-btn">⭐ Reviews</a>
       <a href="admin.html" class="pill-btn">🏠 Dashboard</a>
     </div>
   </header>
 
-  <!-- Orders Container -->
   <div class="container">
     <div id="statusText" class="status-text">Loading orders live from Google Sheets...</div>
 
@@ -204,7 +196,7 @@
 <div id="toast" class="toast">Saved ✔</div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 
 const STATUS_OPTIONS = [
   "Order Received",
@@ -215,10 +207,8 @@ const STATUS_OPTIONS = [
   "Delivered"
 ];
 
-// Memory store to prevent stale state issues when editing payment status in-session
 let ORDERS_MAP = new Map();
 
-/* CORS-safe fetch helper */
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
@@ -228,7 +218,6 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
-/* Safety HTML Escape */
 function escapeHtml(str) {
   if (!str) return "";
   return String(str)
@@ -239,7 +228,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-/* Date formatter helper for <input type="date"> */
 function formatDateForInput(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
@@ -254,7 +242,6 @@ function showToast(message = "Saved ✔") {
   setTimeout(() => t.style.display = "none", 1800);
 }
 
-/* Load orders */
 async function loadOrders() {
   const statusEl = document.getElementById("statusText");
   statusEl.textContent = "Fetching orders...";
@@ -263,9 +250,7 @@ async function loadOrders() {
     const res = await fetch(SCRIPT_URL + "?action=listOrders");
     const data = await res.json();
 
-    if (!data.success) {
-      throw new Error(data.message || "Failed to load orders");
-    }
+    if (!data.success) throw new Error(data.message || "Failed to load orders");
 
     const tbody = document.getElementById("ordersBody");
     tbody.innerHTML = "";
@@ -341,7 +326,6 @@ async function loadOrders() {
   }
 }
 
-/* Save individual field updates */
 async function saveField(orderId, field, value) {
   try {
     const data = await callAppsScript({
@@ -364,7 +348,6 @@ async function saveField(orderId, field, value) {
   }
 }
 
-/* Update Payment status */
 async function updatePayment(orderId, value) {
   await saveField(orderId, "paymentStatus", value);
 
@@ -383,7 +366,6 @@ async function updatePayment(orderId, value) {
   }
 }
 
-/* Update Fulfillment status with live payment verification */
 async function updateStatus(orderId, status) {
   const localOrder = ORDERS_MAP.get(orderId);
   const currentPayment = localOrder ? localOrder["Payment Status"] : "Pending";
