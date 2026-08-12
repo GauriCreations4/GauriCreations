@@ -5,17 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Checkout • Gauri Creations</title>
 
+<!-- Favicon & PWA -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
+<meta name="theme-color" content="#2563eb">
 
 <style>
   :root {
-    --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
+    --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3);
     --card-bg: rgba(255, 255, 255, 0.94);
-    --border-color: rgba(255, 255, 255, 0.7);
-    --shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+    --border-color: rgba(255, 255, 255, 0.8);
+    --shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
     --primary-blue: #2563eb;
+    --accent-pink: #ec4899;
+    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899);
     --text-dark: #0f172a;
+    --muted: #64748b;
   }
 
   * { box-sizing: border-box; }
@@ -24,7 +29,7 @@
     margin: 0; 
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
     background: var(--bg-grad); 
-    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px; 
+    padding: 20px 20px calc(90px + env(safe-area-inset-bottom)) 20px; 
     color: var(--text-dark);
     min-height: 100vh;
     display: flex;
@@ -32,117 +37,188 @@
     align-items: flex-start;
   }
 
-  .container { 
+  .shell { 
     width: 100%;
-    max-width: 480px; 
+    max-width: 520px; 
+  }
+
+  .card {
     background: var(--card-bg); 
-    padding: 24px 20px; 
-    border-radius: 24px; 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px);
+    padding: 26px 22px; 
+    border-radius: 28px; 
+    backdrop-filter: blur(16px); 
+    -webkit-backdrop-filter: blur(16px);
     box-shadow: var(--shadow); 
     border: 1px solid var(--border-color);
   }
 
+  /* Header Bar */
   .header-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   .back-btn {
     text-decoration: none;
-    color: #64748b;
+    color: var(--muted);
     font-size: 13px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
   }
 
-  .logo { 
+  .back-btn:hover { color: var(--primary-blue); }
+
+  .brand-logo { 
     width: 44px; 
     height: 44px; 
     border-radius: 12px; 
     object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  h2 { margin: 0 0 16px 0; font-size: 20px; text-align: center; font-weight: 800; }
+  h2 { margin: 0 0 18px 0; font-size: 22px; text-align: center; font-weight: 800; letter-spacing: -0.02em; }
 
-  .product-box { 
+  /* Section Headers */
+  .section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .clear-btn {
+    font-size: 12px;
+    color: #e11d48;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+  }
+
+  .clear-btn:hover { text-decoration: underline; }
+
+  /* Cart List & Items */
+  .cart-list { 
     display: flex; 
-    align-items: center; 
-    gap: 14px; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-bottom: 22px; 
+    max-height: 290px; 
+    overflow-y: auto; 
+    padding-right: 4px; 
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     background: #ffffff;
     padding: 12px;
-    border-radius: 16px;
+    border-radius: 20px;
     border: 1px solid #e2e8f0;
-    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .product-img { 
-    width: 80px; 
-    height: 80px; 
-    border-radius: 12px; 
-    object-fit: cover; 
-    background: #f1f5f9; 
+  .cart-item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+
+  .item-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    object-fit: cover;
+    background: #f1f5f9;
     flex-shrink: 0;
   }
 
-  .product-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-  .product-price { font-weight: 800; color: #e11d48; font-size: 15px; }
-  .product-weight { font-size: 12px; color: #64748b; margin-top: 2px; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-price { font-weight: 800; color: #e11d48; font-size: 14px; }
 
-  .qty-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    background: #ffffff;
-    padding: 10px 16px;
-    border-radius: 14px;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 16px;
+  .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid #cbd5e1;
   }
 
-  .qty-btn { 
-    width: 32px;
-    height: 32px;
-    border-radius: 50%; 
-    background: var(--primary-blue); 
-    color: white; 
-    border: none; 
-    font-size: 18px; 
-    font-weight: 700; 
-    cursor: pointer; 
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.1s;
   }
 
+  .qty-btn:active { transform: scale(0.9); }
+
+  .remove-item-btn {
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 2px;
+    transition: transform 0.15s;
+  }
+
+  .remove-item-btn:hover { transform: scale(1.2); }
+
+  /* Form Fields */
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 22px;
   }
 
   .input-field { 
     width: 100%; 
-    padding: 12px 14px; 
-    border-radius: 12px; 
+    padding: 13px 16px; 
+    border-radius: 14px; 
     border: 1px solid #cbd5e1; 
     font-size: 14px; 
     background: #ffffff; 
     outline: none;
     font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
 
-  .input-field:focus { border-color: var(--primary-blue); }
+  .input-field:focus { 
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
 
+  /* Summary Box */
   .summary { 
     background: #ffffff; 
-    padding: 16px; 
-    border-radius: 16px; 
+    padding: 18px; 
+    border-radius: 20px; 
     border: 1px solid #e2e8f0; 
-    margin-bottom: 18px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .summary-row { 
@@ -155,84 +231,105 @@
 
   .summary-row.total {
     border-top: 1px dashed #cbd5e1;
-    padding-top: 8px;
+    padding-top: 10px;
     margin-bottom: 0;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 16px;
     color: #0f172a;
   }
 
+  /* Primary Action Button */
   .btn-proceed { 
     width: 100%; 
-    padding: 14px; 
-    background: var(--primary-blue); 
+    padding: 16px; 
+    background: var(--accent-grad); 
     color: white; 
     border-radius: 999px; 
     font-size: 16px; 
-    font-weight: 700; 
+    font-weight: 800; 
     border: none; 
     cursor: pointer; 
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    transition: transform 0.15s, opacity 0.2s;
+  }
+
+  .btn-proceed:active { transform: scale(0.98); }
+
+  /* Empty Cart State */
+  .empty-cart {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--muted);
+  }
+
+  .empty-cart-icon { font-size: 56px; margin-bottom: 12px; }
+
+  .empty-cart a {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 12px 26px;
+    background: var(--accent-grad);
+    color: white;
+    text-decoration: none;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
   }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="shell">
+  <div class="card">
 
-  <div class="header-bar">
-    <a href="store.html" class="back-btn">← Cancel</a>
-    <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/44?text=GC'">
-  </div>
-
-  <h2>Checkout Order</h2>
-
-  <div class="product-box">
-    <img id="prodImg" class="product-img" alt="Product Image">
-    <div>
-      <div id="prodName" class="product-title">Loading item...</div>
-      <div id="prodPrice" class="product-price">₹0</div>
-      <div id="prodWeight" class="product-weight">Weight: - g</div>
+    <div class="header-bar">
+      <a href="store.html" class="back-btn">← Continue Shopping</a>
+      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="brand-logo" onerror="this.src='https://via.placeholder.com/44?text=GC'">
     </div>
-  </div>
 
-  <div class="qty-row">
-    <span style="font-size:14px; font-weight:600;">Quantity:</span>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <button type="button" class="qty-btn" onclick="updateQty(-1)">−</button>
-      <span id="qty" style="font-weight:800; font-size:16px;">1</span>
-      <button type="button" class="qty-btn" onclick="updateQty(1)">+</button>
+    <h2>Checkout Order</h2>
+
+    <div id="cartContainer">
+      <div class="section-title">
+        <span>🛒 Items in Cart</span>
+        <button type="button" class="clear-btn" onclick="clearCart()">Clear All</button>
+      </div>
+
+      <div id="cartList" class="cart-list"></div>
+
+      <div class="section-title">📋 Shipping Address</div>
+
+      <div class="form-group">
+        <input id="custName" class="input-field" placeholder="Full Name *" required />
+        <input id="custPhone" class="input-field" type="tel" placeholder="10-Digit Phone Number *" required />
+        <input id="custPincode" class="input-field" type="number" placeholder="6-Digit Delivery Pincode *" maxlength="6" required />
+        <textarea id="custAddress" class="input-field" rows="3" placeholder="Full Delivery Address (House No, Building, Street, City) *" required></textarea>
+        <textarea id="custNotes" class="input-field" rows="2" placeholder="Delivery Instructions / Customization Notes (Optional)"></textarea>
+      </div>
+
+      <div class="summary">
+        <div class="summary-row"><span>Items Subtotal:</span> <span>₹<span id="sumPrice">0</span></span></div>
+        <div class="summary-row"><span>Delivery Charges (by weight):</span> <span>₹<span id="sumDelivery">0</span></span></div>
+        <div class="summary-row"><span>Expected Delivery:</span> <span id="deliveryDate" style="font-weight:700; color:#2563eb;">-</span></div>
+        <div class="summary-row total"><span>Total Amount:</span> <span>₹<span id="sumTotal">0</span></span></div>
+      </div>
+
+      <button type="button" class="btn-proceed" id="proceedBtn" onclick="submitOrder(event)">Proceed to Payment ➔</button>
     </div>
+
+    <div id="emptyCartView" class="empty-cart" style="display:none;">
+      <div class="empty-cart-icon">🛒</div>
+      <div style="font-size:16px; font-weight:700; color:#0f172a; margin-bottom:4px;">Your Cart is Empty</div>
+      <div style="font-size:13px;">Add some handcrafted items to proceed with checkout.</div>
+      <a href="store.html">Browse Catalog</a>
+    </div>
+
   </div>
-
-  <div class="form-group">
-    <input id="custName" class="input-field" placeholder="Full Name *" required />
-    <input id="custPhone" class="input-field" type="tel" placeholder="Phone Number *" required />
-    <input id="custPincode" class="input-field" type="number" placeholder="6-Digit Pincode *" maxlength="6" required />
-    <textarea id="custAddress" class="input-field" rows="3" placeholder="Full Delivery Address (House No, Street, City) *" required></textarea>
-    <textarea id="custNotes" class="input-field" rows="2" placeholder="Delivery Instructions / Notes (Optional)"></textarea>
-  </div>
-
-  <div class="summary">
-    <div class="summary-row"><span>Item Subtotal:</span> <span>₹<span id="sumPrice">0</span></span></div>
-    <div class="summary-row"><span>Delivery Charges:</span> <span>₹<span id="sumDelivery">0</span></span></div>
-    <div class="summary-row"><span>Expected Delivery:</span> <span id="deliveryDate" style="font-weight:600;">-</span></div>
-    <div class="summary-row total"><span>Total Amount:</span> <span>₹<span id="sumTotal">0</span></span></div>
-  </div>
-
-  <button type="button" class="btn-proceed" id="proceedBtn" onclick="submitOrder(event)">Proceed to Payment</button>
-
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
-
-const qtyEl = document.getElementById("qty");
-const sumPrice = document.getElementById("sumPrice");
-const sumDelivery = document.getElementById("sumDelivery");
-const sumTotal = document.getElementById("sumTotal");
-const deliveryDate = document.getElementById("deliveryDate");
 
 const custName = document.getElementById("custName");
 const custPhone = document.getElementById("custPhone");
@@ -240,10 +337,7 @@ const custPincode = document.getElementById("custPincode");
 const custAddress = document.getElementById("custAddress");
 const custNotes = document.getElementById("custNotes");
 
-let qty = 1;
-let prodName = "";
-let prodPrice = 0;
-let weightPerItem = 0;
+let cartItems = [];
 
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
@@ -254,18 +348,22 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
-function normalizeImageForThumb(url) {
-  if (!url) return "";
-  url = String(url).trim();
-  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
-    if (url.includes('=w') || url.includes('=s')) return url;
+function getCart() {
+  return JSON.parse(localStorage.getItem("gc_cart") || "[]");
+}
+
+function saveCart(cart) {
+  localStorage.setItem("gc_cart", JSON.stringify(cart));
+  cartItems = cart;
+  renderCart();
+}
+
+function clearCart() {
+  if (confirm("Clear all items from your cart?")) {
+    localStorage.removeItem("gc_cart");
+    cartItems = [];
+    renderCart();
   }
-  const m = url.match(/[-A-Za-z0-9_]+/g);
-  if (m && m.length) {
-    const candidate = m.reduce((a, b) => a.length > b.length ? a : b, "");
-    if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w600`;
-  }
-  return url;
 }
 
 function initCustomerSession() {
@@ -285,81 +383,131 @@ function shippingByWeight(g) {
   return 79 + Math.ceil((g - 1000) / 500) * 30;
 }
 
-function updateSummary() {
-  qtyEl.textContent = qty;
-  if (!prodPrice) return;
-
-  const subtotal = prodPrice * qty;
-  const pin = custPincode.value.trim();
-  const delivery = /^\d{6}$/.test(pin) ? shippingByWeight(weightPerItem * qty) : 0;
-
-  sumPrice.textContent = subtotal;
-  sumDelivery.textContent = delivery;
-  sumTotal.textContent = subtotal + delivery;
-
-  const d = new Date();
-  d.setDate(d.getDate() + 7);
-  deliveryDate.textContent = d.toDateString();
+function updateCartQty(index, change) {
+  if (cartItems[index]) {
+    cartItems[index].qty += change;
+    if (cartItems[index].qty <= 0) {
+      cartItems.splice(index, 1);
+    }
+    saveCart(cartItems);
+  }
 }
 
-function updateQty(v) {
-  qty = Math.max(1, qty + v);
-  updateSummary();
+function removeCartItem(index) {
+  if (cartItems[index]) {
+    cartItems.splice(index, 1);
+    saveCart(cartItems);
+  }
 }
 
-const sku = new URLSearchParams(window.location.search).get("sku");
+function renderCart() {
+  const cartList = document.getElementById("cartList");
+  const cartContainer = document.getElementById("cartContainer");
+  const emptyCartView = document.getElementById("emptyCartView");
 
-async function loadProductDetails() {
-  if (!sku) {
-    alert("No product selected.");
-    window.location.href = "store.html";
+  if (cartItems.length === 0) {
+    cartContainer.style.display = "none";
+    emptyCartView.style.display = "block";
     return;
   }
 
-  try {
-    const res = await fetch(`${SCRIPT_URL}?action=getProduct&sku=${encodeURIComponent(sku)}`);
-    const d = await res.json();
+  cartContainer.style.display = "block";
+  emptyCartView.style.display = "none";
 
-    if (!d.success || !d.product) {
-      alert("Product details could not be found.");
-      window.location.href = "store.html";
-      return;
-    }
+  let listHtml = "";
+  let subtotal = 0;
+  let totalWeight = 0;
 
-    const p = d.product;
-    prodName = p["Name"] || "Handcrafted Item";
-    prodPrice = Number(p["Price"] || 0);
-    weightPerItem = Number(p["Weight"] || 0);
+  cartItems.forEach((item, index) => {
+    const itemSubtotal = item.price * item.qty;
+    subtotal += itemSubtotal;
+    totalWeight += (item.weight || 200) * item.qty;
 
-    document.getElementById("prodName").textContent = prodName;
-    document.getElementById("prodPrice").textContent = "₹" + prodPrice;
-    document.getElementById("prodWeight").textContent = `Weight: ${weightPerItem} g`;
+    listHtml += `
+      <div class="cart-item">
+        <img src="${item.img || 'https://via.placeholder.com/64'}" class="item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/64?text=Item'">
+        <div class="item-info">
+          <div class="item-title">${item.name}</div>
+          <div class="item-price">₹${item.price} × ${item.qty} = ₹${itemSubtotal}</div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="updateCartQty(${index}, -1)">−</button>
+          <span style="font-weight:800; font-size:13px;">${item.qty}</span>
+          <button class="qty-btn" onclick="updateCartQty(${index}, 1)">+</button>
+        </div>
+        <button class="remove-item-btn" onclick="removeCartItem(${index})" title="Remove Item">✕</button>
+      </div>
+    `;
+  });
 
-    const imgUrl = normalizeImageForThumb(p["Image URL 1"] || p["Image URL 2"] || "");
-    const imgEl = document.getElementById("prodImg");
-    imgEl.src = imgUrl;
-    imgEl.onerror = function() {
-      this.src = 'https://via.placeholder.com/80?text=No+Image';
-    };
+  cartList.innerHTML = listHtml;
 
-    updateSummary();
-  } catch (err) {
-    console.error("Error loading product:", err);
-  }
+  const pin = custPincode.value.trim();
+  const delivery = /^\d{6}$/.test(pin) ? shippingByWeight(totalWeight) : 0;
+
+  document.getElementById("sumPrice").textContent = subtotal;
+  document.getElementById("sumDelivery").textContent = delivery;
+  document.getElementById("sumTotal").textContent = subtotal + delivery;
+
+  const d = new Date();
+  d.setDate(d.getDate() + 7);
+  document.getElementById("deliveryDate").textContent = d.toDateString();
 }
 
-custPincode.addEventListener("input", updateSummary);
+async function handleUrlSku() {
+  const urlSku = new URLSearchParams(window.location.search).get("sku");
+  cartItems = getCart();
+
+  if (urlSku) {
+    const existing = cartItems.find(i => i.sku === urlSku);
+    if (!existing) {
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getProduct&sku=${encodeURIComponent(urlSku)}`);
+        const d = await res.json();
+        if (d.success && d.product) {
+          const p = d.product;
+          cartItems.push({
+            sku: urlSku,
+            name: p["Name"] || "Handcrafted Item",
+            price: Number(p["Price"] || 0),
+            weight: Number(p["Weight"] || 0),
+            img: p["Image URL 1"] || "",
+            qty: 1
+          });
+          saveCart(cartItems);
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+  
+  renderCart();
+}
+
+custPincode.addEventListener("input", renderCart);
 
 async function submitOrder(e) {
   if (e) e.preventDefault();
+
+  if (cartItems.length === 0) {
+    alert("Your shopping cart is empty.");
+    return;
+  }
 
   if (!custName.value.trim() || !custPhone.value.trim() || !custAddress.value.trim() || !/^\d{6}$/.test(custPincode.value.trim())) {
     alert("Please fill in your Name, Phone Number, Address, and a valid 6-Digit Pincode.");
     return;
   }
 
-  const subtotal = prodPrice * qty;
-  const delivery = shippingByWeight(weightPerItem * qty);
+  const productNames = cartItems.map(i => `${i.name} (x${i.qty})`).join(", ");
+  const productSkus = cartItems.map(i => i.sku).join(", ");
+  const totalQty = cartItems.reduce((a, b) => a + b.qty, 0);
+
+  const subtotal = cartItems.reduce((a, b) => a + (b.price * b.qty), 0);
+  const totalWeight = cartItems.reduce((a, b) => a + ((b.weight || 200) * b.qty), 0);
+  const delivery = shippingByWeight(totalWeight);
   const total = subtotal + delivery;
 
   const btn = document.getElementById("proceedBtn");
@@ -369,10 +517,10 @@ async function submitOrder(e) {
   try {
     const data = await callAppsScript({
       action: "createOrder",
-      product: prodName,
-      sku: sku,
-      qty: qty,
-      price: prodPrice,
+      product: productNames,
+      sku: productSkus,
+      qty: totalQty,
+      price: subtotal,
       subtotal: subtotal,
       delivery: delivery,
       total: total,
@@ -384,6 +532,7 @@ async function submitOrder(e) {
     });
 
     if (data.success && data.orderId) {
+      localStorage.removeItem("gc_cart");
       window.location.href = `payment.html?orderId=${encodeURIComponent(data.orderId)}`;
     } else {
       throw new Error(data.message || "Order creation failed.");
@@ -392,13 +541,13 @@ async function submitOrder(e) {
     console.error(err);
     alert("Order processing failed: " + err.message);
     btn.disabled = false;
-    btn.textContent = "Proceed to Payment";
+    btn.textContent = "Proceed to Payment ➔";
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initCustomerSession();
-  loadProductDetails();
+  handleUrlSku();
 });
 </script>
 
