@@ -8,35 +8,171 @@
 <link rel="apple-touch-icon" href="logo-gauri.jpeg">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2563eb">
+
 <style>
-  :root { --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3); --glass: rgba(255, 255, 255, 0.92); --accent-grad: linear-gradient(135deg, #2563eb, #ec4899); --shadow: 0 18px 45px rgba(15, 23, 42, 0.12); }
+  :root { 
+    --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3); 
+    --glass: rgba(255, 255, 255, 0.92); 
+    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899); 
+    --shadow: 0 18px 45px rgba(15, 23, 42, 0.12); 
+  }
+
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-grad); padding: 18px 18px calc(80px + env(safe-area-inset-bottom)) 18px; display: flex; justify-content: center; color: #0f172a; }
+
+  body { 
+    margin: 0; 
+    min-height: 100vh; 
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: var(--bg-grad); 
+    padding: 18px 18px calc(80px + env(safe-area-inset-bottom)) 18px; 
+    display: flex; 
+    justify-content: center; 
+    color: #0f172a; 
+    position: relative;
+    overflow-x: hidden;
+  }
+
   .shell { width: 100%; max-width: 1150px; }
-  .top-header { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 10px 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.6); }
+
+  .top-header { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+    padding: 10px 16px; 
+    border-radius: 16px; 
+    margin-bottom: 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.6); 
+  }
+
   .brand-logo { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; }
-  .menu-btn { background: var(--accent-grad); padding: 8px 16px; border-radius: 999px; color: #ffffff; font-weight: 700; cursor: pointer; border: none; font-size: 13px; }
-  .menu-box { position: absolute; top: 55px; right: 0; background: #ffffff; border-radius: 16px; width: 170px; padding: 6px 0; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); display: none; z-index: 200; border: 1px solid #e2e8f0; }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; position: relative; }
+
+  .cart-icon-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #cbd5e1;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #e11d48;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
+  }
+
+  .cart-icon-btn.cart-catching {
+    transform: scale(1.4) translateY(2px) rotate(-10deg);
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
+  }
+
+  .menu-btn { 
+    background: var(--accent-grad); 
+    padding: 8px 16px; 
+    border-radius: 999px; 
+    color: #ffffff; 
+    font-weight: 700; 
+    cursor: pointer; 
+    border: none; 
+    font-size: 13px; 
+  }
+
+  .menu-box { 
+    position: absolute; 
+    top: 50px; 
+    right: 0; 
+    background: #ffffff; 
+    border-radius: 16px; 
+    width: 170px; 
+    padding: 6px 0; 
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); 
+    display: none; 
+    z-index: 200; 
+    border: 1px solid #e2e8f0; 
+  }
+
   .menu-item { padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
   .menu-item:last-child { border-bottom: none; }
+
   h2 { font-size: 24px; font-weight: 800; margin: 0 0 4px 0; text-align: center; }
   .sub { font-size: 13px; color: #64748b; margin-bottom: 24px; text-align: center; }
+
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+
   .card { background: var(--glass); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 8px; position: relative; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, 0.7); }
+
   .img-wrap { border-radius: 14px; overflow: hidden; height: 150px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; }
   .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
   .btn-remove { position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.9); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold; color: #e11d48; z-index: 10; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+
   .name { font-size: 14px; font-weight: 700; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #0f172a; }
   .price { font-weight: 800; color: #e11d48; font-size: 15px; }
+
   .actions { display: flex; gap: 6px; margin-top: auto; }
+
   .btn { flex: 1; padding: 10px 8px; border-radius: 999px; font-size: 12px; cursor: pointer; border: none; font-weight: 700; text-align: center; text-decoration: none; }
   .btn-primary { background: var(--accent-grad); color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
   .btn-outline { background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
+
+  .flying-img {
+    position: fixed;
+    z-index: 9999;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+    pointer-events: none;
+    border: 2px solid #ffffff;
+    transition: left 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), 
+                top 1.35s cubic-bezier(0.45, 0, 0.15, 1), 
+                width 1.35s ease-in-out, 
+                height 1.35s ease-in-out, 
+                opacity 1.35s ease-out, 
+                transform 1.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+
+  @keyframes cartCatchPop {
+    0% { transform: scale(1.4) rotate(-10deg); }
+    35% { transform: scale(1.6) rotate(14deg); }
+    65% { transform: scale(1.2) rotate(-4deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .cart-catch-pop { animation: cartCatchPop 0.55s ease-in-out; }
+
   .empty { text-align: center; padding: 60px 20px; color: #64748b; grid-column: 1 / -1; font-size: 14px; line-height: 1.6; }
   .empty a { display: inline-block; margin-top: 12px; padding: 10px 20px; background: var(--accent-grad); color: white; text-decoration: none; border-radius: 999px; font-weight: 700; }
 </style>
 </head>
+
 <body>
+
 <div class="shell">
   <div class="top-header">
     <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="location.href='store.html'">
@@ -44,7 +180,13 @@
        <img src="logo-gauri.jpeg" class="brand-logo" alt="Gauri Creations" onerror="this.src='https://via.placeholder.com/38?text=GC'">
        <div style="font-weight: 800; font-size: 15px;">Gauri Creations</div>
     </div>
-    <div style="position: relative;">
+
+    <div class="header-actions">
+      <button class="cart-icon-btn" id="cartBtn" onclick="location.href='order.html'" title="View Cart">
+        🛒
+        <span class="cart-badge" id="cartCount">0</span>
+      </button>
+
       <button class="menu-btn" onclick="toggleMenu()">≡ Menu</button>
       <div id="menuBox" class="menu-box">
         <div class="menu-item" onclick="location.href='store.html'">🏠 Home</div>
@@ -53,15 +195,107 @@
       </div>
     </div>
   </div>
+
   <h2>❤️ My Wishlist</h2>
   <div class="sub">Your saved favorite items</div>
+  
   <main id="grid" class="grid"><div style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 40px 0;">Loading saved items...</div></main>
 </div>
+
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
+
+let ALL_CATALOG = [];
+
 function toggleMenu() { const b = document.getElementById("menuBox"); b.style.display = b.style.display === "block" ? "none" : "block"; }
+
 function getWishlist() { return JSON.parse(localStorage.getItem("gc_wishlist") || "[]"); }
-function removeFromWishlist(sku) { const list = getWishlist().filter(s => String(s) !== String(sku)); localStorage.setItem("gc_wishlist", JSON.stringify(list)); renderWishlist(); }
+
+function getCart() { return JSON.parse(localStorage.getItem("gc_cart") || "[]"); }
+
+function saveCart(cart) {
+  localStorage.setItem("gc_cart", JSON.stringify(cart));
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const badge = document.getElementById("cartCount");
+  if (badge) badge.textContent = totalItems;
+}
+
+function removeFromWishlist(sku) { 
+  const list = getWishlist().filter(s => String(s) !== String(sku)); 
+  localStorage.setItem("gc_wishlist", JSON.stringify(list)); 
+  renderWishlist(); 
+}
+
+function moveToCart(sku, event) {
+  const product = ALL_CATALOG.find(p => String(p.SKU || p.sku) === String(sku));
+  if (!product) return;
+
+  let cart = getCart();
+  const existingIdx = cart.findIndex(item => item.sku === sku);
+
+  if (existingIdx > -1) {
+    cart[existingIdx].qty += 1;
+  } else {
+    cart.push({
+      sku: sku,
+      name: product.Name || product.name || "Handcrafted Item",
+      price: Number(product.Price || product.price || 0),
+      weight: Number(product.Weight || product.weight || 200),
+      img: product["Image URL 1"] || "",
+      qty: 1
+    });
+  }
+
+  const card = event.target.closest('.card');
+  const cardImg = card ? card.querySelector('img') : null;
+  const cartBtn = document.getElementById("cartBtn");
+
+  if (cardImg && cartBtn) {
+    const imgRect = cardImg.getBoundingClientRect();
+    const cartRect = cartBtn.getBoundingClientRect();
+
+    cartBtn.classList.add("cart-catching");
+
+    const flyer = document.createElement("img");
+    flyer.src = cardImg.src;
+    flyer.className = "flying-img";
+    flyer.style.left = `${imgRect.left}px`;
+    flyer.style.top = `${imgRect.top}px`;
+    flyer.style.width = `${imgRect.width}px`;
+    flyer.style.height = `${imgRect.height}px`;
+
+    document.body.appendChild(flyer);
+
+    setTimeout(() => {
+      flyer.style.left = `${cartRect.left + 6}px`;
+      flyer.style.top = `${cartRect.top + 6}px`;
+      flyer.style.width = "22px";
+      flyer.style.height = "22px";
+      flyer.style.opacity = "0.15";
+      flyer.style.transform = "rotate(720deg) scale(0.3)";
+    }, 30);
+
+    setTimeout(() => {
+      flyer.remove();
+      saveCart(cart);
+      removeFromWishlist(sku);
+
+      cartBtn.classList.remove("cart-catching");
+      cartBtn.classList.add("cart-catch-pop");
+
+      setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 550);
+    }, 1380);
+  } else {
+    saveCart(cart);
+    removeFromWishlist(sku);
+  }
+}
+
 function normalizeImageForThumb(url) {
   if (!url) return ""; url = String(url).trim();
   if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) { if (url.includes('=w') || url.includes('=s')) return url; }
@@ -69,25 +303,71 @@ function normalizeImageForThumb(url) {
   if (m && m.length) { const candidate = m.reduce((a, b) => a.length > b.length ? a : b, ""); if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w600`; }
   return url;
 }
+
 function escapeHtml(str) { if (!str) return ""; return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
 async function renderWishlist() {
-  const grid = document.getElementById("grid"); const wishlistIds = getWishlist();
-  if (wishlistIds.length === 0) { grid.innerHTML = `<div class='empty'>Your wishlist is currently empty 💔<br><a href='store.html'>Explore Store Catalog</a></div>`; return; }
+  const grid = document.getElementById("grid"); 
+  const wishlistIds = getWishlist();
+
+  if (wishlistIds.length === 0) { 
+    grid.innerHTML = `<div class='empty'>Your wishlist is currently empty 💔<br><a href='store.html'>Explore Store Catalog</a></div>`; 
+    return; 
+  }
+
   try {
-    const res = await fetch(SCRIPT_URL + "?action=getProducts"); const data = await res.json();
-    if (!data.success || !data.products) { grid.innerHTML = "<div class='empty'>Unable to retrieve product details.</div>"; return; }
-    const myItems = data.products.filter(p => wishlistIds.includes(String(p["SKU"] || p["sku"])));
-    if (myItems.length === 0) { grid.innerHTML = "<div>Saved items are no longer available in catalog.</div>"; return; }
+    const res = await fetch(SCRIPT_URL + "?action=getProducts"); 
+    const data = await res.json();
+
+    if (!data.success || !data.products) { 
+      grid.innerHTML = "<div class='empty'>Unable to retrieve product details.</div>"; 
+      return; 
+    }
+
+    ALL_CATALOG = data.products || [];
+    const myItems = ALL_CATALOG.filter(p => wishlistIds.includes(String(p["SKU"] || p["sku"])));
+
+    if (myItems.length === 0) { 
+      grid.innerHTML = "<div class='empty'>Saved items are no longer available in catalog.<br><a href='store.html'>Explore Catalog</a></div>"; 
+      return; 
+    }
+
     let cardsHtml = "";
     myItems.forEach(p => {
-      const sku = escapeHtml(p.SKU || p.sku || ""); const name = escapeHtml(p.Name || p.name || "Handcrafted Item"); const price = escapeHtml(p.Price || p.price || "0");
-      let rawUrl = p["Image URL 1"] || p["Image URL 2"] || p["Image"] || ""; let finalImg = normalizeImageForThumb(rawUrl) || "https://via.placeholder.com/300?text=Handcrafted+Decor";
-      cardsHtml += `<div class="card"><button class="btn-remove" onclick="removeFromWishlist('${sku}')" title="Remove Item">✕</button><div class="img-wrap"><img src="${finalImg}" alt="${name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=Decor+Item'"></div><div class="name">${name}</div><div class="price">₹${price}</div><div class="actions"><a class="btn btn-outline" href="product.html?sku=${encodeURIComponent(sku)}">View</a><a class="btn btn-primary" href="order.html?sku=${encodeURIComponent(sku)}">Buy Now</a></div></div>`;
-    });
+      const sku = escapeHtml(p.SKU || p.sku || ""); 
+      const name = escapeHtml(p.Name || p.name || "Handcrafted Item"); 
+      const price = escapeHtml(p.Price || p.price || "0");
+      let rawUrl = p["Image URL 1"] || p["Image URL 2"] || p["Image"] || ""; 
+      let finalImg = normalizeImageForThumb(rawUrl) || "https://via.placeholder.com/300?text=Handcrafted+Decor";
+
+      cardsHtml += `
+        <div class="card">
+          <button class="btn-remove" onclick="removeFromWishlist('${sku}')" title="Remove Item">✕</button>
+          <div class="img-wrap">
+            <img src="${finalImg}" alt="${name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=Decor+Item'">
+          </div>
+          <div class="name">${name}</div>
+          <div class="price">₹${price}</div>
+          <div class="actions">
+            <a class="btn btn-outline" href="product.html?sku=${encodeURIComponent(sku)}">View</a>
+            <button class="btn btn-primary" onclick="moveToCart('${sku}', event)">+ 🛒 Cart</button>
+          </div>
+        </div>
+      `;
+    }});
+
     grid.innerHTML = cardsHtml;
-  } catch (e) { console.error("Wishlist error:", e); grid.innerHTML = "<div class='empty'>Network error loading wishlist. Please try again.</div>"; }
+
+  } catch (e) { 
+    console.error("Wishlist error:", e); 
+    grid.innerHTML = "<div class='empty'>Network error loading wishlist. Please try again.</div>"; 
+  }
 }
-document.addEventListener("DOMContentLoaded", renderWishlist);
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartBadge();
+  renderWishlist();
+});
 </script>
 </body>
 </html>
