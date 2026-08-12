@@ -32,7 +32,6 @@
 
   .shell { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 14px; }
 
-  /* LOGIN OVERLAY */
   #loginOverlay {
     position: fixed;
     inset: 0;
@@ -85,7 +84,6 @@
 
   .login-error { font-size: 12px; color: #fecaca; margin-top: 8px; display: none; }
 
-  /* TOPBAR */
   .topbar {
     display: flex;
     align-items: center;
@@ -137,7 +135,6 @@
     border: none;
   }
 
-  /* LAYOUT */
   .main-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr); gap: 14px; }
   @media (max-width: 900px) { .main-layout { grid-template-columns: minmax(0, 1fr); } }
 
@@ -153,7 +150,6 @@
   .card-title { font-size: 15px; font-weight: 700; }
   .card-sub { font-size: 11px; color: #6b7280; }
 
-  /* METRICS */
   .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
   @media (min-width: 600px) { .metrics-grid { grid-template-columns: repeat(4, 1fr); } }
 
@@ -233,7 +229,7 @@
       </div>
     </div>
     <div class="top-right">
-      <a href="index.html" class="pill-btn">🛍️ View Store</a>
+      <a href="store.html" class="pill-btn">🛍️ View Store</a>
       <a href="admin-add-product.html" class="pill-btn primary">➕ New Product</a>
       <button class="pill-btn" onclick="adminLogout()">🔒 Logout</button>
     </div>
@@ -305,7 +301,6 @@
         </div>
       </div>
 
-      <!-- ✅ EXACT FILE NAMES FROM REPOSITORY -->
       <div class="quick-actions">
         <a href="admin-add-product.html" class="qa-btn">
           <div class="qa-label">➕ Add Product</div>
@@ -341,7 +336,7 @@
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 const ADMIN_PIN = "3105";
 const ADMIN_FLAG = "gc_admin_auth";
 
@@ -413,7 +408,7 @@ function updateMetrics(products, orders) {
   document.getElementById("metricProducts").textContent = products.length;
 
   const lowStockCount = products.filter(p => {
-    const stock = Number(p["Stock"] || 0);
+    const stock = Number(p["Stock"] || p["stock"] || 0);
     return stock <= 5;
   }).length;
   document.getElementById("metricLowStock").textContent = lowStockCount;
@@ -421,7 +416,7 @@ function updateMetrics(products, orders) {
   document.getElementById("metricOrders").textContent = orders.length;
 
   const pendingPayments = orders.filter(o => {
-    const pay = (o["Payment Status"] || "").toString().toLowerCase();
+    const pay = (o["Payment Status"] || o["paymentStatus"] || "").toString().toLowerCase();
     return pay === "pending" || pay === "unpaid" || pay === "";
   }).length;
   document.getElementById("metricPending").textContent = pendingPayments;
@@ -441,9 +436,9 @@ function renderLatestOrders(allOrders) {
   orders.forEach(o => {
     const tr = document.createElement("tr");
 
-    const orderId = o["Order ID"] || "-";
-    const prodName = o["Product Name"] || "-";
-    const total = "₹" + (o["Total"] || "0");
+    const orderId = o["Order ID"] || o["orderId"] || "-";
+    const prodName = o["Product Name"] || o["product"] || "-";
+    const total = "₹" + (o["Total"] || o["total"] || "0");
     const statusText = (o["Status"] || "Order Received").toString();
     const payText = (o["Payment Status"] || "Pending").toString();
 
