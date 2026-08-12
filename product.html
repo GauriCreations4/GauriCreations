@@ -4,206 +4,70 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Product Details • Gauri Creations</title>
-
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 <meta name="theme-color" content="#2563eb">
-
 <style>
-  :root { 
-    --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3); 
-    --accent-grad: linear-gradient(135deg, #2563eb, #ec4899); 
-    --card-bg: rgba(255, 255, 255, 0.92);
-    --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-  }
-
+  :root { --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3); --accent-grad: linear-gradient(135deg, #2563eb, #ec4899); --card-bg: rgba(255, 255, 255, 0.92); --shadow: 0 18px 45px rgba(15, 23, 42, 0.12); }
   * { box-sizing: border-box; }
-
-  body { 
-    margin: 0; 
-    min-height: 100vh; 
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    background: var(--bg-grad); 
-    padding: 18px 18px calc(80px + env(safe-area-inset-bottom)) 18px; 
-    display: flex; 
-    justify-content: center; 
-    color: #0f172a;
-  }
-
+  body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-grad); padding: 18px 18px calc(80px + env(safe-area-inset-bottom)) 18px; display: flex; justify-content: center; color: #0f172a; }
   .shell { width: 100%; max-width: 1100px; }
-
-  /* Interactive Elements */
-  .menu-btn, .btn, .thumb, .wish-btn { transition: transform 0.2s, box-shadow 0.2s; }
-  .thumb:hover { transform: scale(1.08); border-color: #2563eb; }
-  .wish-btn:hover { transform: scale(1.15) rotate(10deg); }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
-  .btn:active { transform: scale(0.97); }
-
-  /* HEADER STYLE */
-  .top-header { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    background: rgba(255, 255, 255, 0.85); 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 10px 16px; 
-    border-radius: 16px; 
-    margin-bottom: 16px; 
-    position: relative; 
-    z-index: 100; 
-    border: 1px solid rgba(255, 255, 255, 0.6);
-  }
-
+  .top-header { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 10px 16px; border-radius: 16px; margin-bottom: 16px; border: 1px solid rgba(255, 255, 255, 0.6); }
   .brand-logo { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; }
-  
-  .menu-btn { 
-    background: var(--accent-grad); 
-    padding: 8px 16px; 
-    border-radius: 999px; 
-    color: #ffffff; 
-    font-weight: 700; 
-    cursor: pointer; 
-    border: none; 
-    font-size: 13px; 
-  }
-
-  .menu-box { 
-    position: absolute; 
-    top: 55px; 
-    right: 0; 
-    background: #ffffff; 
-    border-radius: 16px; 
-    width: 170px; 
-    padding: 6px 0; 
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); 
-    display: none; 
-    z-index: 200; 
-    border: 1px solid #e2e8f0;
-  }
-
+  .menu-btn { background: var(--accent-grad); padding: 8px 16px; border-radius: 999px; color: #ffffff; font-weight: 700; cursor: pointer; border: none; font-size: 13px; }
+  .menu-box { position: absolute; top: 55px; right: 0; background: #ffffff; border-radius: 16px; width: 170px; padding: 6px 0; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); display: none; z-index: 200; border: 1px solid #e2e8f0; }
   .menu-item { padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
   .menu-item:last-child { border-bottom: none; }
-  .menu-item:hover { background: #f8fafc; color: #2563eb; }
-
-  /* GRID LAYOUT */
   .product-grid { display: grid; grid-template-columns: 1fr 420px; gap: 16px; }
   @media(max-width: 980px) { .product-grid { grid-template-columns: 1fr; } }
-
-  .images-card, .details-card, .reviews-card {
-    background: var(--card-bg); 
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 22px; 
-    padding: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.7); 
-    box-shadow: var(--shadow);
-  }
-
-  .wish-btn { 
-    position: absolute; 
-    top: 12px; 
-    right: 12px; 
-    background: #ffffff; 
-    border-radius: 50%; 
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px; 
-    cursor: pointer; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
-    z-index: 5; 
-  }
-
-  .main-image-wrap { 
-    border-radius: 16px; 
-    overflow: hidden; 
-    background: #ffffff; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    height: 380px; 
-    position: relative; 
-    border: 1px solid #e2e8f0;
-  }
-
+  .images-card, .details-card, .reviews-card { background: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 22px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: var(--shadow); }
+  .wish-btn { position: absolute; top: 12px; right: 12px; background: #ffffff; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); z-index: 5; }
+  .main-image-wrap { border-radius: 16px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; height: 380px; position: relative; border: 1px solid #e2e8f0; }
   .main-image { max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; }
-  
   .thumbs { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
-  
-  .thumb { 
-    width: 68px; 
-    height: 68px; 
-    border-radius: 12px; 
-    overflow: hidden; 
-    border: 2px solid transparent; 
-    cursor: pointer; 
-    background: #ffffff; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-
+  .thumb { width: 68px; height: 68px; border-radius: 12px; overflow: hidden; border: 2px solid transparent; cursor: pointer; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
   .thumb.active { border-color: #2563eb; }
   .thumb img { width: 100%; height: 100%; object-fit: cover; }
-
   .prod-name { font-size: 22px; font-weight: 800; line-height: 1.3; margin-bottom: 4px; }
   .price { font-weight: 800; font-size: 26px; color: #e11d48; }
   .rating { font-size: 14px; color: #d97706; display: flex; align-items: center; gap: 4px; font-weight: 700; }
-  
   .actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn { border-radius: 999px; border: none; padding: 14px 20px; font-size: 15px; cursor: pointer; font-weight: 700; flex: 1; text-align: center; }
   .btn-primary { background: var(--accent-grad); color: #ffffff; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); }
   .btn-outline { background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
-
-  /* REVIEWS SECTION */
   .reviews-card { margin-top: 16px; padding: 20px; }
   .review-item { border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
-  .review-item:last-child { border-bottom: none; }
   .review-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
   .review-stars { color: #f59e0b; }
   .review-text { font-size: 13px; color: #475569; line-height: 1.5; }
   .no-reviews { text-align: center; color: #64748b; padding: 20px; font-style: italic; font-size: 13px; }
-
-  /* LIGHTBOX OVERLAY */
   #lightboxOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
   #lightboxImg { max-width: 95%; max-height: 95%; border-radius: 16px; object-fit: contain; }
 </style>
 </head>
 <body>
-
 <div class="shell">
-  <!-- TOP HEADER -->
   <div class="top-header">
-    <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="location.href='index.html'">
+    <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="location.href='store.html'">
        <span style="font-size: 18px; font-weight: bold;">←</span>
        <img src="logo-gauri.jpeg" class="brand-logo" alt="Gauri Creations" onerror="this.src='https://via.placeholder.com/38?text=GC'">
        <div style="font-weight: 800; font-size: 15px;">Gauri Creations</div>
     </div>
     <button class="menu-btn" onclick="toggleMenu()">≡ Menu</button>
     <div id="menuBox" class="menu-box">
-      <div class="menu-item" onclick="location.href='index.html'">🏠 Home</div>
+      <div class="menu-item" onclick="location.href='store.html'">🏠 Home</div>
       <div class="menu-item" onclick="location.href='track.html'">📦 Track Order</div>
       <div class="menu-item" onclick="location.href='my-orders.html'">🧾 My Orders</div>
     </div>
   </div>
-
   <div class="product-grid">
-    <!-- LEFT: PRODUCT IMAGES -->
-    <div class="images-card">
+    <div class="images-card" style="position:relative;">
       <div class="wish-btn" id="wishBtn" onclick="toggleWishlist()">🤍</div>
       <div class="main-image-wrap">
          <img id="mainImage" class="main-image" src="https://via.placeholder.com/400?text=Loading..." alt="Product Image">
       </div>
       <div id="thumbs" class="thumbs"></div>
     </div>
-
-    <!-- RIGHT: DETAILS & REVIEWS -->
     <div>
       <div class="details-card">
         <div id="prodName" class="prod-name">Loading Product...</div>
@@ -214,14 +78,11 @@
         </div>
         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
         <p id="prodDesc" style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;"></p>
-        
         <div class="actions">
           <button id="btnBuyNow" class="btn btn-primary">Buy Now</button>
           <button id="btnAddOrder" class="btn btn-outline" onclick="addToOrders()">Add to Order</button>
         </div>
       </div>
-
-      <!-- REVIEWS SECTION -->
       <div class="reviews-card">
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 800;">Customer Reviews</h3>
         <div id="reviewsList">Loading reviews...</div>
@@ -229,110 +90,52 @@
     </div>
   </div>
 </div>
-
-<!-- LIGHTBOX OVERLAY -->
 <div id="lightboxOverlay" onclick="this.style.display='none'">
   <img id="lightboxImg" alt="Expanded Product Image">
 </div>
-
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 let CURRENT_SKU = null;
-
-function toggleMenu() { 
-  const b = document.getElementById("menuBox"); 
-  b.style.display = b.style.display === "block" ? "none" : "block"; 
-}
-
-/* Image Normalizer for Google Drive Links */
+function toggleMenu() { const b = document.getElementById("menuBox"); b.style.display = b.style.display === "block" ? "none" : "block"; }
 function normalizeImageForThumb(url) {
-  if (!url) return "";
-  url = String(url).trim();
-  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
-    if (url.includes('=w') || url.includes('=s')) return url;
-  }
+  if (!url) return ""; url = String(url).trim();
+  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) { if (url.includes('=w') || url.includes('=s')) return url; }
   const m = url.match(/[-A-Za-z0-9_]+/g);
-  if (m && m.length) {
-    const candidate = m.reduce((a, b) => a.length > b.length ? a : b, "");
-    if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w800`;
-  }
+  if (m && m.length) { const candidate = m.reduce((a, b) => a.length > b.length ? a : b, ""); if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w800`; }
   return url;
 }
-
-/* Safety HTML Escape */
-function escapeHtml(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-/* Load Product Data */
+function escapeHtml(str) { if (!str) return ""; return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 async function loadProduct() {
   const sku = new URLSearchParams(location.search).get("sku");
-  if (!sku) {
-    document.getElementById("prodName").textContent = "No Product Selected";
-    return;
-  }
+  if (!sku) { document.getElementById("prodName").textContent = "No Product Selected"; return; }
   CURRENT_SKU = sku;
-
   try {
     const res = await fetch(`${SCRIPT_URL}?action=getProduct&sku=${encodeURIComponent(sku)}`);
     const data = await res.json();
-    
-    if (!data.success || !data.product) {
-      document.getElementById("prodName").textContent = "Product Not Found";
-      return;
-    }
-    
+    if (!data.success || !data.product) { document.getElementById("prodName").textContent = "Product Not Found"; return; }
     const p = data.product;
-
     document.getElementById("prodName").textContent = p.Name || "Handcrafted Item";
     document.getElementById("prodSku").textContent = "SKU: " + (p.SKU || sku);
     document.getElementById("prodPrice").textContent = "₹" + (p.Price || "0");
     document.getElementById("prodDesc").textContent = p.Description || "No description provided.";
-    
-    // Rating
     const rateText = p.Rating ? `★ ${p.Rating} (${p["Review Count"] || 0} reviews)` : "★ New Product";
     document.getElementById("prodRating").textContent = rateText;
-
-    // Main Image
     const mainImgUrl = normalizeImageForThumb(p["Image URL 1"] || p["Image URL 2"] || "");
     const mainImgEl = document.getElementById("mainImage");
     mainImgEl.src = mainImgUrl || "https://via.placeholder.com/400?text=No+Image";
-    mainImgEl.onclick = () => { 
-      document.getElementById("lightboxImg").src = mainImgUrl; 
-      document.getElementById("lightboxOverlay").style.display = "flex"; 
-    };
-
-    // Thumbnails
-    const thumbsContainer = document.getElementById("thumbs");
-    thumbsContainer.innerHTML = "";
-
+    mainImgEl.onclick = () => { document.getElementById("lightboxImg").src = mainImgUrl; document.getElementById("lightboxOverlay").style.display = "flex"; };
+    const thumbsContainer = document.getElementById("thumbs"); thumbsContainer.innerHTML = "";
     let hasThumbs = false;
     for (let i = 1; i <= 5; i++) {
       let imgRaw = p["Image URL " + i];
       if (imgRaw) {
-        hasThumbs = true;
-        const normUrl = normalizeImageForThumb(imgRaw);
-        const thumbDiv = document.createElement("div");
-        thumbDiv.className = `thumb ${i === 1 ? 'active' : ''}`;
-        thumbDiv.onclick = function() {
-          document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          mainImgEl.src = normUrl;
-        };
-        thumbDiv.innerHTML = `<img src="${normUrl}" alt="Thumbnail ${i}">`;
-        thumbsContainer.appendChild(thumbDiv);
+        hasThumbs = true; const normUrl = normalizeImageForThumb(imgRaw);
+        const thumbDiv = document.createElement("div"); thumbDiv.className = `thumb ${i === 1 ? 'active' : ''}`;
+        thumbDiv.onclick = function() { document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active')); this.classList.add('active'); mainImgEl.src = normUrl; };
+        thumbDiv.innerHTML = `<img src="${normUrl}" alt="Thumbnail ${i}">`; thumbsContainer.appendChild(thumbDiv);
       }
     }
-
     if (!hasThumbs) thumbsContainer.style.display = "none";
-
-    // Load Reviews
     const revList = document.getElementById("reviewsList");
     if (data.reviews && data.reviews.length > 0) {
       let revHtml = "";
@@ -340,54 +143,24 @@ async function loadProduct() {
         const name = escapeHtml(r.name || r["Customer ID"] || "Verified Buyer");
         const ratingNum = Math.min(5, Math.max(1, Number(r.rating || r.Rating || 5)));
         const comment = escapeHtml(r.comment || r.Comment || "");
-
-        revHtml += `
-          <div class="review-item">
-            <div class="review-header">
-              <span>${name}</span>
-              <span class="review-stars">${"★".repeat(ratingNum)}</span>
-            </div>
-            <div class="review-text">${comment}</div>
-          </div>
-        `;
+        revHtml += `<div class="review-item"><div class="review-header"><span>${name}</span><span class="review-stars">${"★".repeat(ratingNum)}</span></div><div class="review-text">${comment}</div></div>`;
       });
       revList.innerHTML = revHtml;
-    } else {
-      revList.innerHTML = "<div class='no-reviews'>No reviews yet. Be the first to purchase and review!</div>";
-    }
-
-    // Buttons
+    } else { revList.innerHTML = "<div class='no-reviews'>No reviews yet. Be the first to purchase and review!</div>"; }
     document.getElementById("btnBuyNow").onclick = () => location.href = `order.html?sku=${encodeURIComponent(sku)}`;
-    
-    // Check Wishlist Status
     const wishlist = JSON.parse(localStorage.getItem("gc_wishlist") || "[]");
     if (wishlist.includes(sku)) document.getElementById("wishBtn").textContent = "❤️";
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("prodName").textContent = "Error Loading Product";
-  }
+  } catch (err) { console.error(err); document.getElementById("prodName").textContent = "Error Loading Product"; }
 }
-
-function addToOrders() { 
-  if (CURRENT_SKU) location.href = `order.html?sku=${encodeURIComponent(CURRENT_SKU)}`; 
-}
-
+function addToOrders() { if (CURRENT_SKU) location.href = `order.html?sku=${encodeURIComponent(CURRENT_SKU)}`; }
 function toggleWishlist() {
   if (!CURRENT_SKU) return;
   let wishlist = JSON.parse(localStorage.getItem("gc_wishlist") || "[]");
   const btn = document.getElementById("wishBtn");
-
-  if (wishlist.includes(CURRENT_SKU)) {
-    wishlist = wishlist.filter(s => s !== CURRENT_SKU);
-    btn.textContent = "🤍";
-  } else {
-    wishlist.push(CURRENT_SKU);
-    btn.textContent = "❤️";
-  }
+  if (wishlist.includes(CURRENT_SKU)) { wishlist = wishlist.filter(s => s !== CURRENT_SKU); btn.textContent = "🤍"; }
+  else { wishlist.push(CURRENT_SKU); btn.textContent = "❤️"; }
   localStorage.setItem("gc_wishlist", JSON.stringify(wishlist));
 }
-
 document.addEventListener("DOMContentLoaded", loadProduct);
 </script>
 </body>
