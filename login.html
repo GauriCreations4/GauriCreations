@@ -4,224 +4,62 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Login • Gauri Creations</title>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0071e3">
-
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="logo.png"> 
-
+<link rel="apple-touch-icon" href="logo-gauri.jpeg"> 
 <style>
-  * { box-sizing: border-box; outline: none; }
-
+  :root {
+    --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    --primary-blue: #2563eb;
+    --accent-pink: #ec4899;
+  }
+  * { box-sizing: border-box; }
   body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(135deg, #e3f2ff 0%, #ffe5f3 100%);
-    padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px;
-    position: relative;
-    overflow: hidden;
+    background: var(--bg-grad); padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px; color: #0f172a;
   }
-
-  /* BACKGROUND SLIDESHOW */
-  #bg-slideshow {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .bg-slide {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 2s ease-in-out, transform 10s linear;
-    filter: grayscale(20%);
-  }
-
-  .bg-slide.active {
-    opacity: 0.25;
-    transform: scale(1.05);
-  }
-
-  /* CARD STYLES */
   .card {
-    width: 100%;
-    max-width: 380px;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 32px 28px;
-    border-radius: 24px;
-    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12);
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    z-index: 10;
+    width: 100%; max-width: 380px; background: var(--card-bg); padding: 32px 24px;
+    border-radius: 24px; box-shadow: var(--shadow); text-align: center;
+    display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255, 255, 255, 0.7);
   }
-
-  h2 {
-    margin: 0 0 20px 0;
-    color: #0f172a;
-    font-size: 22px;
-    font-weight: 800;
-  }
-
-  .input-group {
-    position: relative;
-    margin-bottom: 14px;
-  }
-
+  .logo { width: 60px; height: 60px; border-radius: 16px; object-fit: cover; margin-bottom: 8px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
+  h2 { margin: 4px 0 16px; font-size: 22px; font-weight: 800; }
   input {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 14px;
-    border: 1px solid #cbd5e1;
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.85);
-    transition: all 0.2s;
+    width: 100%; padding: 13px 16px; margin-top: 10px; border-radius: 14px; border: 1px solid #cbd5e1;
+    font-size: 14px; background: #ffffff; outline: none; font-family: inherit; transition: border-color 0.2s;
   }
-
-  input:focus {
-    border-color: #2563eb;
-    background: #ffffff;
+  input:focus { border-color: var(--primary-blue); }
+  button {
+    width: 100%; padding: 14px; margin-top: 18px; border: none; border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--accent-pink)); color: #ffffff;
+    font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    transition: transform 0.1s, opacity 0.2s;
   }
-
-  .toggle-pw {
-    position: absolute;
-    right: 14px;
-    top: 13px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #64748b;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-
-  .btn-primary {
-    width: 100%;
-    padding: 14px;
-    margin-top: 8px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .btn-primary:active { transform: scale(0.98); }
-
-  .guest-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: rgba(255, 255, 255, 0.6);
-    color: #334155;
-    border: 1px solid #cbd5e1;
-    border-radius: 14px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .guest-btn:hover { background: #ffffff; }
-
-  .links {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #64748b;
-  }
-
-  .links a {
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 700;
-  }
-
-  .error {
-    color: #e11d48;
-    font-size: 13px;
-    margin-top: 14px;
-    min-height: 18px;
-    font-weight: 600;
-  }
-
-  .loader {
-    display: none;
-    width: 18px;
-    height: 18px;
-    margin-left: 8px;
-    border: 2px solid #ffffff;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  button:active { transform: scale(0.98); }
+  .guest-btn { background: #ffffff; color: #334155; border: 1px solid #cbd5e1; margin-top: 10px; box-shadow: none; }
+  .error { color: #dc2626; font-size: 13px; margin-top: 12px; min-height: 18px; font-weight: 600; }
+  .small { font-size: 13px; margin-top: 18px; color: #64748b; }
+  .small a { color: var(--primary-blue); font-weight: 700; text-decoration: none; }
 </style>
 </head>
-
 <body>
-
-<div id="bg-slideshow"></div>
-
 <div class="card">
-  <h2>Welcome Back</h2>
-
-  <form id="loginForm" onsubmit="event.preventDefault(); login();">
-    <div class="input-group">
-      <input id="email" type="email" placeholder="Email Address" required />
-    </div>
-
-    <div class="input-group">
-      <input id="password" type="password" placeholder="Password" required />
-      <button type="button" class="toggle-pw" onclick="togglePw()">👁️</button>
-    </div>
-
-    <button type="submit" class="btn-primary" id="loginBtn">
-      <span>Login</span>
-      <span class="loader" id="loader"></span>
-    </button>
-  </form>
-
-  <button type="button" class="guest-btn" onclick="continueAsGuest()">
-    Continue as Guest
-  </button>
-
+  <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
+  <h2>Customer Login</h2>
+  <input id="email" type="email" placeholder="Email Address *" required />
+  <input id="password" type="password" placeholder="Password *" required />
+  <button id="loginBtn" onclick="login()">Login</button>
+  <button type="button" class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
   <div id="error" class="error"></div>
-
-  <div class="links">
-    New here? <a href="register.html">Create an account</a>
+  <div class="small">
+    Don't have an account? <a href="register.html">Register</a>
   </div>
 </div>
-
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
-
-// Redirect immediately if already logged in
-if (localStorage.getItem("gc_customer")) {
-  window.location.href = "index.html";
-}
-
-/* CORS-Safe Fetch Helper */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
@@ -230,115 +68,28 @@ async function callAppsScript(payload) {
   });
   return await res.json();
 }
-
-/* Image Normalizer for Google Drive Assets */
-function normalizeImageForThumb(url) {
-  if (!url) return "";
-  url = String(url).trim();
-  if (url.includes("googleusercontent") || url.includes("gstatic.com") || url.startsWith('http')) {
-    if (url.includes('=w') || url.includes('=s')) return url;
-  }
-  const m = url.match(/[-A-Za-z0-9_]+/g);
-  if (m && m.length) {
-    const candidate = m.reduce((a, b) => a.length > b.length ? a : b, "");
-    if (candidate.length >= 20) return `https://lh3.googleusercontent.com/d/${candidate}=w800`;
-  }
-  return url;
-}
-
-/* Background Slideshow Loader */
-window.onload = async function() {
-  try {
-    const res = await fetch(SCRIPT_URL + "?action=getProducts");
-    const data = await res.json();
-    if (data.products && data.products.length > 0) {
-      startSlideshow(data.products);
-    }
-  } catch(e) { 
-    console.log("Background image load bypassed"); 
-  }
-};
-
-function startSlideshow(products) {
-  const container = document.getElementById("bg-slideshow");
-  const shuffled = products.sort(() => 0.5 - Math.random()).slice(0, 6);
-  
-  shuffled.forEach((p, i) => {
-    let img = normalizeImageForThumb(p["Image URL 1"] || p.imageUrl1 || p.Image || "");
-    if (!img) return;
-    
-    let div = document.createElement("div");
-    div.className = "bg-slide";
-    div.style.backgroundImage = `url('${img}')`;
-    if (i === 0) div.classList.add("active");
-    container.appendChild(div);
-  });
-
-  let current = 0;
-  const slides = document.querySelectorAll(".bg-slide");
-  if (slides.length > 1) {
-    setInterval(() => {
-      slides[current].classList.remove("active");
-      current = (current + 1) % slides.length;
-      slides[current].classList.add("active");
-    }, 5000);
-  }
-}
-
-function continueAsGuest() { 
-  window.location.href = "index.html"; 
-}
-
-function togglePw() {
-  const p = document.getElementById("password");
-  p.type = p.type === "password" ? "text" : "password";
-}
-
+function continueAsGuest() { window.location.href = "store.html"; }
 async function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const errorBox = document.getElementById("error");
   const btn = document.getElementById("loginBtn");
-  const loader = document.getElementById("loader");
-
   errorBox.textContent = "";
-
-  if (!email || !password) {
-    errorBox.textContent = "Please fill in both email and password.";
-    return;
-  }
-
-  btn.disabled = true;
-  loader.style.display = "inline-block";
-  btn.style.opacity = "0.8";
-
+  if (!email || !password) { errorBox.textContent = "Please enter both Email and Password."; return; }
+  btn.disabled = true; btn.textContent = "Logging in...";
   try {
-    const data = await callAppsScript({
-      action: "customerLogin",
-      email: email,
-      password: password
-    });
-
+    const data = await callAppsScript({ action: "customerLogin", email: email, password: password });
     if (!data.success) {
-      errorBox.textContent = data.message || "Invalid email or password.";
-      btn.disabled = false;
-      loader.style.display = "none";
-      btn.style.opacity = "1";
-      return;
+      errorBox.textContent = data.message || "Invalid credentials.";
+      btn.disabled = false; btn.textContent = "Login"; return;
     }
-
     localStorage.setItem("gc_customer", JSON.stringify(data.customer));
-    window.location.href = "index.html";
-
+    window.location.href = "store.html";
   } catch (err) {
-    console.error(err);
-    errorBox.textContent = "Connection failed. Please check your network.";
-    btn.disabled = false;
-    loader.style.display = "none";
-    btn.style.opacity = "1";
+    console.error(err); errorBox.textContent = "Network error. Please try again.";
+    btn.disabled = false; btn.textContent = "Login";
   }
 }
 </script>
-
 </body>
 </html>
