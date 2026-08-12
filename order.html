@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Checkout • Gauri Creations</title>
 
-<!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="favicon.ico">
 
@@ -45,7 +44,6 @@
     border: 1px solid var(--border-color);
   }
 
-  /* Header Bar */
   .header-bar {
     display: flex;
     align-items: center;
@@ -62,14 +60,13 @@
 
   .logo { 
     width: 44px; 
-    height: 44px;
+    height: 44px; 
     border-radius: 12px; 
     object-fit: cover;
   }
 
   h2 { margin: 0 0 16px 0; font-size: 20px; text-align: center; font-weight: 800; }
 
-  /* Product Info Box */
   .product-box { 
     display: flex; 
     align-items: center; 
@@ -94,7 +91,6 @@
   .product-price { font-weight: 800; color: #e11d48; font-size: 15px; }
   .product-weight { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-  /* Quantity Selector */
   .qty-row { 
     display: flex; 
     justify-content: space-between; 
@@ -119,12 +115,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s;
   }
 
-  .qty-btn:active { transform: scale(0.92); }
-
-  /* Form Controls */
   .form-group {
     display: flex;
     flex-direction: column;
@@ -145,7 +137,6 @@
 
   .input-field:focus { border-color: var(--primary-blue); }
 
-  /* Order Summary */
   .summary { 
     background: #ffffff; 
     padding: 16px; 
@@ -182,10 +173,7 @@
     border: none; 
     cursor: pointer; 
     box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    transition: transform 0.1s, opacity 0.2s;
   }
-
-  .btn-proceed:active { transform: scale(0.98); }
 </style>
 </head>
 
@@ -194,13 +182,12 @@
 <div class="container">
 
   <div class="header-bar">
-    <a href="index.html" class="back-btn">← Cancel</a>
+    <a href="store.html" class="back-btn">← Cancel</a>
     <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/44?text=GC'">
   </div>
 
   <h2>Checkout Order</h2>
 
-  <!-- Product Card -->
   <div class="product-box">
     <img id="prodImg" class="product-img" alt="Product Image">
     <div>
@@ -210,7 +197,6 @@
     </div>
   </div>
 
-  <!-- Quantity Control -->
   <div class="qty-row">
     <span style="font-size:14px; font-weight:600;">Quantity:</span>
     <div style="display:flex; align-items:center; gap:12px;">
@@ -220,7 +206,6 @@
     </div>
   </div>
 
-  <!-- Customer Address Inputs -->
   <div class="form-group">
     <input id="custName" class="input-field" placeholder="Full Name *" required />
     <input id="custPhone" class="input-field" type="tel" placeholder="Phone Number *" required />
@@ -229,7 +214,6 @@
     <textarea id="custNotes" class="input-field" rows="2" placeholder="Delivery Instructions / Notes (Optional)"></textarea>
   </div>
 
-  <!-- Order Summary -->
   <div class="summary">
     <div class="summary-row"><span>Item Subtotal:</span> <span>₹<span id="sumPrice">0</span></span></div>
     <div class="summary-row"><span>Delivery Charges:</span> <span>₹<span id="sumDelivery">0</span></span></div>
@@ -242,9 +226,8 @@
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 
-/* Elements */
 const qtyEl = document.getElementById("qty");
 const sumPrice = document.getElementById("sumPrice");
 const sumDelivery = document.getElementById("sumDelivery");
@@ -257,13 +240,11 @@ const custPincode = document.getElementById("custPincode");
 const custAddress = document.getElementById("custAddress");
 const custNotes = document.getElementById("custNotes");
 
-/* State */
 let qty = 1;
 let prodName = "";
 let prodPrice = 0;
 let weightPerItem = 0;
 
-/* CORS-Safe Fetch Helper */
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
@@ -273,7 +254,6 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
-/* Image Normalizer for Google Drive Assets */
 function normalizeImageForThumb(url) {
   if (!url) return "";
   url = String(url).trim();
@@ -288,16 +268,15 @@ function normalizeImageForThumb(url) {
   return url;
 }
 
-/* Auto-fill Customer Data if Logged In */
 function initCustomerSession() {
   const user = JSON.parse(localStorage.getItem("gc_customer") || "null");
   if (user) {
     if (user.name) custName.value = user.name;
     if (user.phone) custPhone.value = user.phone;
+    if (user.address) custAddress.value = user.address;
   }
 }
 
-/* Weight-Based Shipping Calculation */
 function shippingByWeight(g) {
   if (g <= 0) return 49;
   if (g <= 250) return 49;
@@ -306,7 +285,6 @@ function shippingByWeight(g) {
   return 79 + Math.ceil((g - 1000) / 500) * 30;
 }
 
-/* Update Order Summary */
 function updateSummary() {
   qtyEl.textContent = qty;
   if (!prodPrice) return;
@@ -329,13 +307,12 @@ function updateQty(v) {
   updateSummary();
 }
 
-/* Fetch Product Details */
 const sku = new URLSearchParams(window.location.search).get("sku");
 
 async function loadProductDetails() {
   if (!sku) {
     alert("No product selected.");
-    window.location.href = "index.html";
+    window.location.href = "store.html";
     return;
   }
 
@@ -345,7 +322,7 @@ async function loadProductDetails() {
 
     if (!d.success || !d.product) {
       alert("Product details could not be found.");
-      window.location.href = "index.html";
+      window.location.href = "store.html";
       return;
     }
 
@@ -373,7 +350,6 @@ async function loadProductDetails() {
 
 custPincode.addEventListener("input", updateSummary);
 
-/* Submit Order */
 async function submitOrder(e) {
   if (e) e.preventDefault();
 
@@ -394,6 +370,7 @@ async function submitOrder(e) {
     const data = await callAppsScript({
       action: "createOrder",
       product: prodName,
+      sku: sku,
       qty: qty,
       price: prodPrice,
       subtotal: subtotal,
@@ -419,7 +396,6 @@ async function submitOrder(e) {
   }
 }
 
-/* Initialization */
 document.addEventListener("DOMContentLoaded", () => {
   initCustomerSession();
   loadProductDetails();
