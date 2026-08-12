@@ -85,7 +85,7 @@
   }
 
   .cart-icon-btn.cart-catching {
-    transform: scale(1.4) translateY(2px) rotate(-10deg);
+    transform: scale(1.35) translateY(2px) rotate(-10deg);
     background: #ffffff;
     border-color: #2563eb;
     box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
@@ -150,21 +150,21 @@
     box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
     pointer-events: none;
     border: 2px solid #ffffff;
-    transition: left 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), 
-                top 1.35s cubic-bezier(0.45, 0, 0.15, 1), 
-                width 1.35s ease-in-out, 
-                height 1.35s ease-in-out, 
-                opacity 1.35s ease-out, 
-                transform 1.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: left 0.85s cubic-bezier(0.2, 0.8, 0.25, 1), 
+                top 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                width 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                height 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.85s ease-out, 
+                transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   @keyframes cartCatchPop {
-    0% { transform: scale(1.4) rotate(-10deg); }
-    35% { transform: scale(1.6) rotate(14deg); }
-    65% { transform: scale(1.2) rotate(-4deg); }
+    0% { transform: scale(1.35) rotate(-8deg); }
+    40% { transform: scale(1.5) rotate(10deg); }
+    70% { transform: scale(1.15) rotate(-3deg); }
     100% { transform: scale(1) rotate(0deg); }
   }
-  .cart-catch-pop { animation: cartCatchPop 0.55s ease-in-out; }
+  .cart-catch-pop { animation: cartCatchPop 0.45s ease-in-out; }
 
   .empty { text-align: center; padding: 60px 20px; color: #64748b; grid-column: 1 / -1; font-size: 14px; line-height: 1.6; }
   .empty a { display: inline-block; margin-top: 12px; padding: 10px 20px; background: var(--accent-grad); color: white; text-decoration: none; border-radius: 999px; font-weight: 700; }
@@ -274,11 +274,11 @@ function moveToCart(sku, event) {
     setTimeout(() => {
       flyer.style.left = `${cartRect.left + 6}px`;
       flyer.style.top = `${cartRect.top + 6}px`;
-      flyer.style.width = "22px";
-      flyer.style.height = "22px";
-      flyer.style.opacity = "0.15";
-      flyer.style.transform = "rotate(720deg) scale(0.3)";
-    }, 30);
+      flyer.style.width = "20px";
+      flyer.style.height = "20px";
+      flyer.style.opacity = "0.2";
+      flyer.style.transform = "rotate(450deg) scale(0.3)";
+    }, 25);
 
     setTimeout(() => {
       flyer.remove();
@@ -288,8 +288,8 @@ function moveToCart(sku, event) {
       cartBtn.classList.remove("cart-catching");
       cartBtn.classList.add("cart-catch-pop");
 
-      setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 550);
-    }, 1380);
+      setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 450);
+    }, 880);
   } else {
     saveCart(cart);
     removeFromWishlist(sku);
