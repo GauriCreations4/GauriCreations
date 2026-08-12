@@ -141,7 +141,6 @@
 <body>
 
 <div class="shell">
-  <!-- ✅ EXACT REPOSITORY ROUTES IN TOPBAR -->
   <header class="topbar">
     <div class="top-title">🚚 Seller Hub – Shipping & Fulfillment</div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -176,7 +175,7 @@
 <div id="printArea"></div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 
 let globalOrders = [];
 const STATUS_FLOW = ["Packing", "Shipped", "Out for Delivery", "Delivered"];
@@ -208,16 +207,14 @@ async function loadOrders() {
     const res = await fetch(SCRIPT_URL + "?action=listOrders");
     const data = await res.json();
 
-    if (!data.success) {
-      throw new Error(data.message || "Failed to load orders");
-    }
+    if (!data.success) throw new Error(data.message || "Failed to load orders");
 
     globalOrders = data.orders || [];
     const tbody = document.querySelector("#ordersTable tbody");
     tbody.innerHTML = "";
 
     const paidOrders = globalOrders.filter(o => 
-      String(o["Payment Status"] || "").toLowerCase() === "paid"
+      String(o["Payment Status"] || o["paymentStatus"] || "").toLowerCase() === "paid"
     );
 
     if (paidOrders.length === 0) {
@@ -228,11 +225,11 @@ async function loadOrders() {
 
     paidOrders.reverse().forEach(o => {
       const tr = document.createElement("tr");
-      const orderId = escapeHtml(o["Order ID"]);
-      const custName = escapeHtml(o["Customer Name"]);
-      const phone = escapeHtml(o["Phone"]);
-      const currentStatus = o["Status"] || "Packing";
-      const awb = escapeHtml(o["AWB"]);
+      const orderId = escapeHtml(o["Order ID"] || o["orderId"]);
+      const custName = escapeHtml(o["Customer Name"] || o["name"]);
+      const phone = escapeHtml(o["Phone"] || o["phone"]);
+      const currentStatus = o["Status"] || o["status"] || "Packing";
+      const awb = escapeHtml(o["AWB"] || o["awb"] || "");
 
       tr.innerHTML = `
         <td><b>#${orderId}</b><br><small style="color:#64748b;">${escapeHtml(o["Timestamp"] || "")}</small></td>
@@ -267,14 +264,14 @@ async function loadOrders() {
 }
 
 function printLabel(orderId) {
-  const order = globalOrders.find(o => String(o["Order ID"]) === String(orderId));
+  const order = globalOrders.find(o => String(o["Order ID"] || o["orderId"]) === String(orderId));
   if (!order) return alert("Order data not found!");
 
   const price = parseFloat(order["Price"] || order["price"] || 0);
   const qty = parseInt(order["Qty"] || order["qty"] || 1);
-  const total = order["Total Amount"] || order["Total"] || (price * qty);
-  const pincode = order["Pincode"] || order["Pin"] || order["Zip"] || "";
-  const address = order["Address"] || "Shipping address on file";
+  const total = order["Total Amount"] || order["Total"] || order["total"] || (price * qty);
+  const pincode = order["Pincode"] || order["pincode"] || order["Pin"] || "";
+  const address = order["Address"] || order["address"] || "Shipping address on file";
   
   const routingCode = `MH/${String(pincode).substring(0, 3)}/${Math.floor(Math.random() * 90) + 10}`;
 
@@ -286,10 +283,10 @@ function printLabel(orderId) {
         <div class="qr-box" id="qrcode-${orderId}"></div>
         <div class="address-box">
           <div style="font-weight:bold; font-size:13px; margin-bottom:4px">DELIVER TO:</div>
-          <div style="font-size:15px; font-weight:bold">${escapeHtml(order["Customer Name"])}</div>
+          <div style="font-size:15px; font-weight:bold">${escapeHtml(order["Customer Name"] || order["name"])}</div>
           <div>${escapeHtml(address)}</div>
           <div>${pincode ? escapeHtml(pincode) + "," : ""} Maharashtra</div>
-          <div style="margin-top:6px"><b>Mobile:</b> ${escapeHtml(order["Phone"])}</div>
+          <div style="margin-top:6px"><b>Mobile:</b> ${escapeHtml(order["Phone"] || order["phone"])}</div>
           
           <div class="routing-codes">
              <div>COD: PREPAID</div>
@@ -308,7 +305,7 @@ function printLabel(orderId) {
              <th>Type</th>
            </tr>
            <tr>
-             <td>${escapeHtml(order["Product Name"] || "Handcrafted Item")}</td>
+             <td>${escapeHtml(order["Product Name"] || order["product"] || "Handcrafted Item")}</td>
              <td>${qty}</td>
              <td>Fragile / Decor</td>
            </tr>
@@ -344,7 +341,7 @@ function printLabel(orderId) {
                <th>Total</th>
             </tr>
             <tr>
-               <td>${escapeHtml(order["Product Name"] || "Item")}</td>
+               <td>${escapeHtml(order["Product Name"] || order["product"] || "Item")}</td>
                <td>${qty}</td>
                <td>₹${price}</td>
                <td>0%</td>
@@ -365,7 +362,7 @@ function printLabel(orderId) {
   `;
 
   new QRCode(document.getElementById(`qrcode-${orderId}`), {
-    text: `${orderId} | ${order["Customer Name"]} | ₹${total}`,
+    text: `${orderId} | ${order["Customer Name"] || order["name"]} | ₹${total}`,
     width: 120,
     height: 120
   });
