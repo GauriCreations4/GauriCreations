@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Add Product • Gauri Creations</title>
+<title>Add Product • Gauri Creations Admin</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
 
 <style>
   :root {
     --bg-grad: linear-gradient(135deg, #86e1ff, #ffd4b8);
-    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-bg: rgba(255, 255, 255, 0.35);
     --glass-border: rgba(255, 255, 255, 0.6);
     --shadow-strong: 0 22px 60px rgba(15, 23, 42, 0.25);
   }
@@ -23,8 +24,8 @@
     background: var(--bg-grad);
     display: flex;
     justify-content: center;
-    /* Safe Area padding to prevent bottom overlay bug on mobile browsers */
     padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
+    color: #0f172a;
   }
 
   .shell { width: 100%; max-width: 980px; }
@@ -35,7 +36,7 @@
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
-    padding: 20px;
+    padding: 22px;
     box-shadow: var(--shadow-strong);
   }
 
@@ -46,39 +47,25 @@
     margin-bottom: 16px;
   }
 
-  .card-title { font-size: 20px; font-weight: 700; color: #0f172a; }
+  .card-title { font-size: 20px; font-weight: 800; color: #0f172a; }
   .card-sub { font-size: 12px; color: #475569; }
 
   .pill-link {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0; 
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s, background 0.2s;
   }
 
-  .pill-link::before {
-    content: '';
-    width: 10px;
-    height: 18px;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='20' viewBox='0 0 12 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L2 10L10 18' stroke='%23333' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    transform: translateX(-1px);
-  }
-
   .pill-link:hover {
-    background: rgba(255, 255, 255, 0.8);
-    transform: scale(1.05);
+    background: #ffffff;
+    transform: scale(1.02);
   }
 
   .layout {
@@ -92,14 +79,14 @@
   }
 
   .section-card {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.92);
     border-radius: 20px;
     padding: 16px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   }
 
-  label { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; color: #1e293b; }
+  label { font-size: 12px; font-weight: 700; margin-bottom: 4px; display: block; color: #1e293b; }
 
   .input, .textarea {
     width: 100%;
@@ -114,7 +101,7 @@
 
   .input:focus, .textarea:focus {
     border-color: #2563eb;
-    background: #fff;
+    background: #ffffff;
   }
 
   .textarea { resize: vertical; min-height: 80px; }
@@ -139,6 +126,7 @@
     cursor: pointer;
     font-size: 12px;
     color: #64748b;
+    font-weight: 600;
     transition: all 0.2s;
   }
   
@@ -194,6 +182,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    font-weight: 600;
   }
 
   .footer-row {
@@ -210,7 +199,7 @@
     padding: 12px 24px;
     border-radius: 999px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -218,7 +207,7 @@
     box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
   }
 
-  .status-text { font-size: 12px; color: #64748b; font-weight: 500; }
+  .status-text { font-size: 12px; color: #64748b; font-weight: 600; }
   .status-text.ok { color: #15803d; }
   .status-text.err { color: #e11d48; }
 </style>
@@ -233,7 +222,7 @@
         <div class="card-title">Add New Product</div>
         <div class="card-sub">Upload images & details for Gauri Creations.</div>
       </div>
-      <a href="admin.html" class="pill-link" title="Back to Admin">← Back</a>
+      <a href="admin.html" class="pill-link">← Back to Admin</a>
     </div>
 
     <div class="layout">
@@ -315,7 +304,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
     
     let imageFiles = [];
     let videoFile = null;
@@ -333,24 +322,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusText = qs("statusText");
     const saveBtn = qs("saveBtn");
 
-    /* ================== 1. DRAG & DROP & FILE SELECTION ================== */
-    
-    // Trigger hidden inputs on dropzone click
     imageDropZone.onclick = () => imageInput.click();
     videoDropZone.onclick = () => videoInput.click();
 
-    // Prevent default browser drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       document.body.addEventListener(eventName, e => e.preventDefault());
     });
 
-    // Dropzone highlight effects
     [imageDropZone, videoDropZone].forEach(zone => {
       zone.addEventListener('dragover', () => zone.classList.add('dragover'));
       zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
     });
 
-    // Image Drag & Drop
     imageDropZone.addEventListener('drop', (e) => {
       imageDropZone.classList.remove('dragover');
       handleImages(Array.from(e.dataTransfer.files));
@@ -388,7 +371,6 @@ document.addEventListener('DOMContentLoaded', function() {
       imageInput.value = ""; 
     }
 
-    // Video Drag & Drop
     videoDropZone.addEventListener('drop', (e) => {
       videoDropZone.classList.remove('dragover');
       if (e.dataTransfer.files[0] && e.dataTransfer.files[0].type.startsWith('video/')) {
@@ -409,7 +391,6 @@ document.addEventListener('DOMContentLoaded', function() {
       qs("videoUrlInput").placeholder = "Uploaded: " + videoFile.name;
     }
 
-    /* ================== 2. HELPER: CONVERT TO BASE64 ================== */
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -417,9 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
         reader.onerror = error => reject(error);
     });
 
-    /* ================== 3. CORS-SAFE API FETCH ================== */
     async function callAppsScript(payload) {
-      // Sending text/plain avoids CORS preflight checks in Google Apps Script
       const res = await fetch(SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -428,7 +407,6 @@ document.addEventListener('DOMContentLoaded', function() {
       return await res.json();
     }
 
-    /* ================== 4. SUBMIT LOGIC ================== */
     if(saveBtn) {
       saveBtn.onclick = async () => {
         if (!qs("name").value || !qs("price").value) {
@@ -442,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function() {
         statusText.className = "status-text";
 
         try {
-          // A. Upload Images Sequentially
           let uploadedImageUrls = [];
           for (let i = 0; i < imageFiles.length; i++) {
             statusText.textContent = `Uploading image ${i + 1} of ${imageFiles.length}...`;
@@ -456,7 +433,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) uploadedImageUrls.push(data.url);
           }
 
-          // B. Upload Video
           let finalVideoUrl = qs("videoUrlInput").value;
           if (videoFile) {
             statusText.textContent = "Uploading video (this may take time)...";
@@ -470,7 +446,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (vData.success) finalVideoUrl = vData.url;
           }
 
-          // C. Save Product Row
           statusText.textContent = "Saving product details...";
           const productBody = {
             action: "createProduct",
