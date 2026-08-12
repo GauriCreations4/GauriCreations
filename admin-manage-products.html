@@ -6,7 +6,7 @@
 <title>Manage Products • Gauri Creations Admin</title>
 
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="logo-gauri.jpeg">
 
 <style>
   :root{
@@ -24,7 +24,6 @@
     min-height:100vh;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg-grad);
-    /* Safe Area bottom padding for mobile navigation bars */
     padding: 18px 18px calc(100px + env(safe-area-inset-bottom)) 18px;
     color:#0f172a;
     display:flex;
@@ -47,8 +46,8 @@
     gap: 10px;
   }
   .top-left{ display:flex; gap:12px; align-items:center; }
-  .logo{ width:50px; height:50px; border-radius:12px; object-fit:cover; }
-  .title-main{ font-size:18px; font-weight:700; }
+  .logo{ width:48px; height:48px; border-radius:12px; object-fit:cover; }
+  .title-main{ font-size:18px; font-weight:800; }
   .subtitle{ font-size:12px; color:var(--muted); }
 
   .top-right { display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
@@ -59,7 +58,7 @@
     border:1px solid rgba(148,163,184,0.8);
     background:#fff;
     cursor:pointer; text-decoration:none; color:#0f172a;
-    display:inline-flex; gap:6px; align-items:center; font-weight:600;
+    display:inline-flex; gap:6px; align-items:center; font-weight:700;
     font-size: 13px;
   }
   .pill-btn.primary{ background:var(--accent-grad); color:#fff; border:none; box-shadow:0 6px 18px rgba(37,99,235,0.2); }
@@ -73,7 +72,7 @@
   }
 
   .card-header{ display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
-  .card-title{ font-size:16px; font-weight:700; }
+  .card-title{ font-size:16px; font-weight:800; }
   .card-sub{ font-size:12px; color:var(--muted); }
 
   .filters{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -115,7 +114,7 @@
   .fcard-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
 
   .fcard-actions{ display:flex; gap:8px; margin-top:auto; }
-  .btn-small{ padding:6px 12px; border-radius:999px; font-size:12px; border:1px solid #d1d5db; background:#fff; cursor:pointer; font-weight:600; }
+  .btn-small{ padding:6px 12px; border-radius:999px; font-size:12px; border:1px solid #d1d5db; background:#fff; cursor:pointer; font-weight:700; }
 
   #editOverlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,23,42,0.7); z-index:60; padding:16px; }
   .edit-box{ width:100%; max-width:760px; max-height:90vh; overflow-y:auto; background:#fff; border-radius:22px; padding:20px; box-shadow: var(--shadow-strong); }
@@ -135,7 +134,7 @@
 
   <header class="topbar">
     <div class="top-left">
-      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/50?text=GC'" />
+      <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/48?text=GC'" />
       <div>
         <div class="title-main">Manage Products</div>
         <div class="subtitle">Edit images, stock & product details</div>
@@ -303,13 +302,12 @@
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGE0vN4yxngAyqooJAnULrBQbbNc6kyluYSg7JgydWeJ5481HmsFxVgC8kCWBvE3Wq/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 const ADMIN_FLAG = "gc_admin_auth";
 
 let ALL_PRODUCTS = [];
 let CURRENT_EDIT_PRODUCT = null;
 
-/* Helper: CORS-Safe POST Request to Google Apps Script */
 async function callAppsScript(payload) {
   const res = await fetch(SCRIPT_URL, {
     method: "POST",
@@ -319,7 +317,6 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
-/* Image Thumb Normalizer for Google Drive Assets */
 function normalizeImageForThumb(url){
   if(!url) return "";
   url = String(url).trim();
@@ -334,7 +331,6 @@ function normalizeImageForThumb(url){
   return url;
 }
 
-/* Auth Logic */
 function initAdminLogin(){
   if(localStorage.getItem(ADMIN_FLAG) === "yes"){
     document.getElementById("adminMain").style.display = "block";
@@ -357,7 +353,6 @@ function adminLogout(){
   window.location.href = "admin.html"; 
 }
 
-/* Fetch Products */
 async function reloadProducts(){
   document.getElementById("statusText").textContent = "Loading catalog from sheet…";
   try{
@@ -419,7 +414,6 @@ function getFilteredProducts(){
   return list;
 }
 
-/* Render Table and Grid */
 function renderProducts(){
   const tableBody = document.getElementById("productsTableBody");
   const cardsGrid = document.getElementById("cardsGrid");
@@ -436,7 +430,6 @@ function renderProducts(){
     return;
   }
 
-  // Render Table
   list.forEach(p => {
     const tr = document.createElement("tr");
 
@@ -455,7 +448,7 @@ function renderProducts(){
     const tdStock = document.createElement("td");
     const stockVal = Number(p["Stock"]||0);
     const stockBadge = document.createElement("span");
-    stockBadge.style.padding = "4px 8px"; stockBadge.style.borderRadius="999px"; stockBadge.style.fontSize="11px"; stockBadge.style.fontWeight="600";
+    stockBadge.style.padding = "4px 8px"; stockBadge.style.borderRadius="999px"; stockBadge.style.fontSize="11px"; stockBadge.style.fontWeight="700";
     if(stockVal <= 0){ stockBadge.style.background = "#fee2e2"; stockBadge.style.color="#991b1b"; stockBadge.textContent = "Out ("+stockVal+")"; }
     else if(stockVal <= 5){ stockBadge.style.background = "#fef3c7"; stockBadge.style.color="#92400e"; stockBadge.textContent = "Low ("+stockVal+")"; }
     else { stockBadge.style.background = "#dcfce7"; stockBadge.style.color="#166534"; stockBadge.textContent = "In ("+stockVal+")"; }
@@ -475,7 +468,6 @@ function renderProducts(){
     tableBody.appendChild(tr);
   });
 
-  // Render Mobile Cards
   list.forEach(p => {
     const card = document.createElement("div"); card.className="product-fcard";
 
@@ -502,7 +494,6 @@ function renderProducts(){
   statusEl.textContent = `Showing ${list.length} of ${ALL_PRODUCTS.length} products.`;
 }
 
-/* Modal and Edit Controls */
 function syncImagePreview(slot){
   const input = document.getElementById("editImg"+slot);
   const url = (input?.value || "").trim();
@@ -523,7 +514,6 @@ function clearImageField(slot){
   syncImagePreview(slot); 
 }
 
-/* Image Upload to Google Drive */
 async function handleImageUpload(event, slot){
   const file = event.target.files[0];
   if(!file) return;
@@ -583,7 +573,6 @@ function closeEdit(){
   CURRENT_EDIT_PRODUCT = null; 
 }
 
-/* Save Edits to Google Sheet */
 document.getElementById("saveEditBtn").addEventListener("click", saveEdit);
 
 async function saveEdit(){
@@ -626,7 +615,6 @@ async function saveEdit(){
   }
 }
 
-/* Delete Product Row */
 async function deleteProduct(product){
   const sku = product["SKU"];
   if(!sku) return;
@@ -646,7 +634,6 @@ async function deleteProduct(product){
   }
 }
 
-/* Init Event Listeners */
 document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("searchInput").addEventListener("input", renderProducts);
   document.getElementById("filterCategory").addEventListener("change", renderProducts);
