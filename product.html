@@ -73,7 +73,7 @@
     cursor: pointer;
     font-size: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .cart-badge {
@@ -94,16 +94,15 @@
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* CART CATCHING HOVER & ANIMATION STATES */
   .cart-icon-btn.cart-catching {
-    transform: scale(1.4) translateY(2px) rotate(-10deg);
+    transform: scale(1.35) translateY(2px) rotate(-8deg);
     background: #ffffff;
     border-color: #2563eb;
     box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
   }
 
   .cart-icon-btn.cart-catching .cart-badge {
-    transform: scale(1.3);
+    transform: scale(1.25);
   }
 
   .menu-btn { 
@@ -209,7 +208,6 @@
   .btn-primary { background: var(--accent-grad); color: #ffffff; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); }
   .btn-outline { background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; }
 
-  /* REVIEWS SECTION */
   .reviews-card { margin-top: 16px; padding: 20px; }
   .review-item { border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
   .review-item:last-child { border-bottom: none; }
@@ -218,11 +216,10 @@
   .review-text { font-size: 13px; color: #475569; line-height: 1.5; }
   .no-reviews { text-align: center; color: #64748b; padding: 20px; font-style: italic; font-size: 13px; }
 
-  /* LIGHTBOX OVERLAY */
   #lightboxOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
   #lightboxImg { max-width: 95%; max-height: 95%; border-radius: 16px; object-fit: contain; }
 
-  /* FLY TO CART ANIMATION - SMOOTH & ELEGANT */
+  /* REFINED FLY TO CART ANIMATION - QUICKER ZOOM (0.85s) */
   .flying-img {
     position: fixed;
     z-index: 9999;
@@ -233,22 +230,21 @@
     box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
     pointer-events: none;
     border: 2px solid #ffffff;
-    transition: left 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), 
-                top 1.35s cubic-bezier(0.45, 0, 0.15, 1), 
-                width 1.35s ease-in-out, 
-                height 1.35s ease-in-out, 
-                opacity 1.35s ease-out, 
-                transform 1.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: left 0.85s cubic-bezier(0.2, 0.8, 0.25, 1), 
+                top 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                width 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                height 0.85s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.85s ease-out, 
+                transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
-  /* CART CATCH POP REACTION */
   @keyframes cartCatchPop {
-    0% { transform: scale(1.4) rotate(-10deg); }
-    35% { transform: scale(1.6) rotate(14deg); }
-    65% { transform: scale(1.2) rotate(-4deg); }
+    0% { transform: scale(1.35) rotate(-8deg); }
+    40% { transform: scale(1.5) rotate(10deg); }
+    70% { transform: scale(1.15) rotate(-3deg); }
     100% { transform: scale(1) rotate(0deg); }
   }
-  .cart-catch-pop { animation: cartCatchPop 0.55s ease-in-out; }
+  .cart-catch-pop { animation: cartCatchPop 0.45s ease-in-out; }
 </style>
 </head>
 <body>
@@ -263,7 +259,6 @@
     </div>
 
     <div class="header-actions">
-      <!-- CART ICON BUTTON -->
       <button class="cart-icon-btn" id="cartBtn" onclick="location.href='order.html'" title="View Cart">
         🛒
         <span class="cart-badge" id="cartCount">0</span>
@@ -279,7 +274,6 @@
   </div>
 
   <div class="product-grid">
-    <!-- LEFT: PRODUCT IMAGES -->
     <div class="images-card" style="position: relative;">
       <div class="wish-btn" id="wishBtn" onclick="toggleWishlist()">🤍</div>
       <div class="main-image-wrap">
@@ -288,7 +282,6 @@
       <div id="thumbs" class="thumbs"></div>
     </div>
 
-    <!-- RIGHT: DETAILS & REVIEWS -->
     <div>
       <div class="details-card">
         <div id="prodName" class="prod-name">Loading Product...</div>
@@ -306,7 +299,6 @@
         </div>
       </div>
 
-      <!-- REVIEWS SECTION -->
       <div class="reviews-card">
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 800;">Customer Reviews</h3>
         <div id="reviewsList">Loading reviews...</div>
@@ -315,7 +307,6 @@
   </div>
 </div>
 
-<!-- LIGHTBOX OVERLAY -->
 <div id="lightboxOverlay" onclick="this.style.display='none'">
   <img id="lightboxImg" alt="Expanded Product Image">
 </div>
@@ -468,7 +459,6 @@ async function loadProduct() {
   }
 }
 
-/* SLOWER, SMOOTHER & INTERACTIVE "CART CATCHING" ANIMATION */
 function addToCart(event, buyNowDirect = false) {
   if (!CURRENT_SKU || !CURRENT_PRODUCT) return;
 
@@ -500,31 +490,27 @@ function addToCart(event, buyNowDirect = false) {
   const imgRect = mainImg.getBoundingClientRect();
   const cartRect = cartBtn.getBoundingClientRect();
 
-  // Step 1: Trigger "Cart Catching" hover & scale state immediately
   cartBtn.classList.add("cart-catching");
 
-  // Step 2: Create smooth flying image clone
   const flyer = document.createElement("img");
   flyer.src = CURRENT_IMAGE_URL || mainImg.src;
   flyer.className = "flying-img";
   flyer.style.left = `${imgRect.left}px`;
   flyer.style.top = `${imgRect.top}px`;
-  flyer.style.width = `${Math.min(imgRect.width, 220)}px`;
-  flyer.style.height = `${Math.min(imgRect.height, 220)}px`;
+  flyer.style.width = `${Math.min(imgRect.width, 180)}px`;
+  flyer.style.height = `${Math.min(imgRect.height, 180)}px`;
 
   document.body.appendChild(flyer);
 
-  // Step 3: Animate flyer towards cart over 1.35 seconds with smooth arc trajectory & rotation
   setTimeout(() => {
     flyer.style.left = `${cartRect.left + 6}px`;
     flyer.style.top = `${cartRect.top + 6}px`;
-    flyer.style.width = "22px";
-    flyer.style.height = "22px";
-    flyer.style.opacity = "0.15";
-    flyer.style.transform = "rotate(720deg) scale(0.3)";
-  }, 30);
+    flyer.style.width = "20px";
+    flyer.style.height = "20px";
+    flyer.style.opacity = "0.2";
+    flyer.style.transform = "rotate(450deg) scale(0.3)";
+  }, 25);
 
-  // Step 4: When flyer arrives at cart, trigger catch pop animation & remove flyer
   setTimeout(() => {
     flyer.remove();
     saveCart(cart);
@@ -532,8 +518,8 @@ function addToCart(event, buyNowDirect = false) {
     cartBtn.classList.remove("cart-catching");
     cartBtn.classList.add("cart-catch-pop");
 
-    setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 550);
-  }, 1380);
+    setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 450);
+  }, 880);
 }
 
 function toggleWishlist() {
