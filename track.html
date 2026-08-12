@@ -12,15 +12,18 @@
   :root { --bg-grad: linear-gradient(135deg, #e3f2ff, #ffe5f3); --glass: rgba(255, 255, 255, 0.88); --glass-border: rgba(255, 255, 255, 0.7); --accent: #2563eb; --accent-grad: linear-gradient(135deg, #2563eb, #ec4899); --text-main: #0f172a; --success: #22c55e; --gray: #cbd5e1; }
   * { box-sizing: border-box; }
   body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-grad); display: flex; align-items: center; justify-content: center; padding: 20px 20px calc(80px + env(safe-area-inset-bottom)) 20px; color: var(--text-main); }
-  .card { background: var(--glass); width: 100%; max-width: 440px; padding: 30px 22px; border-radius: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12); border: 1px solid var(--glass-border); text-align: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  .logo { width: 60px; height: 60px; border-radius: 16px; object-fit: cover; margin-bottom: 12px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); }
+  .card { background: var(--glass); width: 100%; max-width: 440px; padding: 24px 22px 30px; border-radius: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12); border: 1px solid var(--glass-border); text-align: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .top-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .cart-icon-btn { position: relative; background: rgba(255, 255, 255, 0.9); border: 1px solid #cbd5e1; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); }
+  .cart-badge { position: absolute; top: -4px; right: -4px; background: #e11d48; color: #ffffff; font-size: 11px; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4); }
+  .logo { width: 50px; height: 50px; border-radius: 14px; object-fit: cover; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); }
   h2 { margin: 0 0 4px 0; color: var(--text-main); font-weight: 800; font-size: 22px; }
   p { color: #64748b; margin: 0 0 20px 0; font-size: 13px; }
   .input-group { position: relative; margin-bottom: 16px; }
   input { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #cbd5e1; background: #ffffff; font-size: 15px; text-align: center; outline: none; transition: border-color 0.2s; }
   input:focus { border-color: var(--accent); }
-  button { width: 100%; padding: 14px; border: none; border-radius: 999px; background: var(--accent-grad); color: #ffffff; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); transition: transform 0.15s, opacity 0.2s; }
-  button:active { transform: scale(0.98); }
+  button.btn-track { width: 100%; padding: 14px; border: none; border-radius: 999px; background: var(--accent-grad); color: #ffffff; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); transition: transform 0.15s, opacity 0.2s; }
+  button.btn-track:active { transform: scale(0.98); }
   .result-box { margin-top: 24px; display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
   @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .status-icon { font-size: 48px; margin-bottom: 8px; display: block; }
@@ -40,17 +43,28 @@
 </head>
 <body>
 <div class="card">
-  <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/60?text=GC'">
+  <div class="top-header-row">
+    <a href="store.html" style="text-decoration:none; color:#0f172a; font-weight:bold; font-size:14px;">← Store</a>
+    <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/50?text=GC'">
+    <button class="cart-icon-btn" onclick="location.href='order.html'" title="View Cart">
+      🛒
+      <span class="cart-badge" id="cartCount">0</span>
+    </button>
+  </div>
+
   <h2>Track Parcel</h2>
   <p>Check live shipment and delivery progress</p>
+
   <div class="input-group">
     <input type="text" id="orderInput" placeholder="Enter Order ID (e.g. GC-101)" autofocus />
   </div>
-  <button id="trackBtn" onclick="trackOrder()">Track Now</button>
+  <button class="btn-track" id="trackBtn" onclick="trackOrder()">Track Now</button>
+
   <div id="result" class="result-box">
     <div class="status-icon" id="mainIcon">📦</div>
     <div class="status-text" id="mainStatus">Searching...</div>
     <div class="order-id-display" id="displayId"></div>
+
     <div class="stepper">
       <div class="progress-line" id="progressBar"></div>
       <div class="step" id="step1"><div class="dot">✓</div><div class="step-label">Ordered</div></div>
@@ -59,44 +73,65 @@
       <div class="step" id="step4"><div class="dot">🏠</div><div class="step-label">Delivered</div></div>
     </div>
   </div>
+
   <a href="store.html" class="back-link">← Back to Store</a>
 </div>
+
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 const STEP_MAPPING = { "Order Received": 1, "Payment Verified": 1, "Packing": 2, "Packed": 2, "Shipped": 3, "Out for Delivery": 3, "Delivered": 4, "Cancelled": 0 };
+
+function updateCartBadge() {
+  const cart = JSON.parse(localStorage.getItem("gc_cart") || "[]");
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const badge = document.getElementById("cartCount");
+  if (badge) badge.textContent = totalItems;
+}
+
 function escapeHtml(str) { if (!str) return ""; return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
 async function trackOrder() {
   const input = document.getElementById("orderInput");
   const resultBox = document.getElementById("result");
   const trackBtn = document.getElementById("trackBtn");
   const orderId = input.value.trim().toUpperCase();
+
   if (!orderId) { alert("Please enter a valid Order ID"); return; }
+
   resultBox.style.display = "block";
   document.getElementById("mainStatus").textContent = "Searching...";
   document.getElementById("mainIcon").textContent = "🔍";
   document.getElementById("displayId").textContent = "Checking Order #" + escapeHtml(orderId);
   updateStepper(0);
+
   trackBtn.disabled = true; trackBtn.textContent = "Checking...";
+
   try {
     const res = await fetch(`${SCRIPT_URL}?action=trackOrder&orderId=${encodeURIComponent(orderId)}`);
     const data = await res.json();
+
     if (!data.success) {
       document.getElementById("mainStatus").textContent = "Order Not Found";
       document.getElementById("mainIcon").textContent = "❌";
       document.getElementById("displayId").textContent = "Please verify your Order ID and try again.";
       return;
     }
+
     const status = data.status || "Order Received";
     const stepLevel = STEP_MAPPING[status] !== undefined ? STEP_MAPPING[status] : 1;
+
     document.getElementById("mainStatus").textContent = status;
     document.getElementById("displayId").textContent = "Order #" + escapeHtml(orderId);
+
     let icon = "📝";
     if (status.includes("Pack")) icon = "📦";
     if (status.includes("Ship") || status.includes("Out")) icon = "🚚";
     if (status.includes("Deliver")) icon = "🎉";
     if (status.includes("Cancel")) icon = "🚫";
+
     document.getElementById("mainIcon").textContent = icon;
     updateStepper(stepLevel);
+
   } catch(e) {
     console.error(e);
     document.getElementById("mainStatus").textContent = "Network Error";
@@ -106,6 +141,7 @@ async function trackOrder() {
     trackBtn.disabled = false; trackBtn.textContent = "Track Now";
   }
 }
+
 function updateStepper(level) {
   for (let i = 1; i <= 4; i++) {
     const el = document.getElementById("step" + i);
@@ -117,7 +153,9 @@ function updateStepper(level) {
   else if (level === 3) bar.style.width = "65%";
   else if (level >= 4) bar.style.width = "95%";
 }
+
 document.addEventListener("DOMContentLoaded", () => {
+  updateCartBadge();
   const urlParams = new URLSearchParams(window.location.search);
   const autoId = urlParams.get('orderId');
   if (autoId) { document.getElementById("orderInput").value = decodeURIComponent(autoId).trim(); trackOrder(); }
