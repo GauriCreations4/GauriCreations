@@ -211,6 +211,15 @@
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   }
 
+  select.input-field {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2%232563eb'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    appearance: none;
+  }
+
   /* Summary Box */
   .summary { 
     background: #ffffff; 
@@ -300,11 +309,22 @@
 
       <div class="section-title">📋 Shipping Address</div>
 
+      <!-- Saved Addresses Dropdown Wrapper -->
+      <div id="savedAddressWrap" style="display:none;">
+        <select id="addressSelect" class="input-field" style="margin-bottom: 12px;" onchange="handleAddressSelect(this.value)"></select>
+      </div>
+
       <div class="form-group">
         <input id="custName" class="input-field" placeholder="Full Name *" required />
         <input id="custPhone" class="input-field" type="tel" placeholder="10-Digit Phone Number *" required />
         <input id="custPincode" class="input-field" type="number" placeholder="6-Digit Delivery Pincode *" maxlength="6" required />
         <textarea id="custAddress" class="input-field" rows="3" placeholder="Full Delivery Address (House No, Building, Street, City) *" required></textarea>
+        
+        <label id="saveAddrLabel" style="display:flex; align-items:center; gap:8px; font-size:13px; color:#475569; font-weight:600; cursor:pointer; padding:2px 0;">
+          <input type="checkbox" id="saveAddressCheck" checked style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer;" />
+          Save this address for future checkouts
+        </label>
+
         <textarea id="custNotes" class="input-field" rows="2" placeholder="Delivery Instructions / Customization Notes (Optional)"></textarea>
       </div>
 
@@ -348,6 +368,16 @@ async function callAppsScript(payload) {
   return await res.json();
 }
 
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function getCart() {
   return JSON.parse(localStorage.getItem("gc_cart") || "[]");
 }
@@ -366,13 +396,85 @@ function clearCart() {
   }
 }
 
+/* SAVED ADDRESS PROFILE MANAGEMENT */
+function getSavedAddresses() {
+  return JSON.parse(localStorage.getItem("gc_addresses") || "[]");
+}
+
+function saveAddressProfile(name, phone, address, pincode, labelName) {
+  let addresses = getSavedAddresses();
+  const existing = addresses.find(a => a.address.trim().toLowerCase() === address.trim().toLowerCase() && a.pincode.trim() === pincode.trim());
+  
+  if (!existing) {
+    addresses.push({
+      id: "addr_" + Date.now(),
+      label: labelName || ("Address " + (addresses.length + 1)),
+      name: name,
+      phone: phone,
+      address: address,
+      pincode: pincode
+    });
+    localStorage.setItem("gc_addresses", JSON.stringify(addresses));
+  }
+}
+
 function initCustomerSession() {
   const user = JSON.parse(localStorage.getItem("gc_customer") || "null");
+  let addresses = getSavedAddresses();
+
+  // If user profile has an address and addresses list is empty, seed it
+  if (user && user.address && addresses.length === 0) {
+    saveAddressProfile(user.name || "", user.phone || "", user.address, "", "Home Address");
+    addresses = getSavedAddresses();
+  }
+
   if (user) {
     if (user.name) custName.value = user.name;
     if (user.phone) custPhone.value = user.phone;
-    if (user.address) custAddress.value = user.address;
   }
+
+  const selectWrap = document.getElementById("savedAddressWrap");
+  const selectEl = document.getElementById("addressSelect");
+
+  if (addresses.length > 0) {
+    selectWrap.style.display = "block";
+    let optionsHtml = `<option value="new">➕ Enter New Address</option>`;
+    
+    addresses.forEach((a, idx) => {
+      const pinText = a.pincode ? ` - ${a.pincode}` : '';
+      optionsHtml = `<option value="${a.id}" ${idx === 0 ? 'selected' : ''}>📍 ${escapeHtml(a.label)}${escapeHtml(pinText)}</option>` + optionsHtml;
+    });
+
+    selectEl.innerHTML = optionsHtml;
+    fillAddressFields(addresses[0]);
+  } else if (user && user.address) {
+    custAddress.value = user.address;
+  }
+}
+
+function handleAddressSelect(val) {
+  const saveCheckWrap = document.getElementById("saveAddrLabel");
+  if (val === "new") {
+    custAddress.value = "";
+    custPincode.value = "";
+    saveCheckWrap.style.display = "flex";
+  } else {
+    const addresses = getSavedAddresses();
+    const match = addresses.find(a => a.id === val);
+    if (match) {
+      fillAddressFields(match);
+      saveCheckWrap.style.display = "none";
+    }
+  }
+  renderCart();
+}
+
+function fillAddressFields(addrObj) {
+  if (addrObj.name) custName.value = addrObj.name;
+  if (addrObj.phone) custPhone.value = addrObj.phone;
+  if (addrObj.address) custAddress.value = addrObj.address;
+  if (addrObj.pincode) custPincode.value = addrObj.pincode;
+  renderCart();
 }
 
 function shippingByWeight(g) {
@@ -499,6 +601,19 @@ async function submitOrder(e) {
   if (!custName.value.trim() || !custPhone.value.trim() || !custAddress.value.trim() || !/^\d{6}$/.test(custPincode.value.trim())) {
     alert("Please fill in your Name, Phone Number, Address, and a valid 6-Digit Pincode.");
     return;
+  }
+
+  // Save new address if checkbox checked
+  const saveCheck = document.getElementById("saveAddressCheck");
+  const selectEl = document.getElementById("addressSelect");
+  if (saveCheck && saveCheck.checked && (!selectEl || selectEl.value === "new")) {
+    saveAddressProfile(
+      custName.value.trim(), 
+      custPhone.value.trim(), 
+      custAddress.value.trim(), 
+      custPincode.value.trim(), 
+      "Address " + (getSavedAddresses().length + 1)
+    );
   }
 
   const productNames = cartItems.map(i => `${i.name} (x${i.qty})`).join(", ");
