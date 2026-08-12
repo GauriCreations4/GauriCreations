@@ -34,7 +34,7 @@
   .shell { width: 100%; max-width: 1100px; }
 
   /* Interactive Elements */
-  .menu-btn, .btn, .thumb, .wish-btn, .cart-icon-btn { transition: transform 0.2s, box-shadow 0.2s; }
+  .menu-btn, .btn, .thumb, .wish-btn, .cart-icon-btn { transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease; }
   .thumb:hover { transform: scale(1.08); border-color: #2563eb; }
   .wish-btn:hover { transform: scale(1.15) rotate(10deg); }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
@@ -65,14 +65,15 @@
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid #cbd5e1;
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .cart-badge {
@@ -81,15 +82,28 @@
     right: -4px;
     background: #e11d48;
     color: #ffffff;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* CART CATCHING HOVER & ANIMATION STATES */
+  .cart-icon-btn.cart-catching {
+    transform: scale(1.4) translateY(2px) rotate(-10deg);
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
+  }
+
+  .cart-icon-btn.cart-catching .cart-badge {
+    transform: scale(1.3);
   }
 
   .menu-btn { 
@@ -208,26 +222,33 @@
   #lightboxOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
   #lightboxImg { max-width: 95%; max-height: 95%; border-radius: 16px; object-fit: contain; }
 
-  /* FLY TO CART ANIMATION */
+  /* FLY TO CART ANIMATION - SMOOTH & ELEGANT */
   .flying-img {
     position: fixed;
     z-index: 9999;
-    width: 90px;
-    height: 90px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
     pointer-events: none;
-    transition: all 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    border: 2px solid #ffffff;
+    transition: left 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), 
+                top 1.35s cubic-bezier(0.45, 0, 0.15, 1), 
+                width 1.35s ease-in-out, 
+                height 1.35s ease-in-out, 
+                opacity 1.35s ease-out, 
+                transform 1.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   }
 
-  /* CART POP ANIMATION */
-  @keyframes cartPop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.35) rotate(-12deg); }
-    100% { transform: scale(1); }
+  /* CART CATCH POP REACTION */
+  @keyframes cartCatchPop {
+    0% { transform: scale(1.4) rotate(-10deg); }
+    35% { transform: scale(1.6) rotate(14deg); }
+    65% { transform: scale(1.2) rotate(-4deg); }
+    100% { transform: scale(1) rotate(0deg); }
   }
-  .cart-pop { animation: cartPop 0.4s ease-in-out; }
+  .cart-catch-pop { animation: cartCatchPop 0.55s ease-in-out; }
 </style>
 </head>
 <body>
@@ -243,7 +264,7 @@
 
     <div class="header-actions">
       <!-- CART ICON BUTTON -->
-      <button class="cart-icon-btn" id="cartBtn" onclick="location.href='order.html' + (CURRENT_SKU ? '?sku=' + encodeURIComponent(CURRENT_SKU) : '')" title="View Cart">
+      <button class="cart-icon-btn" id="cartBtn" onclick="location.href='order.html'" title="View Cart">
         🛒
         <span class="cart-badge" id="cartCount">0</span>
       </button>
@@ -302,15 +323,30 @@
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx43-uKrZ24dIGMPIMzZduM01QejA2l5kd3Kwgb2bQ30EqAKMmfbWp-KsEJEaTW90qI/exec";
 let CURRENT_SKU = null;
+let CURRENT_PRODUCT = null;
 let CURRENT_IMAGE_URL = "";
-let cartItemCount = 0;
 
 function toggleMenu() { 
   const b = document.getElementById("menuBox"); 
   b.style.display = b.style.display === "block" ? "none" : "block"; 
 }
 
-/* Image Normalizer for Google Drive Links */
+function getCart() {
+  return JSON.parse(localStorage.getItem("gc_cart") || "[]");
+}
+
+function saveCart(cart) {
+  localStorage.setItem("gc_cart", JSON.stringify(cart));
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const badge = document.getElementById("cartCount");
+  if (badge) badge.textContent = totalItems;
+}
+
 function normalizeImageForThumb(url) {
   if (!url) return "";
   url = String(url).trim();
@@ -325,7 +361,6 @@ function normalizeImageForThumb(url) {
   return url;
 }
 
-/* Safety HTML Escape */
 function escapeHtml(str) {
   if (!str) return "";
   return String(str)
@@ -336,7 +371,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-/* Load Product Data */
 async function loadProduct() {
   const sku = new URLSearchParams(location.search).get("sku");
   if (!sku) {
@@ -355,28 +389,25 @@ async function loadProduct() {
     }
     
     const p = data.product;
+    CURRENT_PRODUCT = p;
 
     document.getElementById("prodName").textContent = p.Name || "Handcrafted Item";
     document.getElementById("prodSku").textContent = "SKU: " + (p.SKU || sku);
     document.getElementById("prodPrice").textContent = "₹" + (p.Price || "0");
     document.getElementById("prodDesc").textContent = p.Description || "No description provided.";
     
-    // Rating
     const rateText = p.Rating ? `★ ${p.Rating} (${p["Review Count"] || 0} reviews)` : "★ New Product";
     document.getElementById("prodRating").textContent = rateText;
 
-    // Main Image Initialization
     CURRENT_IMAGE_URL = normalizeImageForThumb(p["Image URL 1"] || p["Image URL 2"] || "");
     const mainImgEl = document.getElementById("mainImage");
     mainImgEl.src = CURRENT_IMAGE_URL || "https://via.placeholder.com/400?text=No+Image";
     
-    // Lightbox opens CURRENT ACTIVE IMAGE
     mainImgEl.onclick = () => { 
       document.getElementById("lightboxImg").src = CURRENT_IMAGE_URL; 
       document.getElementById("lightboxOverlay").style.display = "flex"; 
     };
 
-    // Thumbnails Generation
     const thumbsContainer = document.getElementById("thumbs");
     thumbsContainer.innerHTML = "";
 
@@ -391,7 +422,7 @@ async function loadProduct() {
         thumbDiv.onclick = function() {
           document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
           this.classList.add('active');
-          CURRENT_IMAGE_URL = normUrl; // Update global current image tracker
+          CURRENT_IMAGE_URL = normUrl;
           mainImgEl.src = normUrl;
         };
         thumbDiv.innerHTML = `<img src="${normUrl}" alt="Thumbnail ${i}">`;
@@ -401,7 +432,6 @@ async function loadProduct() {
 
     if (!hasThumbs) thumbsContainer.style.display = "none";
 
-    // Load Reviews
     const revList = document.getElementById("reviewsList");
     if (data.reviews && data.reviews.length > 0) {
       let revHtml = "";
@@ -425,10 +455,10 @@ async function loadProduct() {
       revList.innerHTML = "<div class='no-reviews'>No reviews yet. Be the first to purchase and review!</div>";
     }
 
-    // Buttons
-    document.getElementById("btnBuyNow").onclick = () => location.href = `order.html?sku=${encodeURIComponent(sku)}`;
+    document.getElementById("btnBuyNow").onclick = (e) => {
+      addToCart(e, true);
+    };
     
-    // Check Wishlist Status
     const wishlist = JSON.parse(localStorage.getItem("gc_wishlist") || "[]");
     if (wishlist.includes(sku)) document.getElementById("wishBtn").textContent = "❤️";
 
@@ -438,48 +468,72 @@ async function loadProduct() {
   }
 }
 
-/* FLY TO CART ANIMATION & CART STATE */
-function addToCart(event) {
-  if (!CURRENT_SKU) return;
+/* SLOWER, SMOOTHER & INTERACTIVE "CART CATCHING" ANIMATION */
+function addToCart(event, buyNowDirect = false) {
+  if (!CURRENT_SKU || !CURRENT_PRODUCT) return;
+
+  let cart = getCart();
+  const existingIdx = cart.findIndex(item => item.sku === CURRENT_SKU);
+
+  if (existingIdx > -1) {
+    cart[existingIdx].qty += 1;
+  } else {
+    cart.push({
+      sku: CURRENT_SKU,
+      name: CURRENT_PRODUCT.Name || "Handcrafted Item",
+      price: Number(CURRENT_PRODUCT.Price || 0),
+      weight: Number(CURRENT_PRODUCT.Weight || 0),
+      img: CURRENT_IMAGE_URL,
+      qty: 1
+    });
+  }
+
+  if (buyNowDirect) {
+    saveCart(cart);
+    window.location.href = "order.html";
+    return;
+  }
 
   const mainImg = document.getElementById("mainImage");
   const cartBtn = document.getElementById("cartBtn");
-  const cartBadge = document.getElementById("cartCount");
 
-  // Get coordinates for animation
   const imgRect = mainImg.getBoundingClientRect();
   const cartRect = cartBtn.getBoundingClientRect();
 
-  // Create flying clone element
+  // Step 1: Trigger "Cart Catching" hover & scale state immediately
+  cartBtn.classList.add("cart-catching");
+
+  // Step 2: Create smooth flying image clone
   const flyer = document.createElement("img");
   flyer.src = CURRENT_IMAGE_URL || mainImg.src;
   flyer.className = "flying-img";
   flyer.style.left = `${imgRect.left}px`;
   flyer.style.top = `${imgRect.top}px`;
-  flyer.style.width = `${imgRect.width}px`;
-  flyer.style.height = `${imgRect.height}px`;
+  flyer.style.width = `${Math.min(imgRect.width, 220)}px`;
+  flyer.style.height = `${Math.min(imgRect.height, 220)}px`;
 
   document.body.appendChild(flyer);
 
-  // Trigger smooth curved fly animation
+  // Step 3: Animate flyer towards cart over 1.35 seconds with smooth arc trajectory & rotation
   setTimeout(() => {
-    flyer.style.left = `${cartRect.left + 5}px`;
-    flyer.style.top = `${cartRect.top + 5}px`;
-    flyer.style.width = "25px";
-    flyer.style.height = "25px";
-    flyer.style.opacity = "0.3";
-    flyer.style.transform = "rotate(360deg) scale(0.5)";
-  }, 20);
+    flyer.style.left = `${cartRect.left + 6}px`;
+    flyer.style.top = `${cartRect.top + 6}px`;
+    flyer.style.width = "22px";
+    flyer.style.height = "22px";
+    flyer.style.opacity = "0.15";
+    flyer.style.transform = "rotate(720deg) scale(0.3)";
+  }, 30);
 
-  // Clean up flyer, update badge count & trigger cart pop animation
+  // Step 4: When flyer arrives at cart, trigger catch pop animation & remove flyer
   setTimeout(() => {
     flyer.remove();
-    cartItemCount++;
-    cartBadge.textContent = cartItemCount;
+    saveCart(cart);
 
-    cartBtn.classList.add("cart-pop");
-    setTimeout(() => cartBtn.classList.remove("cart-pop"), 400);
-  }, 820);
+    cartBtn.classList.remove("cart-catching");
+    cartBtn.classList.add("cart-catch-pop");
+
+    setTimeout(() => cartBtn.classList.remove("cart-catch-pop"), 550);
+  }, 1380);
 }
 
 function toggleWishlist() {
@@ -497,7 +551,10 @@ function toggleWishlist() {
   localStorage.setItem("gc_wishlist", JSON.stringify(wishlist));
 }
 
-document.addEventListener("DOMContentLoaded", loadProduct);
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartBadge();
+  loadProduct();
+});
 </script>
 </body>
 </html>
