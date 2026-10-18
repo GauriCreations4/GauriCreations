@@ -119,6 +119,27 @@
   #editOverlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,23,42,0.7); z-index:60; padding:16px; }
   .edit-box{ width:100%; max-width:760px; max-height:90vh; overflow-y:auto; background:#fff; border-radius:22px; padding:20px; box-shadow: var(--shadow-strong); }
 
+  .costing-panel{margin-top:18px;border:1px solid #cbd5e1;border-radius:16px;background:linear-gradient(135deg,#f8fafc,#eff6ff);overflow:hidden}
+  .costing-panel summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .costing-panel summary::-webkit-details-marker{display:none}
+  .costing-content{padding:0 16px 16px}
+  .costing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .costing-field label{display:block;font-size:11px;font-weight:700;color:#64748b;margin:0 0 4px}
+  .costing-field input,.costing-field textarea,.material-row input,.material-row select{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font:inherit;font-size:13px}
+  .material-table-wrap{overflow-x:auto;margin-top:10px}
+  .material-table{width:100%;min-width:650px;border-collapse:collapse;font-size:12px}
+  .material-table th,.material-table td{padding:6px;border-bottom:1px solid #dbe3ef;text-align:left}
+  .material-table th{color:#64748b;font-size:10px;text-transform:uppercase}
+  .material-row .remove-material{border:0;background:#fee2e2;color:#991b1b;border-radius:8px;padding:7px 10px;cursor:pointer}
+  .cost-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:14px}
+  .cost-stat{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px}
+  .cost-stat span{display:block;color:#64748b;font-size:11px}
+  .cost-stat strong{display:block;font-size:17px;margin-top:3px}
+  .costing-note{font-size:12px;color:#64748b;margin:8px 0}
+  .costing-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .btn-cost{border:0;border-radius:999px;padding:9px 14px;background:linear-gradient(135deg,#2563eb,#ec4899);color:#fff;font-weight:700;cursor:pointer}
+  .btn-cost-secondary{border:1px solid #cbd5e1;border-radius:999px;padding:9px 14px;background:#fff;font-weight:700;cursor:pointer}
+
   @media (max-width:820px){
     .desktop-table{ display:none; }
   }
@@ -137,7 +158,8 @@
       <img src="logo-gauri.jpeg" alt="Gauri Creations" class="logo" onerror="this.src='https://via.placeholder.com/48?text=GC'" />
       <div>
         <div class="title-main">Manage Products</div>
-        <div class="subtitle">Edit images, stock & product details</div>
+        <div class="subtitle">Edit product details, images, stock & private manufacturing costs</div>
+        
       </div>
     </div>
 
@@ -290,6 +312,39 @@
         </div>
       </div>
     </div>
+
+    <details class="costing-panel" id="costingPanel" ontoggle="if(this.open) loadManufacturingForCurrentProduct()">
+      <summary><span>🧵 Manufacturing & Costing <span style="font-size:11px;color:#64748b;font-weight:500">(Admin only)</span></span><span>＋</span></summary>
+      <div class="costing-content">
+        <p class="costing-note">Private internal records. Material cost, suppliers, manufacturing cost and profit are stored separately from the public product catalog.</p>
+        <div class="costing-grid">
+          <div class="costing-field"><label for="costLength">Length</label><input id="costLength" type="text" placeholder="e.g. 30 cm"></div>
+          <div class="costing-field"><label for="costWidth">Width</label><input id="costWidth" type="text" placeholder="e.g. 20 cm"></div>
+          <div class="costing-field"><label for="costHeight">Height</label><input id="costHeight" type="text" placeholder="e.g. 12 cm"></div>
+          <div class="costing-field"><label for="costWeight">Product weight</label><input id="costWeight" type="text" placeholder="e.g. 450 g"></div>
+          <div class="costing-field"><label for="costLabor">Labour cost (₹)</label><input id="costLabor" type="number" min="0" step="0.01" value="0" oninput="recalculateCosting()"></div>
+          <div class="costing-field"><label for="costPackaging">Packaging cost (₹)</label><input id="costPackaging" type="number" min="0" step="0.01" value="0" oninput="recalculateCosting()"></div>
+          <div class="costing-field"><label for="costOther">Other cost (₹)</label><input id="costOther" type="number" min="0" step="0.01" value="0" oninput="recalculateCosting()"></div>
+          <div class="costing-field"><label for="costSupplierDetails">Supplier details (private)</label><input id="costSupplierDetails" type="text" placeholder="Supplier / contact / reference"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:16px">
+          <strong style="font-size:13px">Raw materials</strong><button type="button" class="btn-cost-secondary" onclick="addMaterialRow()">＋ Add material</button>
+        </div>
+        <div class="material-table-wrap"><table class="material-table"><thead><tr><th>Material</th><th>Qty</th><th>Unit</th><th>Rate (₹)</th><th>Supplier</th><th></th></tr></thead><tbody id="materialsBody"></tbody></table></div>
+        <div class="costing-grid" style="margin-top:12px">
+          <div class="costing-field"><label for="costInternalNotes">Internal manufacturing notes</label><textarea id="costInternalNotes" rows="2" placeholder="Production notes, wastage, finish, etc."></textarea></div>
+        </div>
+        <div class="cost-summary">
+          <div class="cost-stat"><span>Total material cost</span><strong id="costMaterialTotal">₹0.00</strong></div>
+          <div class="cost-stat"><span>Total manufacturing cost</span><strong id="costGrandTotal">₹0.00</strong></div>
+          <div class="cost-stat"><span>Selling price</span><strong id="costSellingTotal">₹0.00</strong></div>
+          <div class="cost-stat"><span>Profit per unit</span><strong id="costProfitTotal">₹0.00</strong></div>
+          <div class="cost-stat"><span>Profit margin</span><strong id="costMarginTotal">0.00%</strong></div>
+        </div>
+        <div id="costingStatus" class="costing-note">Expand this section to load saved manufacturing details.</div>
+        <div class="costing-actions"><button type="button" class="btn-cost" onclick="saveManufacturingDetails()">Save Manufacturing Details</button><button type="button" class="btn-cost-secondary" onclick="addMaterialRow()">＋ Add another material</button></div>
+      </div>
+    </details>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
       <span id="editStatus" style="font-size:12px;color:var(--muted)">Modify details and click Update Product.</span>
@@ -550,13 +605,80 @@ function fileToBase64(file){
   }); 
 }
 
+let manufacturingLoadedSku = "";
+let manufacturingLoadPromise = null;
+
+function getAdminToken(){ return sessionStorage.getItem("gc_manufacturing_token") || ""; }
+async function ensureManufacturingAuth(){
+  let token = getAdminToken();
+  if(token) return token;
+  const password = prompt("Admin password required to view or edit private manufacturing costs:");
+  if(password === null || !password) throw new Error("Admin authentication cancelled.");
+  const result = await callAppsScript({action:"adminLogin", password});
+  if(!result.success || !result.token) throw new Error(result.message || "Admin authentication failed.");
+  sessionStorage.setItem("gc_manufacturing_token", result.token);
+  return result.token;
+}
+function money(value){ return "₹" + (Number(value)||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function addMaterialRow(material={}){
+  const body=document.getElementById("materialsBody");
+  const tr=document.createElement("tr"); tr.className="material-row";
+  const safe=(v)=>String(v??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  tr.innerHTML=`<td><input class="mat-name" placeholder="e.g. Fabric" value="${safe(material.name)}"></td><td><input class="mat-qty" type="number" min="0" step="0.001" placeholder="0" value="${safe(material.quantity)}"></td><td><select class="mat-unit"><option ${material.unit==="pcs"?"selected":""}>pcs</option><option ${material.unit==="m"?"selected":""}>m</option><option ${material.unit==="cm"?"selected":""}>cm</option><option ${material.unit==="kg"?"selected":""}>kg</option><option ${material.unit==="g"?"selected":""}>g</option><option ${material.unit==="sq ft"?"selected":""}>sq ft</option><option ${material.unit==="set"?"selected":""}>set</option><option ${material.unit==="other"?"selected":""}>other</option></select></td><td><input class="mat-rate" type="number" min="0" step="0.01" placeholder="0.00" value="${safe(material.rate)}"></td><td><input class="mat-supplier" placeholder="Optional" value="${safe(material.supplier)}"></td><td><button type="button" class="remove-material" title="Remove material" onclick="this.closest('tr').remove();recalculateCosting()">×</button></td>`;
+  tr.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",recalculateCosting));
+  body.appendChild(tr); recalculateCosting();
+}
+function readMaterials(){return Array.from(document.querySelectorAll("#materialsBody tr")).map(tr=>({name:tr.querySelector(".mat-name").value.trim(),quantity:Number(tr.querySelector(".mat-qty").value)||0,unit:tr.querySelector(".mat-unit").value,rate:Number(tr.querySelector(".mat-rate").value)||0,supplier:tr.querySelector(".mat-supplier").value.trim()})).filter(m=>m.name);}
+function recalculateCosting(){
+  const materials=readMaterials(); const materialTotal=materials.reduce((s,m)=>s+m.quantity*m.rate,0);
+  const total=materialTotal+(Number(document.getElementById("costLabor").value)||0)+(Number(document.getElementById("costPackaging").value)||0)+(Number(document.getElementById("costOther").value)||0);
+  const price=Number(document.getElementById("editPrice").value)||0; const profit=price-total; const margin=price>0?profit/price*100:0;
+  document.getElementById("costMaterialTotal").textContent=money(materialTotal); document.getElementById("costGrandTotal").textContent=money(total); document.getElementById("costSellingTotal").textContent=money(price); document.getElementById("costProfitTotal").textContent=money(profit); document.getElementById("costMarginTotal").textContent=margin.toFixed(2)+"%";
+}
+async function loadManufacturingForCurrentProduct(){
+  if(!CURRENT_EDIT_PRODUCT) return;
+  const sku=String(CURRENT_EDIT_PRODUCT["SKU"]||""); if(!sku) return;
+  if(manufacturingLoadedSku===sku) return;
+  const status=document.getElementById("costingStatus"); status.textContent="Authenticating and loading saved costing…";
+  try{
+    const token=await ensureManufacturingAuth();
+    const result=await callAppsScript({action:"getManufacturing",token,sku});
+    if(!result.success) throw new Error(result.message||"Could not load manufacturing record.");
+    const r=result.record||{};
+    document.getElementById("costLength").value=r.length||""; document.getElementById("costWidth").value=r.width||""; document.getElementById("costHeight").value=r.height||""; document.getElementById("costWeight").value=r.weight||"";
+    document.getElementById("costLabor").value=Number(r.laborCost)||0; document.getElementById("costPackaging").value=Number(r.packagingCost)||0; document.getElementById("costOther").value=Number(r.otherCost)||0;
+    document.getElementById("costSupplierDetails").value=r.supplierDetails||""; document.getElementById("costInternalNotes").value=r.internalNotes||"";
+    document.getElementById("materialsBody").innerHTML=""; (r.materials||[]).forEach(addMaterialRow); if(!(r.materials||[]).length) addMaterialRow();
+    if(r.sellingPrice!==undefined && r.sellingPrice!==null && r.sellingPrice!==0) document.getElementById("editPrice").value=r.sellingPrice;
+    manufacturingLoadedSku=sku; status.textContent=r.updatedAt?"Saved record loaded. Last updated: "+new Date(r.updatedAt).toLocaleString():"No saved manufacturing record yet. Add details and save."; recalculateCosting();
+  }catch(err){status.textContent="Could not load costing: "+err.message;}
+}
+async function saveManufacturingDetails(){
+  if(!CURRENT_EDIT_PRODUCT) return;
+  const status=document.getElementById("costingStatus"); status.textContent="Saving private manufacturing record…";
+  try{
+    const token=await ensureManufacturingAuth();
+    const payload={action:"saveManufacturing",token,sku:String(CURRENT_EDIT_PRODUCT["SKU"]||""),materials:readMaterials(),laborCost:Number(document.getElementById("costLabor").value)||0,packagingCost:Number(document.getElementById("costPackaging").value)||0,otherCost:Number(document.getElementById("costOther").value)||0,supplierDetails:document.getElementById("costSupplierDetails").value.trim(),internalNotes:document.getElementById("costInternalNotes").value.trim(),length:document.getElementById("costLength").value.trim(),width:document.getElementById("costWidth").value.trim(),height:document.getElementById("costHeight").value.trim(),weight:document.getElementById("costWeight").value.trim(),sellingPrice:Number(document.getElementById("editPrice").value)||0};
+    const result=await callAppsScript(payload); if(!result.success) throw new Error(result.message||"Save failed.");
+    manufacturingLoadedSku=payload.sku; const t=result.totals||{}; status.textContent="Manufacturing details saved securely. Total cost "+money(t.totalCost)+" · Profit "+money(t.profit)+" · Margin "+(Number(t.margin)||0).toFixed(2)+"%.";
+    recalculateCosting();
+  }catch(err){status.textContent="Save failed: "+err.message;}
+}
+
 function openEdit(product){
   CURRENT_EDIT_PRODUCT = product;
   document.getElementById("editOverlay").style.display = "flex";
+  document.getElementById("costingPanel").open = false;
+  manufacturingLoadedSku = "";
+  document.getElementById("materialsBody").innerHTML = "";
+  ["costLength","costWidth","costHeight","costWeight","costSupplierDetails","costInternalNotes"].forEach(id=>document.getElementById(id).value="");
+  ["costLabor","costPackaging","costOther"].forEach(id=>document.getElementById(id).value="0");
+  document.getElementById("costingStatus").textContent="Expand this section to load saved manufacturing details.";
   document.getElementById("editTitle").textContent = "Edit Product: " + (product["SKU"]||"");
   document.getElementById("editSku").value = product["SKU"] || "";
   document.getElementById("editName").value = product["Name"] || "";
   document.getElementById("editPrice").value = product["Price"] || "";
+  recalculateCosting();
   document.getElementById("editStock").value = product["Stock"] || "";
   document.getElementById("editDesc").value = product["Description"] || "";
 
@@ -574,6 +696,7 @@ function closeEdit(){
 }
 
 document.getElementById("saveEditBtn").addEventListener("click", saveEdit);
+document.getElementById("editPrice").addEventListener("input", recalculateCosting);
 
 async function saveEdit(){
   if(!CURRENT_EDIT_PRODUCT) return;
