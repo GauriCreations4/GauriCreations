@@ -210,6 +210,22 @@
   .status-text { font-size: 12px; color: #64748b; font-weight: 600; }
   .status-text.ok { color: #15803d; }
   .status-text.err { color: #e11d48; }
+
+  .costing-card { margin-top: 14px; }
+  .costing-intro { font-size: 12px; color: #64748b; margin: 5px 0 14px; line-height: 1.5; }
+  .material-table-wrap { width: 100%; overflow-x: auto; }
+  .material-table { width: 100%; min-width: 650px; border-collapse: collapse; font-size: 12px; }
+  .material-table th, .material-table td { padding: 7px 5px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+  .material-table th { color: #475569; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+  .material-table .input { padding: 8px; border-radius: 8px; }
+  .btn-secondary { padding: 9px 14px; border-radius: 999px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .remove-material { border: 0; background: #ffe4e6; color: #be123c; border-radius: 8px; padding: 7px 9px; cursor: pointer; font-weight: 700; }
+  .cost-summary { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-top: 14px; }
+  .cost-stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; }
+  .cost-stat span { display:block; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; }
+  .cost-stat strong { display:block; margin-top:4px; font-size:15px; color:#0f172a; }
+  @media(max-width:700px){ .cost-summary { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
 </style>
 </head>
 
@@ -293,6 +309,48 @@
       </section>
     </div>
 
+    <section class="section-card costing-card">
+      <div class="card-title" style="font-size:17px;">🧾 Manufacturing Details</div>
+      <p class="costing-intro">Your team can enter the initial material and production costing when adding a new product. Once saved, only the Admin can change these private costing records from Manage Products.</p>
+
+      <div class="material-table-wrap">
+        <table class="material-table">
+          <thead><tr>
+            <th style="min-width:150px;">Raw Material</th>
+            <th style="min-width:90px;">Quantity</th>
+            <th style="min-width:90px;">Unit</th>
+            <th style="min-width:100px;">Rate (₹)</th>
+            <th style="min-width:140px;">Supplier</th>
+            <th>Remove</th>
+          </tr></thead>
+          <tbody id="materialsBody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:flex-start;margin-top:10px;">
+        <button class="btn-secondary" id="addMaterialBtn" type="button">＋ Add Raw Material</button>
+      </div>
+
+      <div class="field-row" style="margin-top:14px;">
+        <div><label for="laborCost">Labour Cost (₹)</label><input id="laborCost" class="input" type="number" min="0" step="0.01" value="0"></div>
+        <div><label for="packagingCost">Packaging Cost (₹)</label><input id="packagingCost" class="input" type="number" min="0" step="0.01" value="0"></div>
+      </div>
+      <div class="field-row">
+        <div><label for="otherCost">Other Production Cost (₹)</label><input id="otherCost" class="input" type="number" min="0" step="0.01" value="0"></div>
+        <div><label for="supplierDetails">Supplier / Purchase Notes</label><input id="supplierDetails" class="input" type="text" placeholder="Optional internal supplier details"></div>
+      </div>
+      <div>
+        <label for="internalNotes">Private Manufacturing Notes</label>
+        <textarea id="internalNotes" class="textarea" placeholder="Internal notes for the team/Admin only"></textarea>
+      </div>
+
+      <div class="cost-summary">
+        <div class="cost-stat"><span>Material Cost</span><strong id="materialCostTotal">₹0.00</strong></div>
+        <div class="cost-stat"><span>Total Cost</span><strong id="manufacturingCostTotal">₹0.00</strong></div>
+        <div class="cost-stat"><span>Estimated Profit</span><strong id="manufacturingProfit">₹0.00</strong></div>
+        <div class="cost-stat"><span>Profit Margin</span><strong id="manufacturingMargin">0.00%</strong></div>
+      </div>
+    </section>
+
     <div class="footer-row">
       <div id="statusText" class="status-text">Fill details and click Add Product.</div>
       <button id="saveBtn" class="btn-primary">➕ Add Product</button>
@@ -321,9 +379,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const statusText = qs("statusText");
     const saveBtn = qs("saveBtn");
+    const materialsBody = qs("materialsBody");
 
     imageDropZone.onclick = () => imageInput.click();
     videoDropZone.onclick = () => videoInput.click();
+    qs("addMaterialBtn").addEventListener("click", () => addMaterialRow());
+    ["price","laborCost","packagingCost","otherCost"].forEach(id => qs(id).addEventListener("input", updateCostSummary));
+    addMaterialRow();
+
+    function addMaterialRow(material = {}) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input class="input mat-name" type="text" placeholder="e.g. Fabric" value="${escapeAttr(material.name || "")}"></td>
+        <td><input class="input mat-qty" type="number" min="0" step="0.001" placeholder="0" value="${material.quantity ?? ""}"></td>
+        <td><input class="input mat-unit" type="text" placeholder="m, pcs, g" value="${escapeAttr(material.unit || "pcs")}"></td>
+        <td><input class="input mat-rate" type="number" min="0" step="0.01" placeholder="0.00" value="${material.rate ?? ""}"></td>
+        <td><input class="input mat-supplier" type="text" placeholder="Optional" value="${escapeAttr(material.supplier || "")}"></td>
+        <td><button class="remove-material" type="button" aria-label="Remove material">×</button></td>`;
+      tr.querySelectorAll("input").forEach(input => input.addEventListener("input", updateCostSummary));
+      tr.querySelector(".remove-material").addEventListener("click", () => { tr.remove(); updateCostSummary(); });
+      materialsBody.appendChild(tr);
+      updateCostSummary();
+    }
+
+    function escapeAttr(value) {
+      return String(value ?? "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    function getMaterials() {
+      return Array.from(materialsBody.querySelectorAll("tr")).map(tr => ({
+        name: tr.querySelector(".mat-name").value.trim(),
+        quantity: Number(tr.querySelector(".mat-qty").value) || 0,
+        unit: tr.querySelector(".mat-unit").value.trim() || "pcs",
+        rate: Number(tr.querySelector(".mat-rate").value) || 0,
+        supplier: tr.querySelector(".mat-supplier").value.trim()
+      })).filter(m => m.name);
+    }
+
+    function money(value) {
+      return "₹" + (Number(value) || 0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+    }
+
+    function updateCostSummary() {
+      const materialCost = getMaterials().reduce((sum,m) => sum + m.quantity*m.rate, 0);
+      const total = materialCost + (Number(qs("laborCost").value)||0) + (Number(qs("packagingCost").value)||0) + (Number(qs("otherCost").value)||0);
+      const price = Number(qs("price").value)||0;
+      const profit = price-total;
+      const margin = price > 0 ? profit/price*100 : 0;
+      qs("materialCostTotal").textContent = money(materialCost);
+      qs("manufacturingCostTotal").textContent = money(total);
+      qs("manufacturingProfit").textContent = money(profit);
+      qs("manufacturingMargin").textContent = margin.toFixed(2)+"%";
+    }
 
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       document.body.addEventListener(eventName, e => e.preventDefault());
@@ -430,7 +537,8 @@ document.addEventListener('DOMContentLoaded', function() {
               mimeType: imageFiles[i].type,
               base64: base64
             });
-            if (data.success) uploadedImageUrls.push(data.url);
+            if (!data.success || !data.url) throw new Error(data.message || "Image upload failed.");
+            uploadedImageUrls.push(data.url);
           }
 
           let finalVideoUrl = qs("videoUrlInput").value;
@@ -443,7 +551,8 @@ document.addEventListener('DOMContentLoaded', function() {
               mimeType: videoFile.type,
               base64: vBase64
             });
-            if (vData.success) finalVideoUrl = vData.url;
+            if (!vData.success || !vData.url) throw new Error(vData.message || "Video upload failed.");
+            finalVideoUrl = vData.url;
           }
 
           statusText.textContent = "Saving product details...";
@@ -469,9 +578,29 @@ document.addEventListener('DOMContentLoaded', function() {
           const finalData = await callAppsScript(productBody);
 
           if (finalData.success) {
-            statusText.textContent = "Product Saved Successfully! ✔";
+            statusText.textContent = "Product created. Saving initial manufacturing details...";
+            const manufacturingData = await callAppsScript({
+              action: "saveInitialManufacturing",
+              initialCostingToken: finalData.initialCostingToken,
+              sku: finalData.sku,
+              materials: getMaterials(),
+              laborCost: qs("laborCost").value,
+              packagingCost: qs("packagingCost").value,
+              otherCost: qs("otherCost").value,
+              supplierDetails: qs("supplierDetails").value,
+              internalNotes: qs("internalNotes").value,
+              length: qs("length").value,
+              width: qs("width").value,
+              height: qs("height").value,
+              weight: qs("weight").value,
+              sellingPrice: qs("price").value
+            });
+            if (!manufacturingData.success) {
+              throw new Error("Product was created (SKU: " + finalData.sku + "), but manufacturing details were not saved: " + (manufacturingData.message || "Unknown error") + ". Please contact Admin before retrying to avoid creating a duplicate product.");
+            }
+            statusText.textContent = "Product and initial manufacturing details saved! SKU: " + finalData.sku + " ✔";
             statusText.className = "status-text ok";
-            setTimeout(resetForm, 2000);
+            setTimeout(resetForm, 2500);
           } else {
             throw new Error(finalData.message || "Failed to save product.");
           }
@@ -487,8 +616,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function resetForm(){
-      ["name","price","category","stock","weight","length","width","height","description","videoUrlInput"]
+      ["name","price","category","stock","weight","length","width","height","description","videoUrlInput","laborCost","packagingCost","otherCost","supplierDetails","internalNotes"]
       .forEach(id => qs(id).value = "");
+      materialsBody.innerHTML = "";
+      addMaterialRow();
       
       qs("videoUrlInput").disabled = false;
       qs("videoUrlInput").placeholder = "https://...";
